@@ -22,17 +22,22 @@ public class ApiUriCompBuilder {
     private final String API_DETAIL_PATH;
     private final String API_IMG_PATH ;
     private final String RESPONSE_TYPE;
+    private final int NUM_OF_ROWS;
+
 
     public ApiUriCompBuilder(@Value("${gov.host}") String host,
                             @Value("${gov.serviceKey}") String serviceKey,
                             @Value("${gov.path.detail}") String pathDetail,
                             @Value("${gov.path.img}") String pathImg,
+                            @Value("${gov.type}") String type,
+                            @Value("${gov.numOfRows}") int numOfRows
                             @Value("${gov.type}") String type) {
         this.HOST = host;
         this.SERVICE_KEY = serviceKey;
         this.API_DETAIL_PATH = pathDetail;
         this.API_IMG_PATH = pathImg;
         this.RESPONSE_TYPE = type;
+        this.NUM_OF_ROWS = numOfRows;
     }
 
     /***
@@ -53,7 +58,7 @@ public class ApiUriCompBuilder {
             .queryParam("serviceKey", SERVICE_KEY)
             .queryParam("type", RESPONSE_TYPE)
             .queryParam("pageNo", pageNo)
-            .queryParam("numOfRows", 100)
+            .queryParam("numOfRows", NUM_OF_ROWS)
             .build(true)
             .toUri();
     }
@@ -96,5 +101,4 @@ public class ApiUriCompBuilder {
             .toUri();
 
     }
-
 }
