@@ -10,6 +10,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.support.api.ApiPageCounter;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.support.api.ApiResponseMapper;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.support.api.ApiUriCompBuilder;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.jpa.ApiDataDrugImgRepo;
@@ -27,6 +28,7 @@ public class DrugImageGovScraper {
 	private final RestTemplate restTemplate;
 	private final ApiDataDrugImgRepo imgRepo;
 	private final ObjectMapper objectMapper;
+	private final ApiPageCounter apiPageCounter;
 
 	@Transactional
 	public void getApiData(){
@@ -45,4 +47,23 @@ public class DrugImageGovScraper {
 		}
 		imgRepo.saveAllAndFlush(imgDatas);
 	}
+
+	public void getAllApiData(){
+		log.info("의약품 개요 정보 API 호출 시작");
+		int totalPageCount = apiPageCounter.getImgApiTotalPageCount();
+		for(int i=1;i<=totalPageCount;i++){
+			URI uriForImgApi = uriCompBuilder.getUriForImgApi(i);
+			String response = restTemplate.getForObject(uriForImgApi, String.class);
+			JsonNode items = ApiResponseMapper.getItemsFromResponse(response);
+			List<ApiDataDrugImgEntity> imgDatas = null;
+			try {
+				imgDatas = objectMapper.readValue(items.toString(),
+					new TypeReference<List<ApiDataDrugImgEntity>>() {});
+			} catch (JsonProcessingException e) {
+				throw new RuntimeException(e);
+			}
+			imgRepo.saveAllAndFlush(imgDatas);
+		}
+	}
+
 }
