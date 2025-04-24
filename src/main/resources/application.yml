@@ -28,7 +28,7 @@ gov:
   serviceKey: ${GOV_SERVICE_KEY}
   numOfRows: 100
   path:
-    detail: /1471000/DrugPrdtPrmsnInfoService06/getDrugPrdtPr-bmsnDtlInq05
+    detail: /1471000/DrugPrdtPrmsnInfoService06/getDrugPrdtPrbmsnDtlInq05
     img: /1471000/DrugPrdtPrmsnInfoService06/getDrugPrdtPrmsnInq06
 server:
   port: 8077
