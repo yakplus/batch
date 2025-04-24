@@ -10,7 +10,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.likelion.backendplus4.yakplus.drug.domain.model.vo.Material;
-import com.likelion.backendplus4.yakplus.drug.domain.model.vo.WarningType;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -72,24 +71,23 @@ public class GovDrug {
 		return efficacys;
 	}
 
-	public Map<WarningType, List<String>> getPrecaution() {
+	public Map<String, List<String>> getPrecaution() {
 		ObjectMapper objectMapper = new ObjectMapper();
-		Map<WarningType, List<String>> result = new LinkedHashMap<>();
+		Map<String, List<String>> result = new LinkedHashMap<>();
 
 		try {
 			JsonNode json = objectMapper.readTree(this.precaution);
 			JsonNode articles = json.get("sections").get(0).get("articles");
 
 			for (JsonNode article : articles) {
-				String rawTitle = article.get("title").asText();
-				WarningType type = WarningType.fromLabel(rawTitle);
+				String title = article.get("title").asText();
 
 				List<String> texts = new ArrayList<>();
 				for (JsonNode paragraph : article.get("paragraphs")) {
 					texts.add(paragraph.get("text").asText());
 				}
 
-				result.put(type, texts);
+				result.put(title, texts);
 			}
 
 		} catch (JsonProcessingException e) {
