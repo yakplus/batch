@@ -9,7 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.likelion.backendplus4.yakplus.drug.application.service.DrugApprovalDetailScraper;
 import com.likelion.backendplus4.yakplus.drug.application.service.DrugDataService;
+import com.likelion.backendplus4.yakplus.drug.application.service.scraper.DrugScraper;
 import com.likelion.backendplus4.yakplus.drug.domain.model.GovDrug;
 import com.likelion.backendplus4.yakplus.drug.domain.model.port.out.EmbeddingPort;
 
@@ -24,6 +26,7 @@ import com.likelion.backendplus4.yakplus.response.ApiResponse;
 public class DrugDataTestController {
 	private final DrugDataService dragDataService;
 	private final EmbeddingPort embeddingPort;
+	private final DrugScraper scraperUseCase;
 
 	@GetMapping("/data/all")
 	public List<GovDrug> getAllData(Pageable pageable){
@@ -36,6 +39,12 @@ public class DrugDataTestController {
 		float[] embedding = embeddingPort.getEmbedding("test", EmbeddingModelType.OPENAI);
 		return ApiResponse.success(embedding);
 
+	}
+
+	@GetMapping("/test/parse")
+	public ResponseEntity saveAPIData(){
+		scraperUseCase.scraperStart();
+		return ResponseEntity.ok().build();
 	}
 
 }
