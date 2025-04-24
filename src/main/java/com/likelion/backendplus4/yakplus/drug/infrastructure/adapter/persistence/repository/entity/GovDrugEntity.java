@@ -57,4 +57,13 @@ public class GovDrugEntity {
 
 	@Column(name= "IMG_URL")
 	private String imageUrl;
+
+	@Column(name= "GPT_VECTOR")
+	private String gptVector;
+
+	@Column(name= "KR_SBERT_VECTOR")
+	private String sbertVector;
+
+	@Column(name= "KM_BERT_VECTOR")
+	private String kmBertVector;
 }

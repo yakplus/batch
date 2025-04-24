@@ -7,18 +7,23 @@ import com.likelion.backendplus4.yakplus.drug.application.service.DrugApprovalDe
 import com.likelion.backendplus4.yakplus.drug.application.service.DrugEmbedProcessor;
 import com.likelion.backendplus4.yakplus.drug.application.service.DrugImageGovScraper;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.jpa.GovDrugDetailJpaRepository;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.jpa.GovDrugJpaRepository;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class DrugScraper {
-	DrugImageGovScraper drugImageGovScraper;
-	DrugEmbedProcessor embedProcessor;
-	DrugApprovalDetailScraper drugApprovalDetailScraper;
+	private final DrugImageGovScraper drugImageGovScraper;
+	private final DrugEmbedProcessor embedProcessor;
+	private final DrugApprovalDetailScraper drugApprovalDetailScraper;
+	private final DrugEmbedProcessor drugEmbedProcessor;
+	private final GovDrugJpaRepository govDrugJpaRepository;
 
 	public void scraperStart(){
 		drugApprovalDetailScraper.requestUpdateAllRawDataByJdbc();
 		drugImageGovScraper.getAllApiData();
+		drugEmbedProcessor.startEmbedding();
+		govDrugJpaRepository.createRawDataByApiTable();
 	}
 }
