@@ -7,19 +7,20 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.likelion.backendplus4.yakplus.common.util.log.LogLevel;
+import com.likelion.backendplus4.yakplus.drug.domain.model.GovDrugDetail;
 import com.likelion.backendplus4.yakplus.drug.domain.model.vo.Material;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.entity.GovDrugDetailEntity;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.entity.GovDrugEntity;
 import com.likelion.backendplus4.yakplus.drug.domain.model.GovDrug;
 
-public class DrugDataMapper {
-	public static GovDrug toDomainFromEntity(GovDrugEntity e){
-		GovDrug domain = GovDrug.builder()
-			.drugId(e.getId())
+public class DrugDetailMapper {
+	public static GovDrugDetail toDomainFromEntity(GovDrugDetailEntity e){
+		GovDrugDetail domain = GovDrugDetail.builder()
+			.drugId(e.getDrugId())
 			.drugName(e.getDrugName())
 			.company(e.getCompany())
 			.permitDate(e.getPermitDate())
@@ -30,9 +31,7 @@ public class DrugDataMapper {
 			.efficacy(convertEfficacy(e.getEfficacy()))
 			.usage(getUsage(e.getUsage()))
 			.precaution(getPrecaution(e.getPrecaution()))
-			.imageUrl(e.getImageUrl())
 			.build();
-		log(domain.toString());
 		return domain;
 	}
 

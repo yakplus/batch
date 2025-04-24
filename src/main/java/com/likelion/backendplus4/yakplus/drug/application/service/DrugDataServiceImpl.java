@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.jpa.GovDrugJpaRepository;
-import com.likelion.backendplus4.yakplus.drug.infrastructure.support.mapper.DrugDataMapper;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.support.mapper.DrugDetailMapper;
 import com.likelion.backendplus4.yakplus.drug.domain.model.GovDrug;
 
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ public class DrugDataServiceImpl implements DrugDataService {
 	public List<GovDrug> findAllRawDrug(Pageable pageable) {
 		log.info("findAllRawDrug called");
 		return govDrugJpaRepository.findAll(pageable).stream()
-			.map(DrugDataMapper::toDomainFromEntity)
+			.map(DrugDetailMapper::toDomainFromEntity)
 			.collect(toList());
 	}
 }
