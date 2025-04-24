@@ -30,5 +30,9 @@ gov:
   path:
     detail: /1471000/DrugPrdtPrmsnInfoService06/getDrugPrdtPrmsnDtlInq05
     img: /1471000/DrugPrdtPrmsnInfoService06/getDrugPrdtPrmsnInq06
+
+embed:
+  kmbert: https://embed.techlog.dev/predict
+  krsbert: https://embedb.techlog.dev/predict
 server:
   port: 8077
