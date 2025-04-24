@@ -4,7 +4,7 @@ import static com.likelion.backendplus4.yakplus.common.util.log.LogUtil.*;
 
 import java.util.List;
 
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,9 +25,9 @@ public class DrugDataTestController {
 	private final EmbeddingPort embeddingPort;
 
 	@GetMapping("/data/all")
-	public List<GovDrug> getAllData(){
-		// log.info("getAllData");
-		return dragDataService.findAllRawDrug();
+	public List<GovDrug> getAllData(Pageable pageable){
+		log.info("getAllData");
+		return dragDataService.findAllRawDrug(pageable);
 	}
 
 	@GetMapping("/test/embed")
