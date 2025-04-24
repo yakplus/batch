@@ -2,6 +2,7 @@ package com.likelion.backendplus4.yakplus.drug.presentation.controller;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,9 +18,9 @@ public class DrugDataTestController {
 	private final DrugDataService dragDataService;
 
 	@GetMapping("/data/all")
-	public List<GovDrug> getAllData(){
+	public List<GovDrug> getAllData(Pageable pageable){
 		log.info("getAllData");
-		return dragDataService.findAllRawDrug();
+		return dragDataService.findAllRawDrug(pageable);
 	}
 
 }
