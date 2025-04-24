@@ -1,4 +1,4 @@
-package com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.embedding;
+package com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.embedding.client;
 
 import java.util.List;
 
@@ -9,18 +9,23 @@ import org.springframework.ai.openai.OpenAiEmbeddingModel;
 import org.springframework.ai.openai.OpenAiEmbeddingOptions;
 import org.springframework.ai.openai.api.OpenAiApi;
 import org.springframework.ai.retry.RetryUtils;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-import com.likelion.backendplus4.yakplus.drug.domain.model.port.out.EmbeddingPort;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.embedding.EmbeddingModelType;
 
-@Service
-public class OpenaiEmbeddingAdapter implements EmbeddingPort {
-
+@Component
+public class OpenaiEmbeddingClient implements EmbeddingClient {
 	private final OpenAiApi openAiApi;
 
-	public OpenaiEmbeddingAdapter(OpenAiApi openAiApi) {
+	public OpenaiEmbeddingClient(OpenAiApi openAiApi) {
 		this.openAiApi = openAiApi;
 	}
+
+	@Override
+	public EmbeddingModelType getModelType() {
+		return EmbeddingModelType.OPENAI;
+	}
+
 	@Override
 	public float[] getEmbedding(String text) {
 		OpenAiEmbeddingModel openAiEmbeddingModel = new OpenAiEmbeddingModel(
