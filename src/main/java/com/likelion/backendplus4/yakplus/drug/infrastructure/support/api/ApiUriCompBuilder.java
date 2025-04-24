@@ -79,4 +79,32 @@ public class ApiUriCompBuilder {
     public URI getUriForImgApi(int pageNo) {
         return getUri(API_IMG_PATH, pageNo);
     }
+
+    public URI getUriForDetailApiShort() {
+        return UriComponentsBuilder.newInstance()
+            .scheme("https")
+            .host(HOST)
+            .port(443)
+            .path(API_DETAIL_PATH)
+            .queryParam("serviceKey", SERVICE_KEY)
+            .queryParam("type", "json")
+            .queryParam("pageNo", 1)
+            .queryParam("numOfRows", 1)
+            .build(true)
+            .toUri();
+    }
+
+    public URI getUriForImgApiShort() {
+        return UriComponentsBuilder.newInstance()
+            .scheme("https")
+            .host(HOST)
+            .port(443)
+            .path(API_IMG_PATH)
+            .queryParam("serviceKey", SERVICE_KEY)
+            .queryParam("type", "json")
+            .queryParam("pageNo", 1)
+            .queryParam("numOfRows", 1)
+            .build(true)
+            .toUri();
+    }
 }
