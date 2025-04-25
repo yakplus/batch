@@ -25,7 +25,7 @@ public class ApiResponseMapper {
 	}
 
 	public static int getTotalCountFromResponse(String response) {
-		return 50;
+		return 20;
 		// log.info("응답에서 데이터 사이즈 추출");
 		// try {
 		// 	return new ObjectMapper().readTree(response)

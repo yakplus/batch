@@ -27,7 +27,7 @@ public class ApiPageCounter {
 	}
 
 	public int getImgApiTotalPageCount() {
-		return 10;
+		return 4;
 		// URI uri = uriBuilder.getUriForImgApiShort();
 		// return getPageCountFromUri(uri);
 	}

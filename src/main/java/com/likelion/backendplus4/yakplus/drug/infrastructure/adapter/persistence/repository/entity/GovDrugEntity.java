@@ -59,7 +59,7 @@ public class GovDrugEntity {
 	@Column(name= "IMG_URL")
 	private String imageUrl;
 
-	@Column(name= "GPT_VECTOR", columnDefinition = "JSON")
+	@Column(name= "gpt_vector", columnDefinition = "JSON")
 	private String gptVector;
 
 	@Column(name= "KR_SBERT_VECTOR",columnDefinition = "JSON")

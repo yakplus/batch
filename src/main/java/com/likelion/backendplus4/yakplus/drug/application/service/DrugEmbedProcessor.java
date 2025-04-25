@@ -13,6 +13,7 @@ import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.embedding.E
 import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.entity.ApiDataDrugImgEntity;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.entity.GovDrugDetailEntity;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.entity.GovDrugEntity;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.jdbc.GovDrugJdbcRepository;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.jpa.ApiDataDrugImgRepo;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.jpa.GovDrugDetailJpaRepository;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.jpa.GovDrugJpaRepository;
@@ -28,6 +29,7 @@ public class DrugEmbedProcessor {
 	private final EmbeddingAdapter embeddingAdapter;
 	private final ApiDataDrugImgRepo apiDataDrugImgRepo;
 	private final GovDrugJpaRepository govDrugJpaRepository;
+	private final GovDrugJdbcRepository govDrugJdbcRepository;
 
 	public void startEmbedding(){
 		List<GovDrugDetailEntity> allItem = getAllItem();
@@ -52,23 +54,13 @@ public class DrugEmbedProcessor {
 			GovDrugEntity govDrugEntity = bulidGovDrugEntity(
 					govDrugDetail , openAIVector, kmbertVector, sbertVector
 			);
-
 			drugEntitys.add(govDrugEntity);
-
-			govDrugJpaRepository.save(govDrugEntity);
-			if(drugEntitys.size() > 99) {
-				saveEntitys(drugEntitys);
-			}
 		}
-
-		if(!drugEntitys.isEmpty()) {
-			saveEntitys(drugEntitys);
-		}
+		saveEntitys(drugEntitys);
 
 
 	}
 	private void saveEntitys(List<GovDrugEntity> entitys){
-		System.out.println(entitys.get(0).getGptVector());
 		govDrugJpaRepository.saveAll(entitys);
 		govDrugJpaRepository.flush();
 		entitys.clear();

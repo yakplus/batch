@@ -24,6 +24,5 @@ public class DrugScraper {
 		drugApprovalDetailScraper.requestUpdateAllRawDataByJdbc();
 		drugImageGovScraper.getAllApiData();
 		drugEmbedProcessor.startEmbedding();
-		govDrugJpaRepository.createRawDataByApiTable();
 	}
 }
