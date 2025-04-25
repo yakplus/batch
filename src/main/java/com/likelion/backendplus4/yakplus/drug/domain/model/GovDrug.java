@@ -35,4 +35,7 @@ public class GovDrug {
 	private List<String> usage;
 	private Map<String, List<String>> precaution;
 	private String imageUrl;
+	private float[] gptVector;
+	private float[] sbertVector;
+	private float[] kmBertVector;
 }

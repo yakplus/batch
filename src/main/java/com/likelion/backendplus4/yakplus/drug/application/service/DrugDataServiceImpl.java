@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.jpa.GovDrugJpaRepository;
-import com.likelion.backendplus4.yakplus.drug.infrastructure.support.mapper.DrugDataMapper;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.support.mapper.DrugDetailMapper;
 import com.likelion.backendplus4.yakplus.drug.domain.model.GovDrug;
 
 import lombok.RequiredArgsConstructor;
@@ -23,8 +23,10 @@ public class DrugDataServiceImpl implements DrugDataService {
 	@Override
 	public List<GovDrug> findAllRawDrug(Pageable pageable) {
 		log.info("findAllRawDrug called");
-		return govDrugJpaRepository.findAll(pageable).stream()
-			.map(DrugDataMapper::toDomainFromEntity)
-			.collect(toList());
+		//TODO: Detail을 전처리에서 미리 텍스트를 plain으로 만들고 통합 테이블 가져오는 것 다시 제작 필요
+		return null;
+		// return govDrugJpaRepository.findAll(pageable).stream()
+		// 	.map(DrugDetailMapper::toDomainFromEntity)
+		// 	.collect(toList());
 	}
 }

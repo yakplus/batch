@@ -22,17 +22,23 @@ public class ApiUriCompBuilder {
     private final String API_DETAIL_PATH;
     private final String API_IMG_PATH ;
     private final int NUM_OF_ROWS;
+    private final String API_KM_BERT;
+    private final String API_KR_SBERT;
 
     public ApiUriCompBuilder(@Value("${gov.host}") String host,
                             @Value("${gov.serviceKey}") String serviceKey,
                             @Value("${gov.path.detail}") String pathDetail,
                             @Value("${gov.path.img}") String pathImg,
-                            @Value("${gov.numOfRows}") int numOfRows) {
+                            @Value("${gov.numOfRows}") int numOfRows,
+                            @Value("${embed.kmbert}") String API_KM_BERT,
+                            @Value("${embed.krsbert}") String API_KR_SBERT) {
         this.HOST = host;
         this.SERVICE_KEY = serviceKey;
         this.API_DETAIL_PATH = pathDetail;
         this.API_IMG_PATH = pathImg;
         this.NUM_OF_ROWS = numOfRows;
+        this.API_KM_BERT = API_KM_BERT;
+        this.API_KR_SBERT = API_KR_SBERT;
     }
 
     /***
@@ -104,6 +110,26 @@ public class ApiUriCompBuilder {
             .queryParam("type", "json")
             .queryParam("pageNo", 1)
             .queryParam("numOfRows", 1)
+            .build(true)
+            .toUri();
+    }
+
+    public URI getUriForKmbertEmbeding() {
+        return UriComponentsBuilder.newInstance()
+            .scheme("https")
+            .host(API_KM_BERT)
+            .port(443)
+            .path("/predict")
+            .build(true)
+            .toUri();
+    }
+
+    public URI getUriForKrSbertEmbeding() {
+        return UriComponentsBuilder.newInstance()
+            .scheme("https")
+            .host(API_KR_SBERT)
+            .port(443)
+            .path("/predict")
             .build(true)
             .toUri();
     }
