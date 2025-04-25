@@ -2,9 +2,13 @@ package com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.embedding.
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
-@AllArgsConstructor
+@Setter
+@ToString
 public class EmbeddingRequestText {
 	private String text;
 }

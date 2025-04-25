@@ -2,6 +2,10 @@ package com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.embedding.
 
 import java.net.URI;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.embedding.EmbeddingModelType;
@@ -9,6 +13,7 @@ import com.likelion.backendplus4.yakplus.drug.infrastructure.support.api.ApiUriC
 
 import lombok.RequiredArgsConstructor;
 
+@Component
 @RequiredArgsConstructor
 public class KrSbertEmbeddingClient implements EmbeddingClient {
 	private final ApiUriCompBuilder apiUriCompBuilder;
@@ -26,8 +31,13 @@ public class KrSbertEmbeddingClient implements EmbeddingClient {
 	}
 
 	private float[] getEmbeddingVetor(URI embedUri, String text) {
-		EmbeddingRequestText embeddingRequestText = new EmbeddingRequestText(text);
-		return restTemplate.postForObject(embedUri, embeddingRequestText, float[].class);
+		EmbeddingRequestText embeddingRequestText = new EmbeddingRequestText();
+		embeddingRequestText.setText(text);
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
+		HttpEntity<EmbeddingRequestText> request = new HttpEntity<>(embeddingRequestText, headers);
+		return restTemplate.postForObject(embedUri, request, float[].class);
 	}
 
 	private URI getEmbeddingURI() {

@@ -30,8 +30,8 @@ public class ApiUriCompBuilder {
                             @Value("${gov.path.detail}") String pathDetail,
                             @Value("${gov.path.img}") String pathImg,
                             @Value("${gov.numOfRows}") int numOfRows,
-                            @Value("${embed.kmbert") String API_KM_BERT,
-                            @Value("${embed.krsbert") String API_KR_SBERT) {
+                            @Value("${embed.kmbert}") String API_KM_BERT,
+                            @Value("${embed.krsbert}") String API_KR_SBERT) {
         this.HOST = host;
         this.SERVICE_KEY = serviceKey;
         this.API_DETAIL_PATH = pathDetail;
@@ -117,9 +117,9 @@ public class ApiUriCompBuilder {
     public URI getUriForKmbertEmbeding() {
         return UriComponentsBuilder.newInstance()
             .scheme("https")
-            .host(HOST)
+            .host(API_KM_BERT)
             .port(443)
-            .path(API_KM_BERT)
+            .path("/predict")
             .build(true)
             .toUri();
     }
@@ -127,9 +127,9 @@ public class ApiUriCompBuilder {
     public URI getUriForKrSbertEmbeding() {
         return UriComponentsBuilder.newInstance()
             .scheme("https")
-            .host(HOST)
+            .host(API_KR_SBERT)
             .port(443)
-            .path(API_KR_SBERT)
+            .path("/predict")
             .build(true)
             .toUri();
     }

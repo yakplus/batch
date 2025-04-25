@@ -1,5 +1,6 @@
 package com.likelion.backendplus4.yakplus.drug.application.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -9,10 +10,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.likelion.backendplus4.yakplus.drug.domain.model.GovDrugDetail;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.embedding.EmbeddingAdapter;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.embedding.EmbeddingModelType;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.entity.ApiDataDrugImgEntity;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.entity.GovDrugDetailEntity;
-import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.entity.GovDrugEmbedEntity;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.entity.GovDrugEntity;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.jpa.ApiDataDrugImgRepo;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.jpa.GovDrugDetailJpaRepository;
-import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.jpa.GovDrugEmbedJpaRepository;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.jpa.GovDrugJpaRepository;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.support.mapper.DrugDetailMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -23,36 +26,80 @@ public class DrugEmbedProcessor {
 	private final EmbeddingAdapter adapter;
 	private final GovDrugDetailJpaRepository govDrugDetailJpaRepository;
 	private final EmbeddingAdapter embeddingAdapter;
-	private final GovDrugEmbedJpaRepository embeddingRepository;
+	private final ApiDataDrugImgRepo apiDataDrugImgRepo;
+	private final GovDrugJpaRepository govDrugJpaRepository;
 
 	public void startEmbedding(){
 		List<GovDrugDetailEntity> allItem = getAllItem();
+		List<GovDrugEntity> drugEntitys = new ArrayList<>();
 		for (GovDrugDetailEntity detailEntity : allItem) {
 			GovDrugDetail govDrugDetail = DrugDetailMapper.toDomainFromEntity(detailEntity);
-			Long drugId = govDrugDetail.getDrugId();
-			convertSingleStringForEfficacy(govDrugDetail.getEfficacy());
+
+			String text = convertSingleStringForEfficacy(govDrugDetail.getEfficacy());
+
+			float[] sbertVector = embeddingAdapter.getEmbedding(
+				text,
+				EmbeddingModelType.SBERT);
+
+			float[] kmbertVector = embeddingAdapter.getEmbedding(
+				text,
+				EmbeddingModelType.KM_BERT);
 
 			float[] openAIVector = embeddingAdapter.getEmbedding(
-										detailEntity.getEfficacy(),
-										EmbeddingModelType.OPENAI);
-			float[] sbertVector = embeddingAdapter.getEmbedding(
-										detailEntity.getEfficacy(),
-										EmbeddingModelType.SBERT);
-			float[] kmbertVector = embeddingAdapter.getEmbedding(
-										detailEntity.getEfficacy(),
-										EmbeddingModelType.KM_BERT);
+				text,
+				EmbeddingModelType.OPENAI);
 
+			GovDrugEntity govDrugEntity = bulidGovDrugEntity(
+					govDrugDetail , openAIVector, kmbertVector, sbertVector
+			);
 
-			embeddingRepository.save(GovDrugEmbedEntity.builder()
-				 					.drugId(drugId)
-									.gptVector(toStringFromFloatArray(openAIVector))
-									.krSbertVector(toStringFromFloatArray(sbertVector))
-									.kmBertVector(toStringFromFloatArray(kmbertVector))
-									.build());
+			drugEntitys.add(govDrugEntity);
+
+			govDrugJpaRepository.save(govDrugEntity);
+			if(drugEntitys.size() > 99) {
+				saveEntitys(drugEntitys);
+			}
 		}
 
+		if(!drugEntitys.isEmpty()) {
+			saveEntitys(drugEntitys);
+		}
+
+
+	}
+	private void saveEntitys(List<GovDrugEntity> entitys){
+		System.out.println(entitys.get(0).getGptVector());
+		govDrugJpaRepository.saveAll(entitys);
+		govDrugJpaRepository.flush();
+		entitys.clear();
 	}
 
+	private GovDrugEntity bulidGovDrugEntity(GovDrugDetail govDrugDetail, float[] openAIVector, float[] kmbertVector,
+		float[] sbertVector) {
+		return GovDrugEntity.builder()
+				.drugId(govDrugDetail.getDrugId())
+				.drugName(govDrugDetail.getDrugName())
+				.company(govDrugDetail.getCompany())
+				.permitDate(govDrugDetail.getPermitDate())
+				.isGeneral(govDrugDetail.isGeneral())
+				.materialInfo(govDrugDetail.getMaterialInfo().toString())
+				.storeMethod(govDrugDetail.getStoreMethod())
+				.validTerm(govDrugDetail.getValidTerm())
+				.efficacy(govDrugDetail.getEfficacy().toString())
+				.usage(govDrugDetail.getUsage().toString())
+				.precaution(govDrugDetail.getPrecaution().toString())
+				.imageUrl(getImageUrl(govDrugDetail.getDrugId()))
+				.gptVector(toStringFromFloatArray(openAIVector))
+				.kmBertVector(toStringFromFloatArray(kmbertVector))
+				.sbertVector(toStringFromFloatArray(sbertVector))
+				.build();
+	}
+
+	private String getImageUrl(Long drugId) {
+		ApiDataDrugImgEntity drugImgEntity =  apiDataDrugImgRepo.findById(drugId)
+											.orElseGet(() -> new ApiDataDrugImgEntity());
+			return drugImgEntity.getImgUrl();
+	}
 	private String toStringFromFloatArray(float[] openAIVector) {
 		try {
 			return new ObjectMapper().writeValueAsString(openAIVector);

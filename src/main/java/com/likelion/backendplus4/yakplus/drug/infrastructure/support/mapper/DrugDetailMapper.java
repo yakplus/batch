@@ -35,6 +35,33 @@ public class DrugDetailMapper {
 		return domain;
 	}
 
+	public static GovDrug toDomainFromEntity(GovDrugEntity e){
+		return GovDrug.builder()
+			.drugId(e.getDrugId())
+			.drugName(e.getDrugName())
+			.company(e.getCompany())
+			.permitDate(e.getPermitDate())
+			.isGeneral(e.isGeneral())
+			.materialInfo(convertMaterialInfo(e.getMaterialInfo()))
+			.storeMethod(e.getStoreMethod())
+			.validTerm(e.getValidTerm())
+			.efficacy(convertEfficacy(e.getEfficacy()))
+			.usage(getUsage(e.getUsage()))
+			.precaution(getPrecaution(e.getPrecaution()))
+			.gptVector(toArraysFromFloatString(e.getGptVector()))
+			.sbertVector(toArraysFromFloatString(e.getSbertVector()))
+			.kmBertVector(toArraysFromFloatString(e.getKmBertVector()))
+			.build();
+
+	}
+
+	private static float[] toArraysFromFloatString(String floatString){
+		try {
+			return new ObjectMapper().readValue(floatString, float[].class);
+		} catch (Exception e) {
+			throw new RuntimeException("float 배열로 변환 실패");
+		}
+	}
 	private static List<String> getUsage(String usage){
 		List<String> usages = new ArrayList<>();
 		JsonNode json = toJsonNodeFromString(usage);
@@ -140,4 +167,7 @@ public class DrugDetailMapper {
 
 		return result;
 	}
+
+
+
 }
