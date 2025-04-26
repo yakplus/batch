@@ -27,12 +27,5 @@ public class GovDrugDetail {
 	private List<String> usage;
 	private Map<String,List<String>> precaution;
 
-	public JsonNode toJson(String json) {
-		try {
-			return new ObjectMapper().readValue(json, JsonNode.class);
-		} catch (JsonProcessingException e) {
-			//TODO 에러 로그 처리 필요합니다.
-			throw new RuntimeException(e);
-		}
-	}
+
 }
