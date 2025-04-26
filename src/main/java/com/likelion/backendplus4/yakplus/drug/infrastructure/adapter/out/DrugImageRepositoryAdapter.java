@@ -20,7 +20,7 @@ public class DrugImageRepositoryAdapter implements DrugImageRepositoryPort {
 	private final ApiDataDrugImgRepo imageRepository;
 
 	@Override
-	public List<DrugImage> getAllGovDrugDetail(){
+	public List<DrugImage> getAllGovDrugImage(){
 		return imageRepository.findAll().stream()
 			.map(DrugImageMapper::toDomainFromEntity)
 			.collect(Collectors.toList());
@@ -31,6 +31,12 @@ public class DrugImageRepositoryAdapter implements DrugImageRepositoryPort {
 		return imageRepository.findById(drugId)
 			.map(DrugImageMapper::toDomainFromEntity)
 			.orElseGet(() -> getDefaultDomain());
+	}
+
+	@Override
+	public void saveAllAndFlush(List<DrugImage> imgData) {
+		imageRepository.saveAll(DrugImageMapper.toEntityListFromDomainList(imgData));
+		imageRepository.flush();
 	}
 
 	private static DrugImage getDefaultDomain() {
