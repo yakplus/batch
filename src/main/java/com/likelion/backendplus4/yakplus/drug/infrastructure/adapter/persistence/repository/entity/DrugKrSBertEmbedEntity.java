@@ -17,7 +17,7 @@ public class DrugKrSBertEmbedEntity {
 	@Id
 	@Column( name= "ITEM_SEQ")
 	private Long drugId;
-	
+
 	@Column( name= "KR_SBERT_VECTOR", columnDefinition = "JSON")
 	private String krSbertVector;
 }
