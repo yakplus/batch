@@ -1,4 +1,4 @@
-package com.likelion.backendplus4.yakplus.drug.application.service.scraper;
+package com.likelion.backendplus4.yakplus.drug.infrastructure.support.mapper;
 
 import static com.likelion.backendplus4.yakplus.common.util.log.LogUtil.*;
 
@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,7 +18,8 @@ import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence
 import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.entity.GovDrugEntity;
 import com.likelion.backendplus4.yakplus.drug.domain.model.GovDrug;
 
-public class DocDataParser {
+public class DrugDetailMapper {
+
 	public static GovDrugDetail toDomainFromEntity(DrugDetailEntity e){
 		GovDrugDetail domain = GovDrugDetail.builder()
 			.drugId(e.getDrugId())
@@ -168,6 +170,13 @@ public class DocDataParser {
 		return result;
 	}
 
-
+	public JsonNode toJson(String json) {
+		try {
+			return new ObjectMapper().readValue(json, JsonNode.class);
+		} catch (JsonProcessingException e) {
+			//TODO 에러 로그 처리 필요합니다.
+			throw new RuntimeException(e);
+		}
+	}
 
 }

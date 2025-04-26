@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.entity.DrugGptEmbedEntity;
 
 @Repository
-public interface GovDrugEmbedJpaRepository  extends JpaRepository<DrugGptEmbedEntity,Long> {
+public interface GovDrugGptEmbedJpaRepository extends JpaRepository<DrugGptEmbedEntity,Long> {
 }

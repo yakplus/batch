@@ -15,7 +15,7 @@ import lombok.ToString;
 public class ApiDataDrugImgEntity {
 	@Id
 	@JsonProperty("ITEM_SEQ")
-	private Long seq;
+	private Long drugId;
 
 	@JsonProperty("BIG_PRDT_IMG_URL")
 	private String imgUrl;

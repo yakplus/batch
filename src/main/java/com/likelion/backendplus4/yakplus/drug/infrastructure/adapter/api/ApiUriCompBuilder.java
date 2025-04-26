@@ -1,4 +1,4 @@
-package com.likelion.backendplus4.yakplus.drug.infrastructure.support.api;
+package com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.api;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

@@ -1,6 +1,4 @@
-package com.likelion.backendplus4.yakplus.drug.infrastructure.support.api;
-
-import org.springframework.stereotype.Component;
+package com.likelion.backendplus4.yakplus.drug.infrastructure.support.mapper;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
