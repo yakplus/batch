@@ -20,7 +20,7 @@ public class DrugImageRepositoryAdapter implements DrugImageRepositoryPort {
 	private final ApiDataDrugImgRepo imageRepository;
 
 	@Override
-	public List<DrugImage> getAllGovDrugDetail(){
+	public List<DrugImage> getAllGovDrugImage(){
 		return imageRepository.findAll().stream()
 			.map(DrugImageMapper::toDomainFromEntity)
 			.collect(Collectors.toList());
