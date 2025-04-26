@@ -9,11 +9,11 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "GOV_EMBED_DATA")
+@Table(name = "DRUG_EMBED_KR-SBERT")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DrugKrSBertEmbedEntity {
+public class DrugKrSbertEmbedEntity {
 	@Id
 	@Column( name= "ITEM_SEQ")
 	private Long drugId;

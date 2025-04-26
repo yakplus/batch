@@ -9,7 +9,7 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "GOV_EMBED_DATA")
+@Table(name = "DRUG_EMBED_KM_BERT")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
