@@ -49,8 +49,7 @@ public class DrugDetailScraperService implements DrugDetailScraperUsecase {
 		int savedCountWithoutDuplicates = 0;
 
 		for(int i=1;i<=totalPageCount;i++){
-			JsonNode items = apiRequestPort.getAllDetailData(1);
-			List<DrugDetailRequest> drugs = toListFromJson(items);
+			JsonNode items = apiRequestPort.getAllDetailData(i);
 			receivedCount += drugs.size();
 
 			// item_seq 기준 중복 제거된 약품 개수 유지 (실제 db에 저장된 데이터와 같은 지 비교용)
