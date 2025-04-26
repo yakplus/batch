@@ -2,6 +2,7 @@ package com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistenc
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,4 +16,6 @@ public interface GovDrugDetailJpaRepository extends JpaRepository<GovDrugDetailE
 	@Override
 	@Transactional
 	<S extends GovDrugDetailEntity> List<S> saveAllAndFlush(Iterable<S> entities);
+
+	List<GovDrugDetailEntity> findByDrugIdGreaterThanOrderByDrugIdAsc(Long drugIdIsGreaterThan, Pageable pageable);
 }
