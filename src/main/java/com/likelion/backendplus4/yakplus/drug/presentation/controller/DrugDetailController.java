@@ -5,7 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import com.likelion.backendplus4.yakplus.drug.application.service.DrugApprovalDetailScraper;
+import com.likelion.backendplus4.yakplus.drug.application.service.scraper.detail.DrugApprovalDetailScraper;
 
 import lombok.RequiredArgsConstructor;
 

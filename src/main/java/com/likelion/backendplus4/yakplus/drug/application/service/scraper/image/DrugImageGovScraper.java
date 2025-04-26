@@ -1,4 +1,4 @@
-package com.likelion.backendplus4.yakplus.drug.application.service;
+package com.likelion.backendplus4.yakplus.drug.application.service.scraper.image;
 
 import java.net.URI;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.likelion.backendplus4.yakplus.drug.application.service;
+package com.likelion.backendplus4.yakplus.drug.application.service.scraper.embed;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,17 +7,17 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.likelion.backendplus4.yakplus.drug.application.service.scraper.DocDataParser;
 import com.likelion.backendplus4.yakplus.drug.domain.model.GovDrugDetail;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.embedding.EmbeddingAdapter;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.embedding.EmbeddingModelType;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.entity.ApiDataDrugImgEntity;
-import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.entity.GovDrugDetailEntity;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.entity.DrugDetailEntity;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.entity.GovDrugEntity;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.jdbc.GovDrugJdbcRepository;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.jpa.ApiDataDrugImgRepo;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.jpa.GovDrugDetailJpaRepository;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.jpa.GovDrugJpaRepository;
-import com.likelion.backendplus4.yakplus.drug.infrastructure.support.mapper.DrugDetailMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -32,10 +32,10 @@ public class DrugEmbedProcessor {
 	private final GovDrugJdbcRepository govDrugJdbcRepository;
 
 	public void startEmbedding(){
-		List<GovDrugDetailEntity> allItem = getAllItem();
+		List<DrugDetailEntity> allItem = getAllItem();
 		List<GovDrugEntity> drugEntitys = new ArrayList<>();
-		for (GovDrugDetailEntity detailEntity : allItem) {
-			GovDrugDetail govDrugDetail = DrugDetailMapper.toDomainFromEntity(detailEntity);
+		for (DrugDetailEntity detailEntity : allItem) {
+			GovDrugDetail govDrugDetail = DocDataParser.toDomainFromEntity(detailEntity);
 
 			String text = convertSingleStringForEfficacy(govDrugDetail.getEfficacy());
 
@@ -110,7 +110,7 @@ public class DrugEmbedProcessor {
 		return stringBuilder.toString();
 	}
 
-	private List<GovDrugDetailEntity> getAllItem() {
+	private List<DrugDetailEntity> getAllItem() {
 		return govDrugDetailJpaRepository.findAll();
 	}
 }

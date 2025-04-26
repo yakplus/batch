@@ -6,16 +6,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.entity.GovDrugDetailEntity;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.entity.DrugDetailEntity;
 
 import jakarta.transaction.Transactional;
 
 @Repository
-public interface GovDrugDetailJpaRepository extends JpaRepository<GovDrugDetailEntity,Long> {
+public interface GovDrugDetailJpaRepository extends JpaRepository<DrugDetailEntity,Long> {
 
 	@Override
 	@Transactional
-	<S extends GovDrugDetailEntity> List<S> saveAllAndFlush(Iterable<S> entities);
+	<S extends DrugDetailEntity> List<S> saveAllAndFlush(Iterable<S> entities);
 
-	List<GovDrugDetailEntity> findByDrugIdGreaterThanOrderByDrugIdAsc(Long drugIdIsGreaterThan, Pageable pageable);
+	List<DrugDetailEntity> findByDrugIdGreaterThanOrderByDrugIdAsc(Long drugIdIsGreaterThan, Pageable pageable);
 }

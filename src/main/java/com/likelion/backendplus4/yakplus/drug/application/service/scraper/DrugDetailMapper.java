@@ -1,4 +1,4 @@
-package com.likelion.backendplus4.yakplus.drug.infrastructure.support.mapper;
+package com.likelion.backendplus4.yakplus.drug.application.service.scraper;
 
 import static com.likelion.backendplus4.yakplus.common.util.log.LogUtil.*;
 
@@ -13,12 +13,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.likelion.backendplus4.yakplus.common.util.log.LogLevel;
 import com.likelion.backendplus4.yakplus.drug.domain.model.GovDrugDetail;
 import com.likelion.backendplus4.yakplus.drug.domain.model.vo.Material;
-import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.entity.GovDrugDetailEntity;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.entity.DrugDetailEntity;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.entity.GovDrugEntity;
 import com.likelion.backendplus4.yakplus.drug.domain.model.GovDrug;
 
-public class DrugDetailMapper {
-	public static GovDrugDetail toDomainFromEntity(GovDrugDetailEntity e){
+public class DocDataParser {
+	public static GovDrugDetail toDomainFromEntity(DrugDetailEntity e){
 		GovDrugDetail domain = GovDrugDetail.builder()
 			.drugId(e.getDrugId())
 			.drugName(e.getDrugName())

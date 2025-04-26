@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.entity.GovDrugDetailEntity;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.entity.DrugDetailEntity;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.entity.GovDrugEntity;
 
 import jakarta.transaction.Transactional;
@@ -17,7 +17,7 @@ public class GovDrugJdbcRepository {
 	private final JdbcTemplate jdbc;
 
 	@Transactional
-	public void saveAll(List<GovDrugDetailEntity> entities) {
+	public void saveAll(List<DrugDetailEntity> entities) {
 		String sql = ""
 			+ "INSERT INTO gov_drug_detail "
 			+ "  (ITEM_SEQ, ITEM_NAME, ENTP_NAME, "

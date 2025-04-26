@@ -9,15 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.likelion.backendplus4.yakplus.drug.application.service.DrugApprovalDetailScraper;
 import com.likelion.backendplus4.yakplus.drug.application.service.DrugDataService;
 import com.likelion.backendplus4.yakplus.drug.application.service.scraper.DrugScraper;
 import com.likelion.backendplus4.yakplus.drug.domain.model.GovDrug;
 import com.likelion.backendplus4.yakplus.drug.domain.model.port.out.EmbeddingPort;
 
 import lombok.RequiredArgsConstructor;
-import com.likelion.backendplus4.yakplus.common.util.log.LogLevel;
-import com.likelion.backendplus4.yakplus.common.util.log.LogMessage;
+
 import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.embedding.EmbeddingModelType;
 import com.likelion.backendplus4.yakplus.response.ApiResponse;
 

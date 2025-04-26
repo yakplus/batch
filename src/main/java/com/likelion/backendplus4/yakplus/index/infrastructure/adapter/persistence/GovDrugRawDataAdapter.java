@@ -1,7 +1,6 @@
 package com.likelion.backendplus4.yakplus.index.infrastructure.adapter.persistence;
 
-import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.entity.GovDrugDetailEntity;
-import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.entity.GovDrugEntity;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.entity.DrugDetailEntity;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.jpa.GovDrugDetailJpaRepository;
 import com.likelion.backendplus4.yakplus.index.application.port.out.GovDrugRawDataPort;
 import com.likelion.backendplus4.yakplus.index.exception.IndexException;
@@ -41,7 +40,7 @@ public class GovDrugRawDataAdapter implements GovDrugRawDataPort {
     @Override
     public List<Drug> fetchRawData(Long lastSeq, Pageable pageable) {
         long startSeq = getStartSeq(lastSeq);
-        List<GovDrugDetailEntity> govDrugRawDataEntities = getGovDrugRawDataEntities(startSeq, pageable);
+        List<DrugDetailEntity> govDrugRawDataEntities = getGovDrugRawDataEntities(startSeq, pageable);
 
         return convertToDrugDomains(govDrugRawDataEntities);
     }
@@ -76,7 +75,7 @@ public class GovDrugRawDataAdapter implements GovDrugRawDataPort {
      * @since 2025-04-22
      * @modified 2025-04-24
      */
-    private List<GovDrugDetailEntity> getGovDrugRawDataEntities(Long lastSeq, Pageable pageable) {
+    private List<DrugDetailEntity> getGovDrugRawDataEntities(Long lastSeq, Pageable pageable) {
         try {
             return rawDataJpaRepository.findByDrugIdGreaterThanOrderByDrugIdAsc(lastSeq, pageable);
         } catch (Exception e) {
@@ -96,7 +95,7 @@ public class GovDrugRawDataAdapter implements GovDrugRawDataPort {
      * @since 2025-04-22
      * @modified 2025-04-24
      */
-    private List<Drug> convertToDrugDomains(List<GovDrugDetailEntity> rawData) {
+    private List<Drug> convertToDrugDomains(List<DrugDetailEntity> rawData) {
         return rawData.stream()
                 .map(this::mapToDrugDomain)
                 .collect(Collectors.toList());
@@ -111,7 +110,7 @@ public class GovDrugRawDataAdapter implements GovDrugRawDataPort {
      * @since 2025-04-22
      * @modified 2025-04-24
      */
-    private Drug mapToDrugDomain(GovDrugDetailEntity entity) {
+    private Drug mapToDrugDomain(DrugDetailEntity entity) {
         //TODO: Mapper로 변경 필요
         return Drug.builder()
                 // .drugId(entity.getItemSeq())

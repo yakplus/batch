@@ -13,17 +13,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GovDrugEmbedEntity {
+public class DrugGptEmbedEntity {
 	@Id
 	@Column( name= "ITEM_SEQ")
 	private Long drugId;
 
 	@Column( name= "GPT_VECTOR", columnDefinition = "JSON")
 	private String gptVector;
-
-	@Column( name= "KR_SBERT_VECTOR", columnDefinition = "JSON")
-	private String krSbertVector;
-
-	@Column( name= "KM_BERT_VECTOR", columnDefinition = "JSON")
-	private String kmBertVector;
 }

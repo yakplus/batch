@@ -23,7 +23,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @ToString
 @Table(name = "gov_drug_detail")
-public class GovDrugDetailEntity {
+public class DrugDetailEntity {
 
 	@Id
 	@JsonProperty("ITEM_SEQ")
@@ -67,7 +67,7 @@ public class GovDrugDetailEntity {
 	private String precaution;
 
 	@JsonCreator
-	public GovDrugDetailEntity(@JsonProperty("ETC_OTC_CODE") String drugType) {
+	public DrugDetailEntity(@JsonProperty("ETC_OTC_CODE") String drugType) {
 		this.isGeneral = !"전문의약품".equals(drugType);
 	}
 

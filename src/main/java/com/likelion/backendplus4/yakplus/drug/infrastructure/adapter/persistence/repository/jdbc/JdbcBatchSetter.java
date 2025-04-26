@@ -9,18 +9,18 @@ import java.util.List;
 
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 
-import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.entity.GovDrugDetailEntity;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.entity.DrugDetailEntity;
 
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class JdbcBatchSetter implements BatchPreparedStatementSetter {
 
-	private final List<GovDrugDetailEntity> entities;
+	private final List<DrugDetailEntity> entities;
 
 	@Override
 	public void setValues(PreparedStatement ps, int i) throws SQLException {
-		GovDrugDetailEntity e = entities.get(i);
+		DrugDetailEntity e = entities.get(i);
 		ps.setLong   (1, e.getDrugId());
 		ps.setString (2, e.getDrugName());
 		ps.setString (3, e.getCompany());

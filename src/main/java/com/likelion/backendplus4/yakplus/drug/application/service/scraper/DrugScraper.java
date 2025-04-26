@@ -3,10 +3,9 @@ package com.likelion.backendplus4.yakplus.drug.application.service.scraper;
 import org.springframework.stereotype.Service;
 import static com.likelion.backendplus4.yakplus.common.util.log.LogUtil.log;
 
-import com.likelion.backendplus4.yakplus.drug.application.service.DrugApprovalDetailScraper;
-import com.likelion.backendplus4.yakplus.drug.application.service.DrugEmbedProcessor;
-import com.likelion.backendplus4.yakplus.drug.application.service.DrugImageGovScraper;
-import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.jpa.GovDrugDetailJpaRepository;
+import com.likelion.backendplus4.yakplus.drug.application.service.scraper.detail.DrugApprovalDetailScraper;
+import com.likelion.backendplus4.yakplus.drug.application.service.scraper.embed.DrugEmbedProcessor;
+import com.likelion.backendplus4.yakplus.drug.application.service.scraper.image.DrugImageGovScraper;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.jpa.GovDrugJpaRepository;
 
 import lombok.RequiredArgsConstructor;
