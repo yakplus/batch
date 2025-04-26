@@ -33,6 +33,12 @@ public class DrugImageRepositoryAdapter implements DrugImageRepositoryPort {
 			.orElseGet(() -> getDefaultDomain());
 	}
 
+	@Override
+	public void saveAllAndFlush(List<DrugImage> imgData) {
+		imageRepository.saveAll(DrugImageMapper.toEntityListFromDomainList(imgData));
+		imageRepository.flush();
+	}
+
 	private static DrugImage getDefaultDomain() {
 		return DrugImageMapper.toDomainFromEntity(new ApiDataDrugImgEntity());
 	}

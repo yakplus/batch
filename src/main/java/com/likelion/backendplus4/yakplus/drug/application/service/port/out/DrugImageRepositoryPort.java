@@ -10,4 +10,6 @@ public interface DrugImageRepositoryPort {
 	List<DrugImage> getAllGovDrugDetail();
 
 	DrugImage getById(Long drugId);
+
+	void saveAllAndFlush(List<DrugImage> imgData);
 }
