@@ -20,10 +20,8 @@ import lombok.ToString;
 @Table(name="API_DATA_DRUG_IMG")
 public class ApiDataDrugImgEntity {
 	@Id
-	@JsonProperty("ITEM_SEQ")
 	private Long drugId;
 
-	@JsonProperty("BIG_PRDT_IMG_URL")
 	private String imgUrl;
 
 
