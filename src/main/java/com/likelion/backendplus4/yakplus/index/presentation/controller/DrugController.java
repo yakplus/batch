@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.likelion.backendplus4.yakplus.common.util.log.LogUtil.log;
+
 /**
  * 약품 인덱싱 API 엔드포인트를 제공하는 컨트롤러 클래스
  *
@@ -28,8 +30,9 @@ public class DrugController {
      * @modified 2025-04-24
      * @since 2025-04-22
      */
-    @PostMapping("/index")
+    @PostMapping("/save")
     public void index(@RequestBody IndexRequest request) {
+        log("index 컨트롤러 요청 수신" + request.toString());
         indexUseCase.index(request);
     }
 }
