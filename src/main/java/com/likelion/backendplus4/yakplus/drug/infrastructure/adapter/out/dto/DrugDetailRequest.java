@@ -27,6 +27,8 @@ public class DrugDetailRequest {
 
 	private boolean isGeneral;
 	private String materialInfo;
+
+	@JsonProperty("STORAGE_METHOD")
 	private String storeMethod;
 
 	@JsonProperty("VALID_TERM")
