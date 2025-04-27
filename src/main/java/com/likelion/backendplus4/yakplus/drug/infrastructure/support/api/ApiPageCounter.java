@@ -1,4 +1,4 @@
-package com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.api;
+package com.likelion.backendplus4.yakplus.drug.infrastructure.support.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,13 +22,13 @@ public class ApiPageCounter {
 	}
 
 	public int getDetailApiTotalPageCount() {
-		return 5;
+		return 4;
 		// URI uri = uriBuilder.getUriForDetailApiShort();
 		// return getPageCountFromUri(uri);
 	}
 
 	public int getImgApiTotalPageCount() {
-		return 5;
+		return 4;
 		// URI uri = uriBuilder.getUriForImgApiShort();
 		// return getPageCountFromUri(uri);
 	}

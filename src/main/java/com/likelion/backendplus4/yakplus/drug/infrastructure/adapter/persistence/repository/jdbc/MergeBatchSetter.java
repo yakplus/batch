@@ -9,18 +9,18 @@ import java.util.List;
 
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 
-import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.entity.GovDrugEntity;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.entity.DrugRawDataEntity;
 
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class MergeBatchSetter implements BatchPreparedStatementSetter {
 
-	private final List<GovDrugEntity> entities;
+	private final List<DrugRawDataEntity> entities;
 
 	@Override
 	public void setValues(PreparedStatement ps, int i) throws SQLException {
-		GovDrugEntity e = entities.get(i);
+		DrugRawDataEntity e = entities.get(i);
 		ps.setLong   (1, e.getDrugId());
 		ps.setString (2, e.getDrugName());
 		ps.setString (3, e.getCompany());
@@ -40,9 +40,6 @@ public class MergeBatchSetter implements BatchPreparedStatementSetter {
 		ps.setString (10, e.getUsage());
 		ps.setString (11, e.getPrecaution());
 		ps.setString(12, e.getImageUrl());
-		ps.setString(13, e.getGptVector());
-		ps.setString(14, e.getSbertVector());
-		ps.setString(15, e.getKmBertVector());
 	}
 
 	@Override

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.likelion.backendplus4.yakplus.drug.application.service.DrugDataService;
 import com.likelion.backendplus4.yakplus.drug.application.service.scraper.DrugScraper;
-import com.likelion.backendplus4.yakplus.drug.domain.model.GovDrug;
+import com.likelion.backendplus4.yakplus.drug.domain.model.Drug;
 import com.likelion.backendplus4.yakplus.drug.domain.model.port.out.EmbeddingPort;
 
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class DrugDataTestController {
 	private final DrugScraper scraperUseCase;
 
 	@GetMapping("/data/all")
-	public List<GovDrug> getAllData(Pageable pageable){
+	public List<Drug> getAllData(Pageable pageable){
 		return dragDataService.findAllRawDrug(pageable);
 	}
 

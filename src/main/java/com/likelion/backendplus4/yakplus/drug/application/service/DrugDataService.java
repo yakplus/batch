@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.data.domain.Pageable;
 
-import com.likelion.backendplus4.yakplus.drug.domain.model.GovDrug;
+import com.likelion.backendplus4.yakplus.drug.domain.model.Drug;
 
 public interface DrugDataService {
-	List<GovDrug> findAllRawDrug(Pageable pageable);
+	List<Drug> findAllRawDrug(Pageable pageable);
 }

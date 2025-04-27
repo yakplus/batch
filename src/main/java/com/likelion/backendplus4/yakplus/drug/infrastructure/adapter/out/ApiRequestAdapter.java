@@ -5,9 +5,9 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.likelion.backendplus4.yakplus.drug.application.service.port.out.ApiRequestPort;
-import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.api.ApiPageCounter;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.support.api.ApiPageCounter;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.support.api.ApiUriCompBuilder;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.support.mapper.ApiResponseMapper;
-import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.api.ApiUriCompBuilder;
 
 import lombok.RequiredArgsConstructor;
 
