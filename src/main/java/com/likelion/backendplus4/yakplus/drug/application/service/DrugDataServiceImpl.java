@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.jpa.GovDrugJpaRepository;
-import com.likelion.backendplus4.yakplus.drug.domain.model.GovDrug;
+import com.likelion.backendplus4.yakplus.drug.domain.model.Drug;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +18,7 @@ public class DrugDataServiceImpl implements DrugDataService {
 	private final GovDrugJpaRepository govDrugJpaRepository;
 
 	@Override
-	public List<GovDrug> findAllRawDrug(Pageable pageable) {
+	public List<Drug> findAllRawDrug(Pageable pageable) {
 		log.info("findAllRawDrug called");
 		//TODO: Detail을 전처리에서 미리 텍스트를 plain으로 만들고 통합 테이블 가져오는 것 다시 제작 필요
 		return null;

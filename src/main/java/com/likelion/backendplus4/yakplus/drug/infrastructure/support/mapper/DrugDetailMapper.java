@@ -15,8 +15,8 @@ import com.likelion.backendplus4.yakplus.common.util.log.LogLevel;
 import com.likelion.backendplus4.yakplus.drug.domain.model.GovDrugDetail;
 import com.likelion.backendplus4.yakplus.drug.domain.model.vo.Material;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.entity.DrugDetailEntity;
-import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.entity.GovDrugEntity;
-import com.likelion.backendplus4.yakplus.drug.domain.model.GovDrug;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.entity.DrugRawDataEntity;
+import com.likelion.backendplus4.yakplus.drug.domain.model.Drug;
 
 public class DrugDetailMapper {
 
@@ -37,8 +37,8 @@ public class DrugDetailMapper {
 		return domain;
 	}
 
-	public static GovDrug toDomainFromEntity(GovDrugEntity e){
-		return GovDrug.builder()
+	public static Drug toDomainFromEntity(DrugRawDataEntity e){
+		return Drug.builder()
 			.drugId(e.getDrugId())
 			.drugName(e.getDrugName())
 			.company(e.getCompany())
@@ -50,9 +50,6 @@ public class DrugDetailMapper {
 			.efficacy(convertEfficacy(e.getEfficacy()))
 			.usage(getUsage(e.getUsage()))
 			.precaution(getPrecaution(e.getPrecaution()))
-			.gptVector(toArraysFromFloatString(e.getGptVector()))
-			.sbertVector(toArraysFromFloatString(e.getSbertVector()))
-			.kmBertVector(toArraysFromFloatString(e.getKmBertVector()))
 			.build();
 
 	}

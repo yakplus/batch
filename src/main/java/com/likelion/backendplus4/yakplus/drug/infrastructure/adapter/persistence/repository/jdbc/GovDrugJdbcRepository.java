@@ -6,7 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.entity.DrugDetailEntity;
-import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.entity.GovDrugEntity;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.entity.DrugRawDataEntity;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +40,7 @@ public class GovDrugJdbcRepository {
 	}
 
 	@Transactional
-	public void mergeAll(List<GovDrugEntity> entities) {
+	public void mergeAll(List<DrugRawDataEntity> entities) {
 		String sql = ""
 			+ "INSERT INTO gov_drug_raw_data "
 			+ "  (ITEM_SEQ, ITEM_NAME, ENTP_NAME, "

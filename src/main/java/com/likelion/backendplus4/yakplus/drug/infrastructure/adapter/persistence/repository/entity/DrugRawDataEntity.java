@@ -1,7 +1,6 @@
 package com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.entity;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -20,7 +19,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name="GOV_DRUG_RAW_DATA")
-public class GovDrugEntity {
+public class DrugRawDataEntity {
 	@Id
 	@Column(name="ITEM_SEQ")
 	private Long drugId;
@@ -58,13 +57,4 @@ public class GovDrugEntity {
 
 	@Column(name= "IMG_URL")
 	private String imageUrl;
-
-	@Column(name= "gpt_vector", columnDefinition = "JSON")
-	private String gptVector;
-
-	@Column(name= "KR_SBERT_VECTOR",columnDefinition = "JSON")
-	private String sbertVector;
-
-	@Column(name= "KM_BERT_VECTOR",columnDefinition = "JSON")
-	private String kmBertVector;
 }

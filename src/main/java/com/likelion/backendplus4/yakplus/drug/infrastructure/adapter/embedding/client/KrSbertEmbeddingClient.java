@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.embedding.EmbeddingModelType;
-import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.api.ApiUriCompBuilder;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.support.api.ApiUriCompBuilder;
 
 import lombok.RequiredArgsConstructor;
 

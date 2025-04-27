@@ -3,7 +3,10 @@ package com.likelion.backendplus4.yakplus.drug.application.service.scraper;
 import org.springframework.stereotype.Service;
 import static com.likelion.backendplus4.yakplus.common.util.log.LogUtil.log;
 
+import com.likelion.backendplus4.yakplus.drug.application.service.port.in.DrugCombineUsecase;
 import com.likelion.backendplus4.yakplus.drug.application.service.port.in.DrugDetailScraperUsecase;
+import com.likelion.backendplus4.yakplus.drug.application.service.port.in.DrugImageScraperUsecase;
+import com.likelion.backendplus4.yakplus.drug.application.service.scraper.combiner.DrugCombiner;
 import com.likelion.backendplus4.yakplus.drug.application.service.scraper.embed.DrugEmbedProcessor;
 import com.likelion.backendplus4.yakplus.drug.application.service.scraper.image.DrugImageGovScraper;
 
@@ -23,13 +26,15 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class DrugScraper {
-	private final DrugImageGovScraper drugImageGovScraper;
+	private final DrugImageScraperUsecase drugImageScraperUsecase;
 	private final DrugDetailScraperUsecase drugDetailScraperUsecase;
+	private final DrugCombineUsecase drugCombineUsecase;
 	private final DrugEmbedProcessor drugEmbedProcessor;
 
 	public void scraperStart(){
 		drugDetailScraperUsecase.requestAllData();
-		drugImageGovScraper.getAllApiData();
+		drugImageScraperUsecase.getAllApiData();
+		drugCombineUsecase.mergeTable();
 		drugEmbedProcessor.startEmbedding();
 	}
 }
