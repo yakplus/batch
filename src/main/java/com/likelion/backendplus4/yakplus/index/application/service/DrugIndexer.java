@@ -20,6 +20,7 @@ import java.util.List;
  * @since 2025-04-22
  * @modified 2025-04-27
  * 25.04.27 - esIndexname을 인자로 받아 saveAll 메서드에 전달하도록 수정
+ *          - itemSeq -> drugId로 수정
  */
 @Service
 @RequiredArgsConstructor

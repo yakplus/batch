@@ -23,6 +23,8 @@ import java.util.Map;
  *
  * @since 2025-04-22
  * @modified 2025-04-27
+ * 25.04.27 - saveAll()를 Bulk 요청으로 전환
+ * 			- buildBulkRequestBody(), createBulkRequest() 메서드 추가
  */
 @Component
 public class ElasticsearchDrugAdapter implements DrugIndexRepositoryPort {
