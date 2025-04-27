@@ -1,6 +1,7 @@
 package com.likelion.backendplus4.yakplus.index.infrastructure.adapter.persistence;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.likelion.backendplus4.yakplus.common.util.log.LogLevel;
 import com.likelion.backendplus4.yakplus.index.application.port.out.DrugIndexRepositoryPort;
 import com.likelion.backendplus4.yakplus.index.domain.model.Drug;
 import com.likelion.backendplus4.yakplus.index.exception.IndexException;
@@ -56,6 +57,7 @@ public class ElasticsearchDrugAdapter implements DrugIndexRepositoryPort {
             restClient.performRequest(bulkRequest);
             log("saveAll() 메서드 완료, 인덱스 이름: " + esIndexName + ", Drug 개수: " + drugs.size());
         } catch (Exception e) {
+            log(LogLevel.ERROR, "Elasticsearch 색인 처리 중 오류 발생", e);
             throw new IndexException(IndexErrorCode.ES_SAVE_ERROR);
         }
     }
