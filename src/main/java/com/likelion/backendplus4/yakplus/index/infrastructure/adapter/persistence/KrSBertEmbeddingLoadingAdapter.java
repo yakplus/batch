@@ -31,7 +31,7 @@ public class KrSBertEmbeddingLoadingAdapter implements EmbeddingLoadingPort {
         List<DrugRawDataEntity> rawDataEntities = govDrugJpaRepository.findAll();
         List<DrugKrSbertEmbedEntity> drugKrSBertEmbedEntities = govDrugKrSbertEmbedJpaRepository.findAll();
 
-        // drugKmBertEmbedEntities를 Map으로 변환 (key: drugId)
+        // drugKrSBertEmbedEntities를 Map으로 변환 (key: drugId)
         Map<Long, DrugKrSbertEmbedEntity> krSBertEmbedMap = new HashMap<>();
         for (DrugKrSbertEmbedEntity embed : drugKrSBertEmbedEntities) {
             krSBertEmbedMap.put(embed.getDrugId(), embed);
@@ -54,51 +54,15 @@ public class KrSBertEmbeddingLoadingAdapter implements EmbeddingLoadingPort {
                 .company(drugEntity.getCompany())
                 .permitDate(drugEntity.getPermitDate())
                 .isGeneral(drugEntity.isGeneral())
-                .materialInfo(parseMaterials(drugEntity.getMaterialInfo()))
+                .materialInfo(DrugMapper.parseMaterials(drugEntity.getMaterialInfo()))
                 .storeMethod(drugEntity.getStoreMethod())
                 .validTerm(drugEntity.getValidTerm())
-                .efficacy(parseStringToList(drugEntity.getEfficacy()))
-                .usage(parseStringToList(drugEntity.getUsage()))
-                .precaution(parsePrecaution(drugEntity.getPrecaution()))
+                .efficacy(DrugMapper.parseStringToList(drugEntity.getEfficacy()))
+                .usage(DrugMapper.parseStringToList(drugEntity.getUsage()))
+                .precaution(DrugMapper.parsePrecaution(drugEntity.getPrecaution()))
                 .imageUrl(drugEntity.getImageUrl())
-                .vector(parseJsonToFloatArray(embedEntity.getKrSbertVector()))
+                .vector(DrugMapper.parseJsonToFloatArray(embedEntity.getKrSbertVector()))
                 .build();
-    }
-
-    public static List<Material> parseMaterials(String json) {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.readValue(json, new TypeReference<List<Material>>() {});
-        } catch (Exception e) {
-            throw new RuntimeException("Material 파싱 실패", e);
-        }
-    }
-
-    public static List<String> parseStringToList(String json) {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.readValue(json, new TypeReference<List<String>>() {});
-        } catch (Exception e) {
-            throw new RuntimeException("String to list 파싱 실패", e);
-        }
-    }
-
-    public static Map<String, List<String>> parsePrecaution(String json) {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.readValue(json, new TypeReference<Map<String, List<String>>>() {});
-        } catch (Exception e) {
-            throw new RuntimeException("precaution 파싱 실패", e);
-        }
-    }
-
-    public static float[] parseJsonToFloatArray(String json) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, float[].class);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to parse vector JSON", e);
-        }
     }
 
 }
