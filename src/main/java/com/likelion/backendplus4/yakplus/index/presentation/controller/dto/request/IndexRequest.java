@@ -4,9 +4,10 @@ package com.likelion.backendplus4.yakplus.index.presentation.controller.dto.requ
  * 인덱싱 요청 정보 DTO
  *
  * @since 2025-04-22
- * @modified 2025-04-24
+ * @modified 2025-04-27
+ * 25.04.27 - itemSeq -> drugId로 수정
  */
 public record IndexRequest(
-        Long lastSeq,
+        Long lastDrugId,
         int limit) {
 }
