@@ -3,7 +3,7 @@ package com.likelion.backendplus4.yakplus.index.application.service;
 import com.likelion.backendplus4.yakplus.index.application.port.in.IndexUseCase;
 import com.likelion.backendplus4.yakplus.index.application.port.out.DrugIndexRepositoryPort;
 import com.likelion.backendplus4.yakplus.index.application.port.out.GovDrugRawDataPort;
-import com.likelion.backendplus4.yakplus.index.domain.model.Drug;
+import com.likelion.backendplus4.yakplus.drug.domain.model.Drug;
 import com.likelion.backendplus4.yakplus.index.presentation.controller.dto.request.IndexRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

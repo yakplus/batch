@@ -7,7 +7,7 @@ import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.reposit
 import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.repository.jpa.GovDrugJpaRepository;
 import com.likelion.backendplus4.yakplus.index.application.port.out.EmbeddingLoadingPort;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -15,9 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Repository
+@Repository("gptAdapter")
 @RequiredArgsConstructor
-@Qualifier("gptAdapter")
 public class GptEmbeddingLoadingAdapter implements EmbeddingLoadingPort {
     private final GovDrugGptEmbedJpaRepository govDrugGptEmbedJpaRepository;
     private final GovDrugJpaRepository govDrugJpaRepository;
@@ -27,6 +26,27 @@ public class GptEmbeddingLoadingAdapter implements EmbeddingLoadingPort {
     public List<Drug> loadAllEmbeddings() {
         List<DrugRawDataEntity> rawDataEntities = govDrugJpaRepository.findAll();
         List<DrugGptEmbedEntity> drugGptEmbedEntities = govDrugGptEmbedJpaRepository.findAll();
+
+        // drugGptEmbedEntities를 Map으로 변환 (key: drugId)
+        Map<Long, DrugGptEmbedEntity> gptEmbedMap = new HashMap<>();
+        for (DrugGptEmbedEntity embed : drugGptEmbedEntities) {
+            gptEmbedMap.put(embed.getDrugId(), embed);
+        }
+
+        List<Drug> drugs = new ArrayList<>();
+        for (DrugRawDataEntity drugRawData : rawDataEntities) {
+            DrugGptEmbedEntity embed = gptEmbedMap.get(drugRawData.getDrugId());
+            Drug drug = toDomainFromEntity(drugRawData, embed);
+            drugs.add(drug);
+        }
+
+        return drugs;
+    }
+
+    @Override
+    public List<Drug> loadEmbeddingsByPage(Pageable pageable) {
+        List<DrugRawDataEntity> rawDataEntities = govDrugJpaRepository.findAll(pageable).getContent();
+        List<DrugGptEmbedEntity> drugGptEmbedEntities = govDrugGptEmbedJpaRepository.findAll(pageable).getContent();
 
         // drugGptEmbedEntities를 Map으로 변환 (key: drugId)
         Map<Long, DrugGptEmbedEntity> gptEmbedMap = new HashMap<>();
