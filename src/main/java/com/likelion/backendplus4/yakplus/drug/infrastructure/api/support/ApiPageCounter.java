@@ -23,15 +23,13 @@ public class ApiPageCounter {
 	}
 
 	public int getDetailApiTotalPageCount() {
-		return 4;
-		// URI uri = uriBuilder.getUriForDetailApiShort();
-		// return getPageCountFromUri(uri);
+		URI uri = uriBuilder.getUriForDetailApiShort();
+		return getPageCountFromUri(uri);
 	}
 
 	public int getImgApiTotalPageCount() {
-		return 4;
-		// URI uri = uriBuilder.getUriForImgApiShort();
-		// return getPageCountFromUri(uri);
+		URI uri = uriBuilder.getUriForImgApiShort();
+		return getPageCountFromUri(uri);
 	}
 
 	private int getPageCountFromUri(URI uri) {
