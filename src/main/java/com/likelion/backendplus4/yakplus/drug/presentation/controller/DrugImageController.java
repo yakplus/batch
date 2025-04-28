@@ -3,7 +3,7 @@ package com.likelion.backendplus4.yakplus.drug.presentation.controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.likelion.backendplus4.yakplus.drug.application.service.DrugImageGovScraper;
+import com.likelion.backendplus4.yakplus.drug.application.service.scraper.image.DrugImageGovScraper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -14,6 +14,6 @@ public class DrugImageController {
 
     @GetMapping("/gov/api/parser/image/start")
     public void test(){
-        imageScraper.getApiData();
+        imageScraper.getApiData(1);
     }
 }

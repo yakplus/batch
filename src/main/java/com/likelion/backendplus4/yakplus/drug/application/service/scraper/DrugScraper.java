@@ -3,26 +3,38 @@ package com.likelion.backendplus4.yakplus.drug.application.service.scraper;
 import org.springframework.stereotype.Service;
 import static com.likelion.backendplus4.yakplus.common.util.log.LogUtil.log;
 
-import com.likelion.backendplus4.yakplus.drug.application.service.DrugApprovalDetailScraper;
-import com.likelion.backendplus4.yakplus.drug.application.service.DrugEmbedProcessor;
-import com.likelion.backendplus4.yakplus.drug.application.service.DrugImageGovScraper;
-import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.jpa.GovDrugDetailJpaRepository;
-import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.jpa.GovDrugJpaRepository;
+import com.likelion.backendplus4.yakplus.drug.application.service.port.in.DrugCombineUsecase;
+import com.likelion.backendplus4.yakplus.drug.application.service.port.in.DrugDetailScraperUsecase;
+import com.likelion.backendplus4.yakplus.drug.application.service.port.in.DrugEmbedProcessorUseCase;
+import com.likelion.backendplus4.yakplus.drug.application.service.port.in.DrugImageScraperUsecase;
+import com.likelion.backendplus4.yakplus.drug.application.service.port.in.DrugScraperUsecase;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * @class DrugScraper
+ * @description
+ * 약품 관련 데이터 수집을 담당하는 서비스 클래스
+ * 1) 약품 상세 정보
+ * 2) 약품 이미지
+ * 위 항목을 순차적으로 수집하고 전처리 작업을 거쳐 하나의 테이블로 저장한다.
+ * 약품 효능 값을 임베딩하여 각 임베딩 모델 별로 저장한다.
+ *
+ * @since 2025-04-21
+ */
 @Service
 @RequiredArgsConstructor
-public class DrugScraper {
-	private final DrugImageGovScraper drugImageGovScraper;
-	private final DrugEmbedProcessor embedProcessor;
-	private final DrugApprovalDetailScraper drugApprovalDetailScraper;
-	private final DrugEmbedProcessor drugEmbedProcessor;
-	private final GovDrugJpaRepository govDrugJpaRepository;
+public class DrugScraper implements DrugScraperUsecase{
+	private final DrugImageScraperUsecase drugImageScraperUsecase;
+	private final DrugDetailScraperUsecase drugDetailScraperUsecase;
+	private final DrugCombineUsecase drugCombineUsecase;
+	private final DrugEmbedProcessorUseCase drugEmbedProcessorUseCase;
 
+	@Override
 	public void scraperStart(){
-		drugApprovalDetailScraper.requestUpdateAllRawDataByJdbc();
-		drugImageGovScraper.getAllApiData();
-		drugEmbedProcessor.startEmbedding();
+		drugDetailScraperUsecase.requestAllData();
+		drugImageScraperUsecase.getAllApiData();
+		drugCombineUsecase.mergeTable();
+		drugEmbedProcessorUseCase.startEmbedding();
 	}
 }
