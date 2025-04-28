@@ -29,8 +29,7 @@ public class DrugCombiner implements DrugCombineUsecase {
 	private final DrugDetailRepositoryPort drugDetailRepository;
 	private final DrugImageRepositoryPort drugImageRepositoryPort;
 	private final DrugRawDataRepositoryPort	drugRawDataRepositoryPort;
-
-	@Transactional
+	
 	@Override
 	public void mergeTable(){
 		log("API 요청 결과 테이블 병합 시작: 상세 정보 + 이미지");
