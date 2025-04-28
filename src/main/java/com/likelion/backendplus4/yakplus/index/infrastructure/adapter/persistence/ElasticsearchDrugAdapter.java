@@ -6,14 +6,20 @@ import com.likelion.backendplus4.yakplus.index.application.port.out.DrugIndexRep
 import com.likelion.backendplus4.yakplus.index.domain.model.Drug;
 import com.likelion.backendplus4.yakplus.index.exception.IndexException;
 import com.likelion.backendplus4.yakplus.index.exception.error.IndexErrorCode;
+import com.likelion.backendplus4.yakplus.index.infrastructure.adapter.persistence.repository.DrugSymptomRepository;
+import com.likelion.backendplus4.yakplus.index.infrastructure.adapter.persistence.repository.document.DrugSymptomDocument;
+import com.likelion.backendplus4.yakplus.index.support.mapper.SymptomMapper;
 import org.apache.http.entity.ContentType;
 import org.apache.http.nio.entity.NStringEntity;
 import org.elasticsearch.client.Request;
 import org.elasticsearch.client.RestClient;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.likelion.backendplus4.yakplus.common.util.log.LogUtil.log;
 
@@ -29,10 +35,12 @@ import static com.likelion.backendplus4.yakplus.common.util.log.LogUtil.log;
  */
 @Component
 public class ElasticsearchDrugAdapter implements DrugIndexRepositoryPort {
+    private final DrugSymptomRepository symptomRepository;
     private final RestClient restClient;
     private final ObjectMapper objectMapper;
 
-    public ElasticsearchDrugAdapter(RestClient restClient, ObjectMapper objectMapper) {
+    public ElasticsearchDrugAdapter(DrugSymptomRepository drugSymptomRepository, RestClient restClient, ObjectMapper objectMapper) {
+        this.symptomRepository = drugSymptomRepository;
         this.restClient = restClient;
         this.objectMapper = objectMapper;
     }
@@ -60,6 +68,20 @@ public class ElasticsearchDrugAdapter implements DrugIndexRepositoryPort {
             log(LogLevel.ERROR, "Elasticsearch 색인 처리 중 오류 발생", e);
             throw new IndexException(IndexErrorCode.ES_SAVE_ERROR);
         }
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void saveAllSymptom(Page<Drug> drugs) {
+        //  도메인 → ES Document 변환
+        log("saveAllSymptom() 요청 수신");
+        List<DrugSymptomDocument> docs = drugs.stream()
+                .map(SymptomMapper::toDocument)  // 내부에서 예외 처리 됨
+                .toList();
+        log("  문서 변환 완료: count=" + docs.size());
+
+        symptomRepository.saveAll(docs);
+        log("  ES 색인 완료: count=" + docs.size());
     }
 
     /**

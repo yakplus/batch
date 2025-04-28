@@ -6,6 +6,7 @@ import com.likelion.backendplus4.yakplus.index.application.port.out.GovDrugRawDa
 import com.likelion.backendplus4.yakplus.index.domain.model.Drug;
 import com.likelion.backendplus4.yakplus.index.presentation.controller.dto.request.IndexRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -29,6 +30,7 @@ public class DrugIndexer implements IndexUseCase {
     private final GovDrugRawDataPort govDrugRawDataPort;
     private final DrugIndexRepositoryPort drugIndexRepositoryPort;
     private static final String SORT_BY_PROPERTY = "drugId";
+    private static final int CHUNK_SIZE = 1_000;
 
     /**
      * 요청으로 전달된 lastSeq, limit 정보를 바탕으로 RDB에서 데이터를 조회하고
@@ -47,6 +49,37 @@ public class DrugIndexer implements IndexUseCase {
         List<Drug> drugs = fetchRawData(request, pageable);
         String esIndexName = getEsIndexName();
         saveDrugs(esIndexName, drugs);
+    }
+
+    /**
+     * DB에서 약품 데이터를 페이징으로 가져와 Elasticsearch에 일괄 색인합니다.
+     * 각 페이지는 CHUNK_SIZE만큼 처리되며, 모든 데이터를 순차적으로 색인합니다.
+     *
+     * @author 박찬병
+     * @since 2025-04-24
+     * @modified 2025-04-25
+     */
+    @Override
+    public void indexSymptom() {
+        log("indexSymptom 요청 수신");
+        int page = 0;
+        Page<Drug> drugPage;
+
+        do {
+            log("색인 시작: page=" + page);
+
+            // 1. 페이징으로 DB에서 한 청크 가져오기
+            drugPage = govDrugRawDataPort.findAllDrugs(PageRequest.of(page, CHUNK_SIZE));
+            log("  조회 완료: page=" + page + ", 건수=" + drugPage.getNumberOfElements());
+
+            // 2. 청크별 ES에 색인
+            drugIndexRepositoryPort.saveAllSymptom(drugPage);
+            log("  색인 완료: page=" + page + ", 건수=" + drugPage.getNumberOfElements());
+
+            // 3. 다음 1000개 값 루프
+            page++;
+        } while (drugPage.hasNext());
+        log("indexSymptom 전체 처리 완료");
     }
 
     /**
