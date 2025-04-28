@@ -3,6 +3,8 @@ package com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.adapte
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import com.likelion.backendplus4.yakplus.drug.application.service.port.out.DrugDetailRepositoryPort;
@@ -37,5 +39,11 @@ public class DrugDetailRepositoryAdapter implements DrugDetailRepositoryPort {
 		return drugdetailJpaRepository.findAll().stream()
 			.map(DrugDetailMapper::toDomainFromEntity)
 			.collect(Collectors.toList());
+	}
+
+	@Override
+	public Page<DrugDetail> getGovDrugDetailByPage(Pageable pageable) {
+		return drugdetailJpaRepository.findAll(pageable)
+			.map(DrugDetailMapper::toDomainFromEntity);
 	}
 }

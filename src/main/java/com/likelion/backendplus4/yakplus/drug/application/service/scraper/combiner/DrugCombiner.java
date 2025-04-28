@@ -2,6 +2,8 @@ package com.likelion.backendplus4.yakplus.drug.application.service.scraper.combi
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
 import static com.likelion.backendplus4.yakplus.common.util.log.LogUtil.log;
@@ -29,18 +31,31 @@ public class DrugCombiner implements DrugCombineUsecase {
 	private final DrugDetailRepositoryPort drugDetailRepository;
 	private final DrugImageRepositoryPort drugImageRepositoryPort;
 	private final DrugRawDataRepositoryPort	drugRawDataRepositoryPort;
-	
-	@Override
-	public void mergeTable(){
+
+	public void mergeTable() {
 		log("API 요청 결과 테이블 병합 시작: 상세 정보 + 이미지");
 
-		List<DrugDetail> drugDetails = drugDetailRepository.getAllGovDrugDetail();
-		log(LogLevel.DEBUG, "DrugDetail Raw Data: \n" + drugDetails);
+		int pageSize = 1_000;
+		Page<DrugDetail> firstPage = drugDetailRepository.getGovDrugDetailByPage(PageRequest.of(0, pageSize));
+		int totalPages = firstPage.getTotalPages();
 
-		drugDetails.stream()
-			.map(detail -> buildMergeRawData(detail, getImageDataByDrugDetail(detail)))
-			.forEach(drugRawDataRepositoryPort::save);
+		processDrugDetails(firstPage.getContent(), 1);
+
+		for (int i = 1; i < totalPages; i++) {
+			Page<DrugDetail> page = drugDetailRepository.getGovDrugDetailByPage(PageRequest.of(i, pageSize));
+			processDrugDetails(page.getContent(), i + 1);
+		}
+
 		log("API 요청 결과 테이블 병합 완료");
+	}
+
+	private void processDrugDetails(List<DrugDetail> drugDetails, int pageNumber) {
+		log("Processing Page = " + pageNumber);
+		log(LogLevel.DEBUG, "DrugDetail Raw Data (Page " + pageNumber + "): \n" + drugDetails);
+
+		List<DrugRawData> rawData = drugDetails.stream()
+			.map(detail -> buildMergeRawData(detail, getImageDataByDrugDetail(detail))).toList();
+		drugRawDataRepositoryPort.saveAll(rawData);
 	}
 
 	/**

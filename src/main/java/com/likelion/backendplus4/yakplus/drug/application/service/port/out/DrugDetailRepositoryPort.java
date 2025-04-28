@@ -2,6 +2,9 @@ package com.likelion.backendplus4.yakplus.drug.application.service.port.out;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.likelion.backendplus4.yakplus.drug.domain.model.DrugDetail;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.dto.DrugDetailRequest;
 
@@ -38,4 +41,6 @@ public interface DrugDetailRepositoryPort {
 	 * @since 2025-04-21
 	 */
 	List<DrugDetail> getAllGovDrugDetail();
+
+	Page<DrugDetail> getGovDrugDetailByPage(Pageable pageable);
 }

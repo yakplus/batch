@@ -10,6 +10,7 @@ import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.reposit
 import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.repository.jpa.GovDrugJpaRepository;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.support.mapper.DrugRawDataMapper;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -18,12 +19,14 @@ public class DrugRawDataRepositoryAdapter implements DrugRawDataRepositoryPort {
 
 	private final GovDrugJpaRepository jpaDrugRepository;
 
+	@Transactional
 	@Override
 	public void save(DrugRawData drug){
 		DrugRawDataEntity entity = DrugRawDataMapper.toEntityFromDomain(drug);
 		jpaDrugRepository.save(entity);
 	}
 
+	@Transactional
 	@Override
 	public void saveAll(List<DrugRawData> rawData) {
 		jpaDrugRepository.saveAll(
