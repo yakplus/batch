@@ -48,27 +48,6 @@ public class DrugEmbedRepositoryAdapter implements DrugEmbedRepositoryPort {
 		);
 	}
 
-	@Override
-	public float[] getGptVector(Long drugId){
-		return getVectorFromRepository(
-			drugId, gptRepository, e -> e.getGptVector()
-		);
-	}
-
-	@Override
-	public float[] getKmBertVector(Long drugId){
-		return getVectorFromRepository(
-			drugId, kmBertRepository, e -> e.getKmBertVector()
-		);
-	}
-
-	@Override
-	public float[] getKrSbertVector(Long drugId){
-		return getVectorFromRepository(
-			drugId, krSbertRepository, e -> e.getKrSbertVector()
-		);
-	}
-
 	private  <T> T buildEmbedEntity(Long drugId, float[] vector, Class<T> clazz) {
 		try {
 			String vectorString = toStringFromFloatArray(vector);

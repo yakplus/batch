@@ -43,26 +43,6 @@ public class GovDrugRawDataAdapter implements GovDrugRawDataPort {
     @Value("${gov.numOfRows}")
     private int numOfRows;
 
-
-    /**
-     * 마지막으로 처리된 시퀀스 이후의 원시 데이터를 페이징 조건에 맞춰 조회하고
-     * Drug 도메인 리스트로 변환하여 반환합니다.
-     *
-     * @param lastSeq  마지막 처리 시퀀스 (null이면 0부터 조회)
-     * @param pageable 페이징 및 정렬 정보
-     * @return Drug 도메인 객체 리스트
-     * @throws IndexException 데이터베이스 조회 실패 시 발생
-     * @author 정안식
-     * @since 2025-04-22
-     * @modified 2025-04-24
-     */
-    @Override
-    public List<Drug> fetchRawData(Long lastSeq, Pageable pageable) {
-        long startSeq = getStartSeq(lastSeq);
-        List<DrugDetailEntity> govDrugRawDataEntities = getGovDrugRawDataEntities(startSeq, pageable);
-        return convertToDrugDomains(govDrugRawDataEntities);
-    }
-
     @Override
     public String getEsIndexName() {
         return "";
@@ -158,7 +138,7 @@ public class GovDrugRawDataAdapter implements GovDrugRawDataPort {
 
 
     @Override
-    public List<Drug> fetchRawDataInt(int pageNo) {
+    public List<Drug> fetchRawData(int pageNo) {
         log("index 서비스 요청 수신");
         Pageable pageable = createPageable(pageNo);
         List<Drug> drugs = embeddingLoadingPort.loadEmbeddingsByPage(pageable);
