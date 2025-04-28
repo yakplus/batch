@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.likelion.backendplus4.yakplus.drug.application.service.port.in.DrugCombineUsecase;
+import com.likelion.backendplus4.yakplus.drug.application.service.port.in.DrugEmbedProcessorUseCase;
 import com.likelion.backendplus4.yakplus.drug.application.service.scraper.DrugScraper;
 import com.likelion.backendplus4.yakplus.drug.application.service.port.out.EmbeddingPort;
 
@@ -17,16 +19,9 @@ import com.likelion.backendplus4.yakplus.response.ApiResponse;
 @RestController
 @RequiredArgsConstructor
 public class DrugDataTestController {
-	private final EmbeddingPort embeddingPort;
 	private final DrugScraper scraperUseCase;
-
-	@GetMapping("/test/embed")
-	public ResponseEntity<ApiResponse<float[]>> getEmbedData(){
-		log("getEmbedData");
-		float[] embedding = embeddingPort.getEmbedding("test", EmbeddingModelType.OPENAI);
-		return ApiResponse.success(embedding);
-
-	}
+	private final DrugCombineUsecase drugCombineUsecase;
+	private final DrugEmbedProcessorUseCase drugEmbedProcessorUseCase;
 
 	@GetMapping("/test/parse")
 	public ResponseEntity saveAPIData(){
@@ -34,4 +29,15 @@ public class DrugDataTestController {
 		return ResponseEntity.ok().build();
 	}
 
+	@GetMapping("/test/combine")
+	public ResponseEntity saveCombineData(){
+		drugCombineUsecase.mergeTable();
+		return ResponseEntity.ok().build();
+	}
+
+	@GetMapping("/test/embed")
+	public ResponseEntity saveEmbedData(){
+		drugEmbedProcessorUseCase.startEmbedding();
+		return ResponseEntity.ok().build();
+	}
 }
