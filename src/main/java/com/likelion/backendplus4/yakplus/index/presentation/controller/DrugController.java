@@ -2,7 +2,9 @@ package com.likelion.backendplus4.yakplus.index.presentation.controller;
 
 import com.likelion.backendplus4.yakplus.index.application.port.in.IndexUseCase;
 import com.likelion.backendplus4.yakplus.index.presentation.controller.dto.request.IndexRequest;
+import com.likelion.backendplus4.yakplus.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,5 +36,20 @@ public class DrugController {
     public void index(@RequestBody IndexRequest request) {
         log("index 컨트롤러 요청 수신" + request.toString());
         indexUseCase.index(request);
+    }
+
+    /**
+     * 색인 배치 작업을 실행하여, DB로부터 조회한 약품 증상 데이터를 Elasticsearch에 일괄 색인합니다.
+     *
+     * @return 색인 작업 성공 여부 응답 (Void)
+     * @author 박찬병
+     * @since 2025-04-24
+     * @modified 2025-04-25
+     */
+    @PostMapping("/symptom")
+    public ResponseEntity<ApiResponse<Void>> triggerIndex() {
+        log("indexSymptom 요청 수신");
+        indexUseCase.indexSymptom();
+        return ApiResponse.success();
     }
 }

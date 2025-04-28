@@ -1,12 +1,17 @@
 package com.likelion.backendplus4.yakplus.index.infrastructure.adapter.persistence;
 
+import static com.likelion.backendplus4.yakplus.common.util.log.LogUtil.log;
+
 import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.repository.entity.DrugDetailEntity;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.repository.jpa.GovDrugDetailJpaRepository;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.repository.jpa.GovDrugJpaRepository;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.support.mapper.DrugRawDataMapper;
 import com.likelion.backendplus4.yakplus.index.application.port.out.GovDrugRawDataPort;
 import com.likelion.backendplus4.yakplus.index.exception.IndexException;
 import com.likelion.backendplus4.yakplus.index.exception.error.IndexErrorCode;
 import com.likelion.backendplus4.yakplus.index.domain.model.Drug;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +29,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class GovDrugRawDataAdapter implements GovDrugRawDataPort {
     private final GovDrugDetailJpaRepository rawDataJpaRepository;
+    private final GovDrugJpaRepository drugJpaRepository;
 
     /**
      * 마지막으로 처리된 시퀀스 이후의 원시 데이터를 페이징 조건에 맞춰 조회하고
@@ -49,6 +55,25 @@ public class GovDrugRawDataAdapter implements GovDrugRawDataPort {
     public String getEsIndexName() {
         //TODO 구현 필요
         return "";
+    }
+
+
+    /**
+     * 주어진 Pageable 정보에 따라 DB에서 한 페이지 분량의 GovDrugEntity를 조회하고,
+     * 각 엔티티를 도메인 모델(GovDrug)로 변환하여 Page 형태로 반환합니다.
+     *
+     * @param pageable 조회할 페이지 번호와 크기를 포함하는 Pageable 객체
+     * @return 페이지 단위로 변환된 GovDrug 도메인 객체의 Page
+     * @author 박찬병
+     * @since 2025-04-24
+     * @modified 2025-04-25
+     *
+     */
+    @Override
+    public Page<Drug> findAllDrugs(Pageable pageable) {
+        log("findAllDrugs() 요청 수신");
+        return drugJpaRepository.findAll(pageable)
+                .map(DrugRawDataMapper::toDomainFromEntity);
     }
 
     /**

@@ -4,4 +4,6 @@ import com.likelion.backendplus4.yakplus.index.presentation.controller.dto.reque
 
 public interface IndexUseCase {
     void index(IndexRequest request);
+
+    void indexSymptom();
 }
