@@ -15,7 +15,7 @@ public class DrugDetailController {
 
 	@PostMapping("/gov/api/parser/detail/start")
 	public ResponseEntity saveAPIData(){
-		drugDetailScraperUsecase.requestSingleData();
+		drugDetailScraperUsecase.requestSingleData(1);
 		return ResponseEntity.ok().build();
 	}
 

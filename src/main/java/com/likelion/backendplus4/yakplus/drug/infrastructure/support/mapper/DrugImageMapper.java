@@ -3,8 +3,7 @@ package com.likelion.backendplus4.yakplus.drug.infrastructure.support.mapper;
 import java.util.List;
 
 import com.likelion.backendplus4.yakplus.drug.domain.model.DrugImage;
-import com.likelion.backendplus4.yakplus.drug.domain.model.GovDrugDetail;
-import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.entity.ApiDataDrugImgEntity;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.repository.entity.ApiDataDrugImgEntity;
 
 public class DrugImageMapper {
 	public static DrugImage toDomainFromEntity(ApiDataDrugImgEntity e){

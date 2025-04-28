@@ -12,16 +12,16 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.likelion.backendplus4.yakplus.common.util.log.LogLevel;
-import com.likelion.backendplus4.yakplus.drug.domain.model.GovDrugDetail;
+import com.likelion.backendplus4.yakplus.drug.domain.model.DrugDetail;
 import com.likelion.backendplus4.yakplus.drug.domain.model.vo.Material;
-import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.entity.DrugDetailEntity;
-import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.entity.DrugRawDataEntity;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.repository.entity.DrugDetailEntity;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.repository.entity.DrugRawDataEntity;
 import com.likelion.backendplus4.yakplus.drug.domain.model.Drug;
 
 public class DrugDetailMapper {
 
-	public static GovDrugDetail toDomainFromEntity(DrugDetailEntity e){
-		GovDrugDetail domain = GovDrugDetail.builder()
+	public static DrugDetail toDomainFromEntity(DrugDetailEntity e){
+		DrugDetail domain = DrugDetail.builder()
 			.drugId(e.getDrugId())
 			.drugName(e.getDrugName())
 			.company(e.getCompany())

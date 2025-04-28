@@ -14,6 +14,6 @@ public class DrugImageController {
 
     @GetMapping("/gov/api/parser/image/start")
     public void test(){
-        imageScraper.getApiData();
+        imageScraper.getApiData(1);
     }
 }
