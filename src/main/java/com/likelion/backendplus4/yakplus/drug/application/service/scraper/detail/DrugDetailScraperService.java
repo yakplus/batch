@@ -70,12 +70,11 @@ public class DrugDetailScraperService implements DrugDetailScraperUsecase {
 
 			drugDetailRepository.saveDrugDetailBulk(drugs);
 
-			log(LogLevel.DEBUG,
-				"Page: " + i
-					+ "received: " + drugs.size()
-					+ "saved (unique): " + uniqueItems
-					+ "totalReceived: " + receivedCount
-					+ "totalUniqueSaved: " + savedCountWithoutDuplicates
+			log("Page: " + i
+				+ "received: " + drugs.size()
+				+ "saved (unique): " + uniqueItems
+				+ "totalReceived: " + receivedCount
+				+ "totalUniqueSaved: " + savedCountWithoutDuplicates
 			);
 		}
 	}

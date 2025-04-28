@@ -24,13 +24,11 @@ public class MaterialParser {
 	 * @since 2025-04-21
 	 */
 	public static String parseMaterial(String raw) {
-		log("약품 성분 파싱 시작");
 		ObjectMapper objectMapper = new ObjectMapper();
 		ArrayNode resultArray = objectMapper.createArrayNode();
 		String[] blocks = splitBlock(raw);
 		parsingblocksAndPutArrayItem(blocks, resultArray);
 		String result = convertString(objectMapper, resultArray);
-		log("약품 성분 파싱 완료");
 		return result;
 	}
 
