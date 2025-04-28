@@ -2,8 +2,8 @@ package com.likelion.backendplus4.yakplus.index.infrastructure.adapter.persisten
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.likelion.backendplus4.yakplus.common.util.log.LogLevel;
+import com.likelion.backendplus4.yakplus.drug.domain.model.Drug;
 import com.likelion.backendplus4.yakplus.index.application.port.out.DrugIndexRepositoryPort;
-import com.likelion.backendplus4.yakplus.index.domain.model.Drug;
 import com.likelion.backendplus4.yakplus.index.exception.IndexException;
 import com.likelion.backendplus4.yakplus.index.exception.error.IndexErrorCode;
 import org.apache.http.entity.ContentType;

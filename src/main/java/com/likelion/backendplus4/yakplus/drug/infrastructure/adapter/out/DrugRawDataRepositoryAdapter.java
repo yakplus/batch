@@ -7,7 +7,6 @@ import com.likelion.backendplus4.yakplus.drug.domain.model.DrugRawData;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.entity.DrugRawDataEntity;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.jpa.GovDrugJpaRepository;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.support.mapper.DrugRawDataMapper;
-import com.likelion.backendplus4.yakplus.index.domain.model.Drug;
 
 import lombok.RequiredArgsConstructor;
 
