@@ -7,6 +7,7 @@ import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.reposit
 import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.repository.jpa.GovDrugJpaRepository;
 import com.likelion.backendplus4.yakplus.index.application.port.out.EmbeddingLoadingPort;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 @Repository("gptAdapter")
+@Primary
 @RequiredArgsConstructor
 public class GptEmbeddingLoadingAdapter implements EmbeddingLoadingPort {
     private final GovDrugGptEmbedJpaRepository govDrugGptEmbedJpaRepository;
