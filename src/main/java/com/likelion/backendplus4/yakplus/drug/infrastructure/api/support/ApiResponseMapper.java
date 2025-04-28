@@ -17,8 +17,8 @@ public class ApiResponseMapper {
 				.path("items");
 		} catch (JsonProcessingException e) {
 			log.error("items 추출 실패");
-			//TODO: CustomException 만들고, ControllerAdvice로 예외처리 필요
-			throw new RuntimeException(e);
+			log.error("response: {}", response);
+			return null;
 		}
 	}
 
