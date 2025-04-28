@@ -8,6 +8,7 @@ import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.reposit
 import com.likelion.backendplus4.yakplus.index.application.port.out.EmbeddingLoadingPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -15,9 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Repository
+@Repository("krSBertAdapter")
 @RequiredArgsConstructor
-@Qualifier("krSBertAdapter")
 public class KrSBertEmbeddingLoadingAdapter implements EmbeddingLoadingPort {
     private final GovDrugKrSbertEmbedJpaRepository govDrugKrSbertEmbedJpaRepository;
     private final GovDrugJpaRepository govDrugJpaRepository;
@@ -27,6 +27,27 @@ public class KrSBertEmbeddingLoadingAdapter implements EmbeddingLoadingPort {
     public List<Drug> loadAllEmbeddings() {
         List<DrugRawDataEntity> rawDataEntities = govDrugJpaRepository.findAll();
         List<DrugKrSbertEmbedEntity> drugKrSBertEmbedEntities = govDrugKrSbertEmbedJpaRepository.findAll();
+
+        // drugKrSBertEmbedEntities를 Map으로 변환 (key: drugId)
+        Map<Long, DrugKrSbertEmbedEntity> krSBertEmbedMap = new HashMap<>();
+        for (DrugKrSbertEmbedEntity embed : drugKrSBertEmbedEntities) {
+            krSBertEmbedMap.put(embed.getDrugId(), embed);
+        }
+
+        List<Drug> drugs = new ArrayList<>();
+        for (DrugRawDataEntity drugRawData : rawDataEntities) {
+            DrugKrSbertEmbedEntity embed = krSBertEmbedMap.get(drugRawData.getDrugId());
+            Drug drug = toDomainFromEntity(drugRawData, embed);
+            drugs.add(drug);
+        }
+
+        return drugs;
+    }
+
+    @Override
+    public List<Drug> loadEmbeddingsByPage(Pageable pageable) {
+        List<DrugRawDataEntity> rawDataEntities = govDrugJpaRepository.findAll(pageable).getContent();
+        List<DrugKrSbertEmbedEntity> drugKrSBertEmbedEntities = govDrugKrSbertEmbedJpaRepository.findAll(pageable).getContent();
 
         // drugKrSBertEmbedEntities를 Map으로 변환 (key: drugId)
         Map<Long, DrugKrSbertEmbedEntity> krSBertEmbedMap = new HashMap<>();

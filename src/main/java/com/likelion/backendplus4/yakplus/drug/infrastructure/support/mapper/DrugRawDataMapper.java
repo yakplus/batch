@@ -5,7 +5,7 @@ import com.likelion.backendplus4.yakplus.drug.domain.exception.ScraperException;
 import com.likelion.backendplus4.yakplus.drug.domain.exception.error.ScraperErrorCode;
 import com.likelion.backendplus4.yakplus.drug.domain.model.DrugRawData;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.repository.entity.DrugRawDataEntity;
-import com.likelion.backendplus4.yakplus.index.domain.model.Drug;
+import com.likelion.backendplus4.yakplus.drug.domain.model.Drug;
 import com.likelion.backendplus4.yakplus.index.support.parser.JsonArrayTextParser;
 import java.io.IOException;
 import java.util.List;

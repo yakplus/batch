@@ -1,6 +1,6 @@
 package com.likelion.backendplus4.yakplus.index.application.port.out;
 
-import com.likelion.backendplus4.yakplus.index.domain.model.Drug;
+import com.likelion.backendplus4.yakplus.drug.domain.model.Drug;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -12,4 +12,6 @@ public interface GovDrugRawDataPort {
     String getEsIndexName();
 
     Page<Drug> findAllDrugs(Pageable pageable);
+
+    List<Drug> fetchRawDataInt(int pageNo);
 }

@@ -6,13 +6,18 @@ import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.reposit
 import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.repository.jpa.GovDrugDetailJpaRepository;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.repository.jpa.GovDrugJpaRepository;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.support.mapper.DrugRawDataMapper;
+import com.likelion.backendplus4.yakplus.index.application.port.out.EmbeddingLoadingPort;
 import com.likelion.backendplus4.yakplus.index.application.port.out.GovDrugRawDataPort;
 import com.likelion.backendplus4.yakplus.index.exception.IndexException;
 import com.likelion.backendplus4.yakplus.index.exception.error.IndexErrorCode;
-import com.likelion.backendplus4.yakplus.index.domain.model.Drug;
+import com.likelion.backendplus4.yakplus.drug.domain.model.Drug;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -31,6 +36,14 @@ public class GovDrugRawDataAdapter implements GovDrugRawDataPort {
     private final GovDrugDetailJpaRepository rawDataJpaRepository;
     private final GovDrugJpaRepository drugJpaRepository;
 
+    // 추후 수정... -> 임베딩 받아오는 방식 + List<Drug> 변환 통일
+    @Qualifier("gptAdapter")
+    private final EmbeddingLoadingPort embeddingLoadingPort;
+
+    @Value("${gov.numOfRows}")
+    private int numOfRows;
+
+
     /**
      * 마지막으로 처리된 시퀀스 이후의 원시 데이터를 페이징 조건에 맞춰 조회하고
      * Drug 도메인 리스트로 변환하여 반환합니다.
@@ -47,13 +60,11 @@ public class GovDrugRawDataAdapter implements GovDrugRawDataPort {
     public List<Drug> fetchRawData(Long lastSeq, Pageable pageable) {
         long startSeq = getStartSeq(lastSeq);
         List<DrugDetailEntity> govDrugRawDataEntities = getGovDrugRawDataEntities(startSeq, pageable);
-
         return convertToDrugDomains(govDrugRawDataEntities);
     }
 
     @Override
     public String getEsIndexName() {
-        //TODO 구현 필요
         return "";
     }
 
@@ -143,5 +154,19 @@ public class GovDrugRawDataAdapter implements GovDrugRawDataPort {
                 // .company(entity.getEntpName())
                 // .efficacy(entity.get())
                 .build();
+    }
+
+
+    @Override
+    public List<Drug> fetchRawDataInt(int pageNo) {
+        log("index 서비스 요청 수신");
+        Pageable pageable = createPageable(pageNo);
+        List<Drug> drugs = embeddingLoadingPort.loadEmbeddingsByPage(pageable);
+        return drugs;
+    }
+
+    private Pageable createPageable(int pageNo) {
+        log("pageable 생성");
+        return PageRequest.of(pageNo, numOfRows, Sort.by(Sort.Direction.DESC, "drugId"));
     }
 }

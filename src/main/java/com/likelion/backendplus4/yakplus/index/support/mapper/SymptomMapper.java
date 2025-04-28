@@ -1,6 +1,6 @@
 package com.likelion.backendplus4.yakplus.index.support.mapper;
 
-import com.likelion.backendplus4.yakplus.index.domain.model.Drug;
+import com.likelion.backendplus4.yakplus.drug.domain.model.Drug;
 import com.likelion.backendplus4.yakplus.index.infrastructure.adapter.persistence.repository.document.DrugSymptomDocument;
 import com.likelion.backendplus4.yakplus.index.support.parser.SymptomTextParser;
 import java.util.List;
