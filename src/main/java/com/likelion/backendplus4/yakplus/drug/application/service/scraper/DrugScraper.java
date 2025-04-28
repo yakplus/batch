@@ -5,10 +5,9 @@ import static com.likelion.backendplus4.yakplus.common.util.log.LogUtil.log;
 
 import com.likelion.backendplus4.yakplus.drug.application.service.port.in.DrugCombineUsecase;
 import com.likelion.backendplus4.yakplus.drug.application.service.port.in.DrugDetailScraperUsecase;
+import com.likelion.backendplus4.yakplus.drug.application.service.port.in.DrugEmbedProcessorUseCase;
 import com.likelion.backendplus4.yakplus.drug.application.service.port.in.DrugImageScraperUsecase;
-import com.likelion.backendplus4.yakplus.drug.application.service.scraper.combiner.DrugCombiner;
-import com.likelion.backendplus4.yakplus.drug.application.service.scraper.embed.DrugEmbedProcessor;
-import com.likelion.backendplus4.yakplus.drug.application.service.scraper.image.DrugImageGovScraper;
+import com.likelion.backendplus4.yakplus.drug.application.service.port.in.DrugScraperUsecase;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,16 +24,17 @@ import lombok.RequiredArgsConstructor;
  */
 @Service
 @RequiredArgsConstructor
-public class DrugScraper {
+public class DrugScraper implements DrugScraperUsecase{
 	private final DrugImageScraperUsecase drugImageScraperUsecase;
 	private final DrugDetailScraperUsecase drugDetailScraperUsecase;
 	private final DrugCombineUsecase drugCombineUsecase;
-	private final DrugEmbedProcessor drugEmbedProcessor;
+	private final DrugEmbedProcessorUseCase drugEmbedProcessorUseCase;
 
+	@Override
 	public void scraperStart(){
 		drugDetailScraperUsecase.requestAllData();
 		drugImageScraperUsecase.getAllApiData();
 		drugCombineUsecase.mergeTable();
-		drugEmbedProcessor.startEmbedding();
+		drugEmbedProcessorUseCase.startEmbedding();
 	}
 }

@@ -1,13 +1,10 @@
 package com.likelion.backendplus4.yakplus.index.infrastructure.adapter.persistence;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.likelion.backendplus4.yakplus.drug.domain.model.Drug;
-import com.likelion.backendplus4.yakplus.drug.domain.model.vo.Material;
-import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.entity.DrugGptEmbedEntity;
-import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.entity.DrugRawDataEntity;
-import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.jpa.GovDrugGptEmbedJpaRepository;
-import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.jpa.GovDrugJpaRepository;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.repository.entity.DrugGptEmbedEntity;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.repository.entity.DrugRawDataEntity;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.repository.jpa.GovDrugGptEmbedJpaRepository;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.repository.jpa.GovDrugJpaRepository;
 import com.likelion.backendplus4.yakplus.index.application.port.out.EmbeddingLoadingPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;

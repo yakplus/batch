@@ -1,11 +1,8 @@
 package com.likelion.backendplus4.yakplus.drug.infrastructure.support.mapper;
 
-import java.util.List;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.likelion.backendplus4.yakplus.drug.domain.model.DrugRawData;
-import com.likelion.backendplus4.yakplus.drug.domain.model.vo.Material;
-import com.likelion.backendplus4.yakplus.drug.infrastructure.adapter.persistence.repository.entity.DrugRawDataEntity;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.repository.entity.DrugRawDataEntity;
 
 public class DrugRawDataMapper {
 	private static final ObjectMapper objectMapper = new ObjectMapper();
