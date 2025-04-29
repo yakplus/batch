@@ -147,6 +147,6 @@ public class GovDrugRawDataAdapter implements GovDrugRawDataPort {
 
     private Pageable createPageable(int pageNo) {
         log("pageable 생성");
-        return PageRequest.of(pageNo-1, numOfRows, Sort.by(Sort.Direction.DESC, "drugId"));
+        return PageRequest.of(pageNo-1, numOfRows, Sort.by(Sort.Direction.ASC, "drugId"));
     }
 }
