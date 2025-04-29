@@ -139,7 +139,11 @@ public class DrugDetailMapper {
 			for (JsonNode section : json.get("sections")) {
 				for (JsonNode article : section.get("articles")) {
 					for (JsonNode paragraph : article.get("paragraphs")) {
-						efficacys.add(paragraph.get("text").asText());
+						String text = paragraph.get("text").asText();
+						if(text != null && !text.isEmpty()){
+							efficacys.add(paragraph.get("text").asText());
+						}
+
 					}
 				}
 			}
