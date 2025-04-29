@@ -32,7 +32,7 @@ public class OpenaiEmbeddingClient implements EmbeddingClient {
 			this.openAiApi,
 			MetadataMode.EMBED,
 			OpenAiEmbeddingOptions.builder()
-				.model("text-embedding-ada-002")
+				.model("text-embedding-3-small")
 				.build(),
 			RetryUtils.DEFAULT_RETRY_TEMPLATE);
 
