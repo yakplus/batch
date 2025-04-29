@@ -46,13 +46,13 @@ public class DrugRawDataEntity {
 	@Column(name = "VALID_TERM")
 	private String validTerm;
 
-	@Column(name = "EE_DOC_DATA",  columnDefinition = "TEXT")
+	@Column(name = "EE_DOC_DATA",  columnDefinition = "JSON")
 	private String efficacy;
 
-	@Column(name = "UD_DOC_DATA", columnDefinition = "TEXT")
+	@Column(name = "UD_DOC_DATA", columnDefinition = "JSON")
 	private String usage;
 
-	@Column(name = "NB_DOC_DATA", columnDefinition = "TEXT")
+	@Column(name = "NB_DOC_DATA", columnDefinition = "JSON")
 	private String precaution;
 
 	@Column(name= "IMG_URL")
