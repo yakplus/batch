@@ -37,7 +37,7 @@ public class DrugDetailRepositoryAdapter implements DrugDetailRepositoryPort {
 
 	@Override
 	public List<DrugDetail> getAllGovDrugDetail(){
-		return drugdetailJpaRepository.findAll(Sort.by(Sort.Direction.DESC, "drugId")).stream()
+		return drugdetailJpaRepository.findAll().stream()
 			.map(DrugDetailMapper::toDomainFromEntity)
 			.collect(Collectors.toList());
 	}
