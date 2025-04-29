@@ -132,6 +132,6 @@ public class ElasticsearchDrugAdapter implements DrugIndexRepositoryPort {
      * @since 2025-04-22
      */
     private Map<String, Object> createDrugDocument(Drug drug) {
-        return Map.of("drugId", drug.getDrugId(), "drugName", drug.getDrugName(), "company", drug.getCompany(), "efficacy", drug.getEfficacy(), "imageUrl", drug.getImageUrl(), "vector", drug.getVector());
+        return Map.of("drugId", drug.getDrugId(), "drugName", drug.getDrugName(), "company", drug.getCompany(), "efficacy", drug.getEfficacy(), "imageUrl", drug.getImageUrl() != null ? drug.getImageUrl() : "", "vector", drug.getVector());
     }
 }
