@@ -54,7 +54,8 @@ public class DrugIndexer implements IndexUseCase {
                 saveDrugs(esIndexName, drugs);
             }
         } catch (Exception e) {
-            log(LogLevel.ERROR,"indexing 시 데이터 5000개 보다 적어서 에러 발생 (데이터 5000개 이하면 전체 동작)", e);
+            log(LogLevel.ERROR,"indexing 시 데이터 5000개 보다 적어서 에러 발생", e);
+            e.printStackTrace();
         }
 
     }
