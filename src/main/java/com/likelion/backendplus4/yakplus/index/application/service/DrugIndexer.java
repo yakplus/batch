@@ -1,5 +1,6 @@
 package com.likelion.backendplus4.yakplus.index.application.service;
 
+import com.likelion.backendplus4.yakplus.common.util.log.LogLevel;
 import com.likelion.backendplus4.yakplus.drug.domain.model.Drug;
 import com.likelion.backendplus4.yakplus.index.application.port.in.IndexUseCase;
 import com.likelion.backendplus4.yakplus.index.application.port.out.DrugIndexRepositoryPort;
@@ -46,11 +47,16 @@ public class DrugIndexer implements IndexUseCase {
     public void index() {
         log("index 서비스 요청 수신");
 //        Pageable pageable = createPageable(request.limit());
-        for (int i = 1; i <= 50; i++) {
-            List<Drug> drugs = fetchRawData(i);
-            String esIndexName = getEsIndexName();
-            saveDrugs(esIndexName, drugs);
+        try {
+            for (int i = 1; i <= 50; i++) {
+                List<Drug> drugs = fetchRawData(i);
+                String esIndexName = getEsIndexName();
+                saveDrugs(esIndexName, drugs);
+            }
+        } catch (Exception e) {
+            log(LogLevel.ERROR,"indexing 시 데이터 5000개 보다 적어서 에러 발생 (데이터 5000개 이하면 전체 동작)", e);
         }
+
     }
 
     /**
