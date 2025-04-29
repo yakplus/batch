@@ -45,7 +45,7 @@ public class GovDrugRawDataAdapter implements GovDrugRawDataPort {
 
     @Override
     public String getEsIndexName() {
-        return "";
+        return "test-gpt";
     }
 
 
