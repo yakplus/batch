@@ -4,15 +4,19 @@ import static com.likelion.backendplus4.yakplus.common.util.log.LogUtil.log;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.likelion.backendplus4.yakplus.common.util.log.LogLevel;
 import com.likelion.backendplus4.yakplus.drug.application.service.port.in.DrugEmbedProcessorUseCase;
 import com.likelion.backendplus4.yakplus.drug.application.service.port.out.DrugDetailRepositoryPort;
 import com.likelion.backendplus4.yakplus.drug.application.service.port.out.DrugEmbedRepositoryPort;
+import com.likelion.backendplus4.yakplus.drug.domain.model.Drug;
 import com.likelion.backendplus4.yakplus.drug.domain.model.DrugDetail;
 import com.likelion.backendplus4.yakplus.drug.application.service.port.out.EmbeddingPort;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.embedding.model.EmbeddingModelType;
+import com.likelion.backendplus4.yakplus.index.application.port.out.GovDrugRawDataPort;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,20 +31,23 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class DrugEmbedProcessor implements DrugEmbedProcessorUseCase {
-	private final DrugDetailRepositoryPort detailRepositoryPort;
+	private final GovDrugRawDataPort drugRawDataPort;
 	private final EmbeddingPort embeddingPort;
 	private final DrugEmbedRepositoryPort embedRepositoryPort;
 
 	@Override
 	public void startEmbedding() {
 		log("약품 효능 임베딩 작업 시작");
+		Page<Drug> firstPage = getAllItem(0);
+		for(int i=0; i<firstPage.getTotalPages(); i++){
+			getAllItem(i).forEach(data -> {
+				String efficacy = convertSingleStringForEfficacy(data.getEfficacy());
+				saveSbertVector(data, efficacy);
+				saveKmBertVector(data, efficacy);
+				saveGptVector(data, efficacy);
+			});
 
-		getAllItem().forEach(detail -> {
-			String efficacy = convertSingleStringForEfficacy(detail.getEfficacy());
-			saveSbertVector(detail, efficacy);
-			saveKmBertVector(detail, efficacy);
-			saveGptVector(detail, efficacy);
-		});
+		}
 
 		log("약품 효능 임베딩 작업 완료");
 	}
@@ -53,7 +60,7 @@ public class DrugEmbedProcessor implements DrugEmbedProcessorUseCase {
 	 *
 	 * @since 2025-04-25
 	 */
-	private void saveGptVector(DrugDetail detail, String text) {
+	private void saveGptVector(Drug detail, String text) {
 		float[] openAIVector = embeddingPort.getEmbedding(
 			text, EmbeddingModelType.OPENAI);
 		embedRepositoryPort.saveGptEmbed(detail.getDrugId(), openAIVector);
@@ -67,7 +74,7 @@ public class DrugEmbedProcessor implements DrugEmbedProcessorUseCase {
 	 *
 	 * @since 2025-04-25
 	 */
-	private void saveKmBertVector(DrugDetail detail, String text) {
+	private void saveKmBertVector(Drug detail, String text) {
 		float[] kmbertVector = embeddingPort.getEmbedding(
 			text, EmbeddingModelType.KM_BERT);
 		embedRepositoryPort.saveKmBertEmbed(detail.getDrugId(), kmbertVector);
@@ -81,7 +88,7 @@ public class DrugEmbedProcessor implements DrugEmbedProcessorUseCase {
 	 *
 	 * @since 2025-04-25
 	 */
-	private void saveSbertVector(DrugDetail detail, String text) {
+	private void saveSbertVector(Drug detail, String text) {
 		float[] sbertVector = embeddingPort.getEmbedding(
 			text, EmbeddingModelType.SBERT);
 		embedRepositoryPort.saveKrSbertEmbed(detail.getDrugId(), sbertVector);
@@ -115,7 +122,7 @@ public class DrugEmbedProcessor implements DrugEmbedProcessorUseCase {
 	 *
 	 * @since 2025-04-25
 	 */
-	private List<DrugDetail> getAllItem() {
-		return detailRepositoryPort.getAllGovDrugDetail();
+	private Page<Drug> getAllItem(int i) {
+		return drugRawDataPort.findAllDrugs(PageRequest.of(i, 100));
 	}
 }

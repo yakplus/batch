@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import com.likelion.backendplus4.yakplus.drug.application.service.port.out.DrugDetailRepositoryPort;
@@ -36,7 +37,7 @@ public class DrugDetailRepositoryAdapter implements DrugDetailRepositoryPort {
 
 	@Override
 	public List<DrugDetail> getAllGovDrugDetail(){
-		return drugdetailJpaRepository.findAll().stream()
+		return drugdetailJpaRepository.findAll(Sort.by(Sort.Direction.DESC, "drugId")).stream()
 			.map(DrugDetailMapper::toDomainFromEntity)
 			.collect(Collectors.toList());
 	}

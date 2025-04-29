@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -87,16 +89,23 @@ public class XMLParser {
 			for (int i = 0; i < paraNodes.getLength(); i++) {
 				Element paragraphElement  = (Element) paraNodes.item(i);
 				ParagraphTag paragraphTag = new ParagraphTag();
-				paragraphTag.tagName      = paragraphElement.getAttribute("tagName");
-				paragraphTag.textIndent   = paragraphElement.getAttribute("textIndent");
-				paragraphTag.marginLeft   = paragraphElement.getAttribute("marginLeft");
-				paragraphTag.text         = paragraphElement.getTextContent().trim();
+				paragraphTag.tagName      = cleanText(paragraphElement.getAttribute("tagName"));
+				paragraphTag.textIndent   = cleanText(paragraphElement.getAttribute("textIndent"));
+				paragraphTag.marginLeft   = cleanText(paragraphElement.getAttribute("marginLeft"));
+				paragraphTag.text         = cleanText(paragraphElement.getTextContent().trim());
 
-				allParagraphs.add(paragraphTag);
+				if(!isEmptytagNameOrTagText(paragraphTag)){
+					allParagraphs.add(paragraphTag);
+				}
+
 				mapSectionFromArticle(articleMap, paragraphTag, paragraphElement);
 			}
 		}
 
+	}
+
+	private static boolean isEmptytagNameOrTagText(ParagraphTag paragraphTag) {
+		return paragraphTag.tagName.isEmpty() || paragraphTag.text.isEmpty();
 	}
 
 	/**
@@ -115,7 +124,7 @@ public class XMLParser {
 			for (int i = 0; i < artNodes.getLength(); i++) {
 				Element artElement = (Element) artNodes.item(i);
 				ArticleTag articleTag  = new ArticleTag();
-				articleTag.title       = artElement.getAttribute("title");
+				articleTag.title       = cleanText(artElement.getAttribute("title"));
 				articleTag.paragraphs  = new ArrayList<>();
 
 				allArticles.add(articleTag);
@@ -155,7 +164,7 @@ public class XMLParser {
 			for (int i = 0; i < secNodes.getLength(); i++) {
 				Element secEl     = (Element) secNodes.item(i);
 				SectionTag secDto = new SectionTag();
-				secDto.title      = secEl.getAttribute("title");
+				secDto.title      = cleanText(secEl.getAttribute("title"));
 				secDto.articles   = new ArrayList<>();
 
 				allSections.add(secDto);
@@ -202,7 +211,7 @@ public class XMLParser {
 		public List<SectionTag> sections;
 
 		DocTag(Element root, List sections) {
-			this.title    = root.getAttribute("title");
+			this.title    = cleanText(root.getAttribute("title"));
 			this.type     = root.getAttribute("type");
 			this.sections = sections;
 		}
@@ -280,5 +289,54 @@ public class XMLParser {
 	private interface Tags {
 		void addTag(Tags tags);
 		boolean equalsClass(Tags tags);
+	}
+
+	private static String cleanText(String text){
+		Pattern TAG_REGEX = Pattern.compile("<[^>]+>");
+		String tempText = TAG_REGEX.matcher(text)
+								.replaceAll("")
+								.replaceAll("&nbsp;", " ")
+								.replaceAll("● ", "")
+								.replaceAll("○ ", "")
+								.replaceAll("∎ ", "")
+								.replaceAll("- ", "");
+		String decodeText = decodeHtml(tempText).trim();
+		return decodeText;
+	}
+	/**
+	 * HTML 엔티티(10진수 &#DDD; 및 16진수 &#xHHHH;)를 대응하는 문자로 디코딩합니다. 예: "foo&#8226;bar" → "foo•bar",
+	 * "foo&#x2022;bar" → "foo•bar"
+	 *
+	 * @param input 엔티티를 포함한 문자열
+	 * @return 디코딩된 문자열
+	 *
+	 * @author 박찬병
+	 */
+
+	private static String decodeHtml(String input) {
+		String result = input;
+		Pattern DECIMAL_ENTITY_REGEX = Pattern.compile("&#(\\d+);");
+		Pattern HEX_ENTITY_REGEX = Pattern.compile("&#x([0-9A-Fa-f]+);");
+		// 10진수 엔티티 디코딩
+		Matcher decMatcher = DECIMAL_ENTITY_REGEX.matcher(result);
+		StringBuffer sb = new StringBuffer();
+		while (decMatcher.find()) {
+			int code = Integer.parseInt(decMatcher.group(1));
+			decMatcher.appendReplacement(sb,
+				Matcher.quoteReplacement(Character.toString((char) code)));
+		}
+		decMatcher.appendTail(sb);
+		result = sb.toString();
+
+		// 16진수 엔티티 디코딩
+		Matcher hexMatcher = HEX_ENTITY_REGEX.matcher(result);
+		sb = new StringBuffer();
+		while (hexMatcher.find()) {
+			int code = Integer.parseInt(hexMatcher.group(1), 16);
+			hexMatcher.appendReplacement(sb,
+				Matcher.quoteReplacement(Character.toString((char) code)));
+		}
+		hexMatcher.appendTail(sb);
+		return sb.toString();
 	}
 }
