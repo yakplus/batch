@@ -65,5 +65,5 @@ public class DrugRawDataEntity {
 	private String cancelName;
 
 	@Column(name="IS_HERBAL")
-	private boolean isHerbal;
+	private Boolean isHerbal;
 }
