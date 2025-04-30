@@ -19,7 +19,7 @@ public class TempGovDrugRawDataAdapter implements TempRawDataPort {
 
     public Page<Drug> findAllDrugs(Pageable pageable) {
         log("findAllDrugs() 요청 수신");
-        return drugJpaRepository.findAll(pageable)
+        return drugJpaRepository.findByIsGeneralIsTrue(pageable)
                 .map(DrugRawDataMapper::toDomainFromEntity);
     }
 
