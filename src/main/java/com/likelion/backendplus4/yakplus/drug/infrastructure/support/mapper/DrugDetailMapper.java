@@ -33,6 +33,9 @@ public class DrugDetailMapper {
 			.efficacy(convertEfficacy(e.getEfficacy()))
 			.usage(getUsage(e.getUsage()))
 			.precaution(getPrecaution(e.getPrecaution()))
+			.cancelDate(e.getCancelDate())
+			.cancelName(e.getCancelName())
+			.isHerbal(e.isHerbal())
 			.build();
 		return domain;
 	}
@@ -50,6 +53,9 @@ public class DrugDetailMapper {
 			.efficacy(convertEfficacy(e.getEfficacy()))
 			.usage(getUsage(e.getUsage()))
 			.precaution(getPrecaution(e.getPrecaution()))
+			.cancelDate(e.getCancelDate())
+			.cancelName(e.getCancelName())
+			.isHerbal(e.isHerbal())
 			.build();
 
 	}

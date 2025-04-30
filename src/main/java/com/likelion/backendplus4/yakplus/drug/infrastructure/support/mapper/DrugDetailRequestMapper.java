@@ -18,6 +18,9 @@ public class DrugDetailRequestMapper {
 			.efficacy(r.getEfficacy())
 			.usage(r.getUsage())
 			.precaution(r.getPrecaution())
+			.cancelDate(r.getCancelDate())
+			.cancelName(r.getCancelName())
+			.isHerbal(r.isHerbal())
 			.build();
 	}
 }

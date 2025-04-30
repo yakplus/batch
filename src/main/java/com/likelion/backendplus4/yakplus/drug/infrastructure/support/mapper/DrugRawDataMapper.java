@@ -28,6 +28,9 @@ public class DrugRawDataMapper {
 			.usage(toStringFromObj(raw.getUsage()))
 			.precaution(toStringFromObj(raw.getPrecaution()))
 			.imageUrl(raw.getImageUrl())
+			.cancelDate(raw.getCancelDate())
+			.cancelName(raw.getCancelName())
+			.isHerbal(raw.isHerbal())
 			.build();
 	}
 
@@ -53,6 +56,9 @@ public class DrugRawDataMapper {
 // TODO			.usage(e.getUsage())
 // TODO			.precaution(e.getPrecaution())
 				.imageUrl(e.getImageUrl())
+				.cancelDate(e.getCancelDate())
+				.cancelName(e.getCancelName())
+				.isHerbal(e.isHerbal())
 				.build();
 	}
 

@@ -58,4 +58,10 @@ public class Drug {
 
 	//TODO @ApiModelProperty(value = "[float 배열]")
 	private float[] vector;
+
+	private LocalDate cancelDate;
+
+	private String cancelName;
+
+	private boolean isHerbal;
 }

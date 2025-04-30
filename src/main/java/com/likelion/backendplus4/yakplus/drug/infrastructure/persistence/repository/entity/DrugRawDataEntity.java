@@ -57,4 +57,13 @@ public class DrugRawDataEntity {
 
 	@Column(name= "IMG_URL")
 	private String imageUrl;
+
+	@Column(name="CANCEL_DATE")
+	private LocalDate cancelDate;
+
+	@Column(name="CANCEL_NAME")
+	private String cancelName;
+
+	@Column(name="IS_HERBAL")
+	private boolean isHerbal;
 }

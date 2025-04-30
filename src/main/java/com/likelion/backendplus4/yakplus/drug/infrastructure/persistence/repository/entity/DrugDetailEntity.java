@@ -26,20 +26,15 @@ import java.time.LocalDate;
 public class DrugDetailEntity {
 
 	@Id
-	@JsonProperty("ITEM_SEQ")
 	@Column( name= "ITEM_SEQ")
 	private Long drugId;
 
-	@JsonProperty("ITEM_NAME")
 	@Column( name= "ITEM_NAME", columnDefinition = "TEXT")
 	private String drugName;
 
-	@JsonProperty("ENTP_NAME")
 	@Column( name= "ENTP_NAME")
 	private String company;
 
-	@JsonProperty("ITEM_PERMIT_DATE")
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd")
 	@Column( name= "ITEM_PERMIT_DATE")
 	private LocalDate permitDate;
 
@@ -49,11 +44,9 @@ public class DrugDetailEntity {
 	@Column(name = "MATERIAL_NAME", columnDefinition = "JSON")
 	private String materialInfo;
 
-	@JsonProperty("STORAGE_METHOD")
 	@Column(name = "STORAGE_METHOD", columnDefinition = "TEXT")
 	private String storeMethod;
 
-	@JsonProperty("VALID_TERM")
 	@Column(name = "VALID_TERM")
 	private String validTerm;
 
@@ -66,7 +59,15 @@ public class DrugDetailEntity {
 	@Column(name = "NB_DOC_DATA", columnDefinition = "JSON")
 	private String precaution;
 
-	@JsonCreator
+	@Column(name="CANCEL_DATE")
+	private LocalDate cancelDate;
+
+	@Column(name="CANCEL_NAME")
+	private String cancelName;
+
+	@Column(name="IS_HERBAL")
+	private boolean isHerbal = false;
+
 	public DrugDetailEntity(@JsonProperty("ETC_OTC_CODE") String drugType) {
 		this.isGeneral = !"전문의약품".equals(drugType);
 	}
