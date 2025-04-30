@@ -26,8 +26,17 @@ public class DrugDetailRequest {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd")
 	private LocalDate permitDate;
 
+	@JsonProperty("CANCEL_DATE")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd")
+	private LocalDate cancelDate;
+
+	@JsonProperty("CANCEL_NAME")
+	private String cancelName;
 
 	private boolean isGeneral;
+
+	private boolean isHerbal;
+
 	private String materialInfo;
 
 	@JsonProperty("STORAGE_METHOD")
@@ -59,5 +68,9 @@ public class DrugDetailRequest {
 
 	public void changePrecaution(String precaution) {
 		this.precaution = precaution;
+	}
+
+	public void changeIsHerbal(boolean isHerbal) {
+		this.isHerbal = isHerbal;
 	}
 }

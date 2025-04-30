@@ -25,4 +25,7 @@ public class DrugDetail {
 	private List<String> efficacy;
 	private List<String> usage;
 	private Map<String,List<String>> precaution;
+	private LocalDate cancelDate;
+	private String cancelName;
+	private boolean isHerbal;
 }

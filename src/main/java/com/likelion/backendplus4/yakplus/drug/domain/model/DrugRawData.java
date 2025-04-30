@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.likelion.backendplus4.yakplus.drug.domain.model.vo.Material;
 
+import jakarta.persistence.Column;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -54,4 +55,10 @@ public class DrugRawData {
 
 	//TODO @ApiModelProperty(value = "의약품 이미지 URL", example = "http://example.com/image.jpg")
 	private String imageUrl;
+
+	private LocalDate cancelDate;
+
+	private String cancelName;
+
+	private boolean isHerbal;
 }

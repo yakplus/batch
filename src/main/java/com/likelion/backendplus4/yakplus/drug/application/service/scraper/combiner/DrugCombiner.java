@@ -96,6 +96,9 @@ public class DrugCombiner implements DrugCombineUsecase {
 			.usage(d.getUsage())
 			.precaution(d.getPrecaution())
 			.imageUrl(i.getImageUrl())
+			.cancelDate(d.getCancelDate())
+			.cancelName(d.getCancelName())
+			.isHerbal(d.isHerbal())
 			.build();
 		return rawData;
 	}

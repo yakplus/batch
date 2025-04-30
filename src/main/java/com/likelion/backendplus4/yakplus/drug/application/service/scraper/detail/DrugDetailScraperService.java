@@ -138,6 +138,13 @@ public class DrugDetailScraperService implements DrugDetailScraperUsecase {
 
 				drugDetail.changePrecaution(precautions);
 				log(LogLevel.DEBUG, "drugDetail 객체에 약품 주의사항 저장 완료: \n" + drugDetail);
+
+				String precaution = drugDetail.getPrecaution();
+				if(precaution != null) {
+					if(precaution.contains("한의사") || precaution.contains("한약사")){
+						drugDetail.changeIsHerbal(true);
+					}
+				}
 			}
 			return apiDataDrugDetails;
 		} catch (Exception e) {
