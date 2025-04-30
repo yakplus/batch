@@ -35,7 +35,7 @@ public class DrugDetailMapper {
 			.precaution(getPrecaution(e.getPrecaution()))
 			.cancelDate(e.getCancelDate())
 			.cancelName(e.getCancelName())
-			.isHerbal(e.isHerbal())
+			.isHerbal(e.getIsHerbal())
 			.build();
 		return domain;
 	}
@@ -55,7 +55,7 @@ public class DrugDetailMapper {
 			.precaution(getPrecaution(e.getPrecaution()))
 			.cancelDate(e.getCancelDate())
 			.cancelName(e.getCancelName())
-			.isHerbal(e.isHerbal())
+			.isHerbal(e.getIsHerbal())
 			.build();
 
 	}
