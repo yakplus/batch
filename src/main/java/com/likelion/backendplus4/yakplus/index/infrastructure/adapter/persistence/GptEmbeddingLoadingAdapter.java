@@ -18,34 +18,11 @@ import java.util.Map;
 
 import static com.likelion.backendplus4.yakplus.common.util.log.LogUtil.log;
 
-@Repository("gptAdapter")
-@Primary
+@Repository
 @RequiredArgsConstructor
 public class GptEmbeddingLoadingAdapter implements EmbeddingLoadingPort {
     private final GovDrugGptEmbedJpaRepository govDrugGptEmbedJpaRepository;
     private final GovDrugJpaRepository govDrugJpaRepository;
-
-
-    @Override
-    public List<Drug> loadAllEmbeddings() {
-        List<DrugRawDataEntity> rawDataEntities = govDrugJpaRepository.findAll();
-        List<DrugGptEmbedEntity> drugGptEmbedEntities = govDrugGptEmbedJpaRepository.findAll();
-
-        // drugGptEmbedEntities를 Map으로 변환 (key: drugId)
-        Map<Long, DrugGptEmbedEntity> gptEmbedMap = new HashMap<>();
-        for (DrugGptEmbedEntity embed : drugGptEmbedEntities) {
-            gptEmbedMap.put(embed.getDrugId(), embed);
-        }
-
-        List<Drug> drugs = new ArrayList<>();
-        for (DrugRawDataEntity drugRawData : rawDataEntities) {
-            DrugGptEmbedEntity embed = gptEmbedMap.get(drugRawData.getDrugId());
-            Drug drug = toDomainFromEntity(drugRawData, embed);
-            drugs.add(drug);
-        }
-
-        return drugs;
-    }
 
     @Override
     public List<Drug> loadEmbeddingsByPage(Pageable pageable) {
