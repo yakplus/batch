@@ -66,6 +66,7 @@ public class DrugDetailEntity {
 	private String cancelName;
 
 	@Column(name="IS_HERBAL")
+	@Builder.Default
 	private boolean isHerbal = false;
 
 	public DrugDetailEntity(@JsonProperty("ETC_OTC_CODE") String drugType) {
