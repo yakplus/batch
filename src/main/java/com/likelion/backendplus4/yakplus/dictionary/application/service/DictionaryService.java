@@ -1,7 +1,10 @@
 package com.likelion.backendplus4.yakplus.dictionary.application.service;
 
 import com.likelion.backendplus4.yakplus.dictionary.application.port.in.DictionaryUseCase;
-import com.likelion.backendplus4.yakplus.dictionary.application.port.out.SymptomDictionaryRepositoryPort;
+import com.likelion.backendplus4.yakplus.dictionary.application.port.out.SymptomDictionaryElsRepositoryPort;
+import com.likelion.backendplus4.yakplus.dictionary.application.port.out.SymptomDictionaryJpaRepositoryPort;
+import com.likelion.backendplus4.yakplus.dictionary.infrastructure.persistence.adapter.out.JsonSymptomDictionaryLoader;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -9,15 +12,14 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class DictionaryService implements DictionaryUseCase {
 
-    private final SymptomDictionaryRepositoryPort dictionaryRepositoryPort;
+    private final JsonSymptomDictionaryLoader jsonSymptomDictionaryLoader;
+    private final SymptomDictionaryJpaRepositoryPort dictionaryRepositoryPort;
+    private final SymptomDictionaryElsRepositoryPort dictionaryElsRepositoryPort;
 
     @Override
     public void setDictionary() {
-        try {
-            dictionaryRepositoryPort.setDictionary();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        List<String> symptomList = jsonSymptomDictionaryLoader.loadDictionary();
+        dictionaryRepositoryPort.setDictionary(symptomList);
+        dictionaryElsRepositoryPort.setDictionary(symptomList);
     }
 }
