@@ -34,7 +34,7 @@ public class TempDrugRawDataMapper {
                 .imageUrl(e.getImageUrl())
                 .cancelDate(e.getCancelDate())
                 .cancelName(e.getCancelName())
-                .isHerbal(e.isHerbal())
+                .isHerbal(e.getIsHerbal())
                 .build();
     }
 
