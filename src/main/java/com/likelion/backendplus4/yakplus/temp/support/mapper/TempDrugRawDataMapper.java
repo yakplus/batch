@@ -4,6 +4,7 @@ import com.likelion.backendplus4.yakplus.drug.domain.exception.ScraperException;
 import com.likelion.backendplus4.yakplus.drug.domain.exception.error.ScraperErrorCode;
 import com.likelion.backendplus4.yakplus.drug.domain.model.Drug;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.repository.entity.DrugRawDataEntity;
+import com.likelion.backendplus4.yakplus.index.infrastructure.adapter.persistence.DrugMapper;
 import com.likelion.backendplus4.yakplus.index.support.parser.JsonArrayTextParser;
 import java.io.IOException;
 import java.util.List;
@@ -24,16 +25,16 @@ public class TempDrugRawDataMapper {
                 .company(e.getCompany())
                 .permitDate(e.getPermitDate())
                 .isGeneral(e.isGeneral())
-// TODO			.materialInfo(JsonArrayTextParser.extractAndClean(e.getMaterialInfo()))
+    			.materialInfo(DrugMapper.parseMaterials(e.getMaterialInfo()))
                 .storeMethod(e.getStoreMethod())
                 .validTerm(e.getValidTerm())
                 .efficacy(efficacy)
-// TODO			.usage(e.getUsage())
-// TODO			.precaution(e.getPrecaution())
+    			.usage(DrugMapper.parseStringToList(e.getUsage()))
+    			.precaution(DrugMapper.parsePrecaution(e.getPrecaution()))
                 .imageUrl(e.getImageUrl())
-//                .cancelDate(e.getCancelDate())
-//                .cancelName(e.getCancelName())
-//                .isHerbal(e.isHerbal())
+                .cancelDate(e.getCancelDate())
+                .cancelName(e.getCancelName())
+                .isHerbal(e.isHerbal())
                 .build();
     }
 

@@ -37,10 +37,19 @@ public class DrugKeywordDocument {
     @Field(type = FieldType.Text, name = "efficacy_list")
     private List<String> efficacyList;
 
+    @Field(type = FieldType.Text, name = "ingredientName")
+    private List<String> ingredientName;
+
     @CompletionField(
             analyzer = "drugName_autocomplete",
             searchAnalyzer = "drugName_autocomplete"
     )
     private List<String> drugNameSuggester;
+
+    @CompletionField(
+            analyzer = "drugName_autocomplete",
+            searchAnalyzer = "drugName_autocomplete"
+    )
+    private List<String> ingredientNameSuggester;
 
 }
