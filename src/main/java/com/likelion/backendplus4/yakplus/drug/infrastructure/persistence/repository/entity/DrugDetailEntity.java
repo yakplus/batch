@@ -66,7 +66,8 @@ public class DrugDetailEntity {
 	private String cancelName;
 
 	@Column(name="IS_HERBAL")
-	private boolean isHerbal = false;
+	@Builder.Default
+	private Boolean isHerbal = false;
 
 	public DrugDetailEntity(@JsonProperty("ETC_OTC_CODE") String drugType) {
 		this.isGeneral = !"전문의약품".equals(drugType);
