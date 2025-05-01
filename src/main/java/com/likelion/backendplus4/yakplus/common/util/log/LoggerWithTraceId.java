@@ -79,7 +79,7 @@ public class LoggerWithTraceId {
     private static String makeTraceId() {
         String traceId = MDC.get("traceId");
         if (traceId == null || traceId.trim().isEmpty()) {
-            traceId = UUID.randomUUID().toString();
+            return "no-trace";
         }
         return traceId;
     }
