@@ -19,10 +19,10 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 public class DrugKeywordDocument {
 
     @Id
-    @Field(type = FieldType.Keyword, name = "ITEM_SEQ")
+    @Field(type = FieldType.Keyword, name = "drugId")
     private Long drugId;
 
-    @Field(type = FieldType.Text, name = "ITEM_NAME")
+    @Field(type = FieldType.Text, name = "drugName")
     private String drugName;
 
     @Field(type = FieldType.Text, name = "company")
