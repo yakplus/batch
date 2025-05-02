@@ -40,26 +40,31 @@ public class DrugIndexer implements IndexUseCase {
      * ES 인덱스에 저장한다.
      *
      * @author 정안식
-     * @modified 2025-04-28
-     * 25.04.27 - esIndexname을 인자로 받아 saveAll 메서드에 전달하도록 수정
+     * @modified 2025-05-02 이해창
+     * 25.05.02 - 저장된 약물 상세정보 데이터 크기를 기준으로 ES에 색인하는 loop를 만들도록 수정
      * 25.04.28 - IndexRequest를 인자로 더 이상 받지 않도록 수정
+     * 25.04.27 - esIndexname을 인자로 받아 saveAll 메서드에 전달하도록 수정
      * @since 2025-04-22
      */
     @Override
     public void index() {
         log("index 서비스 요청 수신");
-//        Pageable pageable = createPageable(request.limit());
-        try {
-            for (int i = 1; i <= 50; i++) {
-                List<Drug> drugs = fetchRawData(i);
-                String esIndexName = getEsIndexName();
-                saveDrugs(esIndexName, drugs);
+        String esIndexName = getEsIndexName();
+        long totalDataSize = govDrugRawDataPort.getDrugTotalSize();
+        int totalPages = (int) ((totalDataSize + CHUNK_SIZE - 1) / CHUNK_SIZE); // 전체 페이지 수 계산 (올림)
+        List<Drug> drugs;
+        for(int currentPage = 0; currentPage < totalPages; currentPage++) {
+            log("색인 시작: page=" + currentPage);
+            try{
+                drugs = fetchRawData(currentPage, CHUNK_SIZE);
+            } catch (Exception e) {
+                log(LogLevel.ERROR, String.format("%d 페이지 색인용 데이터 로딩 실패", currentPage), e);
+                continue;
             }
-        } catch (Exception e) {
-            log(LogLevel.ERROR,"indexing 시 데이터 5000개 보다 적어서 에러 발생", e);
-            e.printStackTrace();
+            log("   조회 완료: page=" + currentPage + ", 건수=" + drugs.size());
+            saveDrugs(esIndexName, drugs);
+            log("   색인 완료: page=" + currentPage + ", 건수=" + drugs.size());
         }
-
     }
 
     /**
@@ -111,16 +116,18 @@ public class DrugIndexer implements IndexUseCase {
     /**
      * RDB에서 lastSeq 이후의 원시 데이터를 조회하여 도메인 객체로 변환한다.
      *
-     * @param i for문 내부에서 동작하는 i값(pageable의 pageNumber)
+     * @param  pageNum 현재 페이지 번호
+     * @param numOfRows 한 페이지당 조회할 건수
      * @return 도메인 모델 리스트
      * @author 정안식
-     * @modified 2025-04-28
+     * @modified 2025-05-02 이해창<br/>
+     * 25.05.02 - 페이징 처리 시 페이지 사이즈 받도록 수정 <br/>
      * 25.04.28 - 페이징 처리 로직 수정
      * @since 2025-04-22
      */
-    private List<Drug> fetchRawData(int i) {
+    private List<Drug> fetchRawData(int pageNum, int numOfRows) {
         log("RDB에서 원시 데이터 조회");
-        return govDrugRawDataPort.fetchRawData(i);
+        return govDrugRawDataPort.fetchRawData(pageNum, numOfRows);
     }
 
     /**
