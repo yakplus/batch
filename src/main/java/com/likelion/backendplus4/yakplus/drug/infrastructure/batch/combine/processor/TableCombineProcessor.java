@@ -17,17 +17,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.likelion.backendplus4.yakplus.common.util.log.LogLevel;
 import com.likelion.backendplus4.yakplus.drug.domain.model.vo.Material;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.repository.entity.DrugRawDataEntity;
-import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.repository.entity.TableCombineEntity;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.batch.combine.dto.TableCombineDto;
 
 import lombok.RequiredArgsConstructor;
 
 @Component
 @StepScope
 @RequiredArgsConstructor
-public class TableCombineProcessor implements ItemProcessor<TableCombineEntity, DrugRawDataEntity> {
+public class TableCombineProcessor implements ItemProcessor<TableCombineDto, DrugRawDataEntity> {
 
 	@Override
-	public DrugRawDataEntity process(TableCombineEntity entity) throws Exception {
+	public DrugRawDataEntity process(TableCombineDto entity) throws Exception {
 		String imgUrl = null;
 
 		String productImage = entity.getProductImage();

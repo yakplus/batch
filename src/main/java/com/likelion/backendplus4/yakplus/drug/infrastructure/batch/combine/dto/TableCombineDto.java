@@ -1,4 +1,4 @@
-package com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.repository.entity;
+package com.likelion.backendplus4.yakplus.drug.infrastructure.batch.combine.dto;
 
 import java.time.LocalDate;
 
@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class TableCombineEntity {
+public class TableCombineDto {
 	private Long drugId;
 	private String drugName;
 	private String company;
