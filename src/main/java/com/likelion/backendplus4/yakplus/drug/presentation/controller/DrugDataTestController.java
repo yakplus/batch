@@ -10,12 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.likelion.backendplus4.yakplus.drug.application.service.port.in.DrugCombineUsecase;
 import com.likelion.backendplus4.yakplus.drug.application.service.port.in.DrugEmbedProcessorUseCase;
 import com.likelion.backendplus4.yakplus.drug.application.service.scraper.DrugScraper;
-import com.likelion.backendplus4.yakplus.drug.application.service.port.out.EmbeddingPort;
 
 import lombok.RequiredArgsConstructor;
 
 import com.likelion.backendplus4.yakplus.drug.infrastructure.embedding.model.EmbeddingModelType;
-import com.likelion.backendplus4.yakplus.response.ApiResponse;
 
 @RestController
 @RequiredArgsConstructor

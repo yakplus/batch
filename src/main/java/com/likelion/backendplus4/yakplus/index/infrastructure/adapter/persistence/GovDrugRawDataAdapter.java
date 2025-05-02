@@ -37,10 +37,6 @@ public class GovDrugRawDataAdapter implements GovDrugRawDataPort {
     private final GovDrugJpaRepository drugJpaRepository;
     private final EmbeddingLoadingPort embeddingLoadingPort;
 
-    @Value("${gov.numOfRows}")
-    private int numOfRows;
-
-
 
     /**
      * 주어진 Pageable 정보에 따라 DB에서 한 페이지 분량의 GovDrugEntity를 조회하고,
@@ -131,15 +127,29 @@ public class GovDrugRawDataAdapter implements GovDrugRawDataPort {
 
 
     @Override
-    public List<Drug> fetchRawData(int pageNo) {
+    public List<Drug> fetchRawData(int pageNo, int numOfRows) {
         log("index 서비스 요청 수신");
-        Pageable pageable = createPageable(pageNo);
+        Pageable pageable = createPageable(pageNo, numOfRows);
         List<Drug> drugs = embeddingLoadingPort.loadEmbeddingsByPage(pageable);
         return drugs;
     }
 
-    private Pageable createPageable(int pageNo) {
+    private Pageable createPageable(int pageNo, int numOfRows) {
         log("pageable 생성");
         return PageRequest.of(pageNo, numOfRows, Sort.by(Sort.Direction.ASC, "drugId"));
+    }
+
+
+    /**
+     * JPA 레포지토리를 이용해 GovDrugJpaRepository의 전체 데이터 수를 조회합니다.
+     *
+     * @return GovDrugJpaRepository의 전체 데이터 수
+     * @author 이해창
+     * @since 2025-05-02
+     * @modified
+     */
+    @Override
+    public long getDrugTotalSize() {
+        return drugJpaRepository.count();
     }
 }

@@ -2,6 +2,8 @@ package com.likelion.backendplus4.yakplus.index.infrastructure.adapter.persisten
 
 import com.likelion.backendplus4.yakplus.common.util.log.LogLevel;
 import com.likelion.backendplus4.yakplus.drug.domain.model.Drug;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.api.support.ApiUriCompBuilder;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.embedding.model.EmbeddingRequestText;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.repository.entity.DrugKrSbertEmbedEntity;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.repository.entity.DrugRawDataEntity;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.repository.jpa.GovDrugJpaRepository;
@@ -9,11 +11,17 @@ import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.reposit
 import com.likelion.backendplus4.yakplus.index.application.port.out.EmbeddingLoadingPort;
 import com.likelion.backendplus4.yakplus.index.exception.IndexException;
 import com.likelion.backendplus4.yakplus.index.exception.error.IndexErrorCode;
+import com.likelion.backendplus4.yakplus.index.support.EmbeddingUtil.EmbedEntityBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,24 +33,51 @@ import static com.likelion.backendplus4.yakplus.common.util.log.LogUtil.log;
 @RequiredArgsConstructor
 public class KrSBertEmbeddingLoadingAdapter implements EmbeddingLoadingPort {
     private final GovDrugKrSbertEmbedJpaRepository govDrugKrSbertEmbedJpaRepository;
+    private final ApiUriCompBuilder apiUriCompBuilder;
+    private final RestTemplate restTemplate;
 
     @Override
     public List<Drug> loadEmbeddingsByPage(Pageable pageable) {
         List<Drug> drugs = new ArrayList<>();
         List<Object[]> rows = govDrugKrSbertEmbedJpaRepository.findRawAndEmbed(pageable);
-        log("loadEmbeddingsByPage - " + pageable.getPageNumber() +"페이지 에서 받아온 drug 객체 제작 대상 데이터 수: " + rows.size());
+        log("loadEmbeddingsByPage - " + pageable.getPageNumber() + "페이지 에서 받아온 drug 객체 제작 대상 데이터 수: " + rows.size());
         if (rows.isEmpty()) {
-            log(LogLevel.ERROR,"loadEmbeddingsByPage - Drug 도메인 객체 생성 대상 데이터 없음");
+            log(LogLevel.ERROR, "loadEmbeddingsByPage - Drug 도메인 객체 생성 대상 데이터 없음");
             throw new IndexException(IndexErrorCode.RAW_DATA_FETCH_ERROR);
         }
         for (Object[] arr : rows) {
-            DrugRawDataEntity   raw   = (DrugRawDataEntity)   arr[0];
-            DrugKrSbertEmbedEntity embed = (DrugKrSbertEmbedEntity)  arr[1];
+            DrugRawDataEntity raw = (DrugRawDataEntity) arr[0];
+            DrugKrSbertEmbedEntity embed = (DrugKrSbertEmbedEntity) arr[1];
             drugs.add(toDomainFromEntity(raw, embed));
         }
         log("loadEmbeddingsByPage - Drug 도메인 객체 생성 완료");
 
         return drugs;
+    }
+
+    @Override
+    public float[] getEmbedding(String text) {
+        URI embeddingURI = getEmbeddingURI();
+        return getEmbeddingVector(embeddingURI, text);
+    }
+
+    @Override
+    public void saveEmbedding(Long drugId, float[] embedding) {
+        govDrugKrSbertEmbedJpaRepository.save(EmbedEntityBuilder.buildEmbedEntity(drugId, embedding, DrugKrSbertEmbedEntity.class));
+    }
+
+    private float[] getEmbeddingVector(URI embedUri, String text) {
+        EmbeddingRequestText embeddingRequestText = new EmbeddingRequestText();
+        embeddingRequestText.setText(text);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<EmbeddingRequestText> request = new HttpEntity<>(embeddingRequestText, headers);
+        return restTemplate.postForObject(embedUri, request, float[].class);
+    }
+
+    private URI getEmbeddingURI() {
+        return apiUriCompBuilder.getUriForKrSbertEmbeding();
     }
 
     private static Drug toDomainFromEntity(DrugRawDataEntity drugEntity, DrugKrSbertEmbedEntity embedEntity) {

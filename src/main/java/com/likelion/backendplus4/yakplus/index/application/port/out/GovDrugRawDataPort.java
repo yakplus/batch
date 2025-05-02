@@ -7,8 +7,9 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface GovDrugRawDataPort {
-    List<Drug> fetchRawData(int i);
+    List<Drug> fetchRawData(int pageNo, int numOfRows);
 
     Page<Drug> findAllDrugs(Pageable pageable);
 
+    long getDrugTotalSize();
 }
