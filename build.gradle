@@ -51,6 +51,10 @@ dependencies {
     // OpenAi
     implementation 'org.springframework.ai:spring-ai-openai-spring-boot-starter:1.0.0-M5'
 
+
+    // Spring-Batch
+    implementation 'org.springframework.boot:spring-boot-starter-batch'
+
     // build.gradle
     if (project.hasProperty('env') && project.env == 'test') {
         dependencies {

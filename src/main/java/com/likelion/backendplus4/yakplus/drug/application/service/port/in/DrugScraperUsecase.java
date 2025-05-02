@@ -9,5 +9,9 @@ public interface DrugScraperUsecase {
 	 * 3. 상세 정보와 이미지 병합 후 통합 테이블 저장
 	 * 4. 임베딩 벡터 생성 및 각각 벡터 테이블 저장
 	 */
-	void scraperStart();
+	String scraperStart();
+
+	String getStatus();
+
+	String stop();
 }

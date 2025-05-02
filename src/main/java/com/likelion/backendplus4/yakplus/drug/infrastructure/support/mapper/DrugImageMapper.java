@@ -9,14 +9,14 @@ public class DrugImageMapper {
 	public static DrugImage toDomainFromEntity(ApiDataDrugImgEntity e){
 		return DrugImage.builder()
 			.drugId(e.getDrugId())
-			.imageUrl(e.getImgUrl())
+			.imageUrl(e.getPillImage())
 			.build();
 	}
 
 	public static ApiDataDrugImgEntity toEntityFromDomain(DrugImage d){
 		return ApiDataDrugImgEntity.builder()
 			.drugId(d.getDrugId())
-			.imgUrl(d.getImageUrl())
+			.pillImage(d.getImageUrl())
 			.build();
 	}
 
