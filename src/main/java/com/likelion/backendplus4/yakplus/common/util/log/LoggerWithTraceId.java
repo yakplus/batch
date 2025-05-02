@@ -5,6 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
+import java.util.UUID;
+
 /**
  * TraceId를 포함한 로거 클래스
  * 
@@ -76,7 +78,9 @@ public class LoggerWithTraceId {
      */
     private static String makeTraceId() {
         String traceId = MDC.get("traceId");
-        validateTraceId(traceId);
+        if (traceId == null || traceId.trim().isEmpty()) {
+            return "no-trace";
+        }
         return traceId;
     }
 

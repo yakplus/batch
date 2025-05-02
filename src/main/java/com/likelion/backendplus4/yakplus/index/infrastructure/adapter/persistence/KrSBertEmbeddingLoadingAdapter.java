@@ -16,33 +16,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Repository("krSBertAdapter")
+@Repository
 @RequiredArgsConstructor
 public class KrSBertEmbeddingLoadingAdapter implements EmbeddingLoadingPort {
     private final GovDrugKrSbertEmbedJpaRepository govDrugKrSbertEmbedJpaRepository;
     private final GovDrugJpaRepository govDrugJpaRepository;
-
-
-    @Override
-    public List<Drug> loadAllEmbeddings() {
-        List<DrugRawDataEntity> rawDataEntities = govDrugJpaRepository.findAll();
-        List<DrugKrSbertEmbedEntity> drugKrSBertEmbedEntities = govDrugKrSbertEmbedJpaRepository.findAll();
-
-        // drugKrSBertEmbedEntities를 Map으로 변환 (key: drugId)
-        Map<Long, DrugKrSbertEmbedEntity> krSBertEmbedMap = new HashMap<>();
-        for (DrugKrSbertEmbedEntity embed : drugKrSBertEmbedEntities) {
-            krSBertEmbedMap.put(embed.getDrugId(), embed);
-        }
-
-        List<Drug> drugs = new ArrayList<>();
-        for (DrugRawDataEntity drugRawData : rawDataEntities) {
-            DrugKrSbertEmbedEntity embed = krSBertEmbedMap.get(drugRawData.getDrugId());
-            Drug drug = toDomainFromEntity(drugRawData, embed);
-            drugs.add(drug);
-        }
-
-        return drugs;
-    }
 
     @Override
     public List<Drug> loadEmbeddingsByPage(Pageable pageable) {

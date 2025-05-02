@@ -35,63 +35,40 @@ public class DrugEmbedProcessor implements DrugEmbedProcessorUseCase {
 	private final EmbeddingPort embeddingPort;
 	private final DrugEmbedRepositoryPort embedRepositoryPort;
 
+	private volatile EmbeddingModelType currentEmbeddingModel = EmbeddingModelType.OPENAI; // 기본 모델
+
 	@Override
 	public void startEmbedding() {
 		log("약품 효능 임베딩 작업 시작");
 		Page<Drug> firstPage = getAllItem(0);
-		for(int i=0; i<firstPage.getTotalPages(); i++){
+		for (int i = 0; i < firstPage.getTotalPages(); i++) {
 			getAllItem(i).forEach(data -> {
 				String efficacy = convertSingleStringForEfficacy(data.getEfficacy());
-				saveSbertVector(data, efficacy);
-				saveKmBertVector(data, efficacy);
-				saveGptVector(data, efficacy);
+				saveVector(data, efficacy);
 			});
-
 		}
-
 		log("약품 효능 임베딩 작업 완료");
 	}
 
-	/**
-	 * GPT 모델을 사용하여 임베딩 벡터를 생성하고 저장합니다.
-	 *
-	 * @param detail 의약품 상세 정보
-	 * @param text 임베딩 대상 텍스트
-	 *
-	 * @since 2025-04-25
-	 */
-	private void saveGptVector(Drug detail, String text) {
-		float[] openAIVector = embeddingPort.getEmbedding(
-			text, EmbeddingModelType.OPENAI);
-		embedRepositoryPort.saveGptEmbed(detail.getDrugId(), openAIVector);
-	}
+	// 임베딩 벡터를 생성하고 저장하는 공통 메서드
+	private void saveVector(Drug detail, String text) {
+		// 현재 선택된 임베딩 모델에 따라 벡터를 생성
+		float[] vector = embeddingPort.getEmbedding(text, currentEmbeddingModel);
 
-	/**
-	 * KmBERT 모델을 사용하여 임베딩 벡터를 생성하고 저장합니다.
-	 *
-	 * @param detail 의약품 상세 정보
-	 * @param text 임베딩 대상 텍스트
-	 *
-	 * @since 2025-04-25
-	 */
-	private void saveKmBertVector(Drug detail, String text) {
-		float[] kmbertVector = embeddingPort.getEmbedding(
-			text, EmbeddingModelType.KM_BERT);
-		embedRepositoryPort.saveKmBertEmbed(detail.getDrugId(), kmbertVector);
-	}
-
-	/**
-	 * KrSBERT 모델을 사용하여 임베딩 벡터를 생성하고 저장합니다.
-	 *
-	 * @param detail 의약품 상세 정보
-	 * @param text 임베딩 대상 텍스트
-	 *
-	 * @since 2025-04-25
-	 */
-	private void saveSbertVector(Drug detail, String text) {
-		float[] sbertVector = embeddingPort.getEmbedding(
-			text, EmbeddingModelType.SBERT);
-		embedRepositoryPort.saveKrSbertEmbed(detail.getDrugId(), sbertVector);
+		// 모델에 따른 저장 처리
+		switch (currentEmbeddingModel) {
+			case OPENAI:
+				embedRepositoryPort.saveGptEmbed(detail.getDrugId(), vector);
+				break;
+			case KM_BERT:
+				embedRepositoryPort.saveKmBertEmbed(detail.getDrugId(), vector);
+				break;
+			case SBERT:
+				embedRepositoryPort.saveKrSbertEmbed(detail.getDrugId(), vector);
+				break;
+			default:
+				throw new IllegalArgumentException("Unknown embedding model: " + currentEmbeddingModel);
+		}
 	}
 
 	/**
@@ -124,5 +101,23 @@ public class DrugEmbedProcessor implements DrugEmbedProcessorUseCase {
 	 */
 	private Page<Drug> getAllItem(int i) {
 		return drugRawDataPort.findAllDrugs(PageRequest.of(i, 100));
+	}
+
+	/**
+	 * 임베딩 모델을 스위칭하는 메서드입니다.
+	 *
+	 * @param modelType 전환할 임베딩 모델 타입 (GPT, KmBERT, KrSBERT)
+	 */
+	@Override
+	public void switchEmbeddingModel(String modelType) {
+		// 유효하지 않으면 기본값(OPENAI)로 처리
+		this.currentEmbeddingModel = EmbeddingModelType.valueOf(modelType); // valueOf로 직접 변환
+		log("임베딩 모델 스위치 완료 - 현재 모델: " + currentEmbeddingModel);
+	}
+
+	@Override
+	public EmbeddingModelType getCurrentEmbeddingModel() {
+		log("현재 사용 중인 임베딩 모델 조회 - 현재 모델: " + currentEmbeddingModel);
+		return currentEmbeddingModel;  // Enum 반환
 	}
 }

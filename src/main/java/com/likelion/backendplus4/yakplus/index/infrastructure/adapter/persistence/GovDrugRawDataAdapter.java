@@ -36,8 +36,6 @@ public class GovDrugRawDataAdapter implements GovDrugRawDataPort {
     private final GovDrugDetailJpaRepository rawDataJpaRepository;
     private final GovDrugJpaRepository drugJpaRepository;
 
-    // 추후 수정... -> 임베딩 받아오는 방식 + List<Drug> 변환 통일
-    @Qualifier("gptAdapter")
     private final EmbeddingLoadingPort embeddingLoadingPort;
 
     @Value("${gov.numOfRows}")
