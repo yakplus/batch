@@ -60,4 +60,22 @@ public class EmbeddingRouterAdapter implements EmbeddingLoadingPort, EmbeddingSw
         log("어댑터 빈 이름 요청 - 현재 선택된 어댑터: " + adapterBeanName);
         return adapterBeanName;
     }
+
+    @Override
+    public float[] getEmbedding(String text) {
+        if (embeddingLoadingPort == null) {
+            log(LogLevel.ERROR, "임베딩 어댑터가 선택되지 않았습니다.");
+            throw new IllegalStateException("No adapter selected");
+        }
+        return embeddingLoadingPort.getEmbedding(text);
+    }
+
+    @Override
+    public void saveEmbedding(Long drugId, float[] embedding) {
+        if (embeddingLoadingPort == null) {
+            log(LogLevel.ERROR, "임베딩 어댑터가 선택되지 않았습니다.");
+            throw new IllegalStateException("No adapter selected");
+        }
+        embeddingLoadingPort.saveEmbedding(drugId, embedding);
+    }
 }

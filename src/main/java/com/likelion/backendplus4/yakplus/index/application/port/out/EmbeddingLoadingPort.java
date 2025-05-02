@@ -7,4 +7,8 @@ import java.util.List;
 
 public interface EmbeddingLoadingPort {
     List<Drug> loadEmbeddingsByPage(Pageable pageable);
+
+    float[] getEmbedding(String text);
+
+    void saveEmbedding(Long drugId, float[] embedding);
 }

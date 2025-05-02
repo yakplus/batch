@@ -4,17 +4,15 @@ import static com.likelion.backendplus4.yakplus.common.util.log.LogUtil.log;
 
 import java.util.List;
 
+import com.likelion.backendplus4.yakplus.index.application.port.out.EmbeddingLoadingPort;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.likelion.backendplus4.yakplus.common.util.log.LogLevel;
 import com.likelion.backendplus4.yakplus.drug.application.service.port.in.DrugEmbedProcessorUseCase;
-import com.likelion.backendplus4.yakplus.drug.application.service.port.out.DrugDetailRepositoryPort;
 import com.likelion.backendplus4.yakplus.drug.application.service.port.out.DrugEmbedRepositoryPort;
 import com.likelion.backendplus4.yakplus.drug.domain.model.Drug;
-import com.likelion.backendplus4.yakplus.drug.domain.model.DrugDetail;
-import com.likelion.backendplus4.yakplus.drug.application.service.port.out.EmbeddingPort;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.embedding.model.EmbeddingModelType;
 import com.likelion.backendplus4.yakplus.index.application.port.out.GovDrugRawDataPort;
 
@@ -32,7 +30,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class DrugEmbedProcessor implements DrugEmbedProcessorUseCase {
 	private final GovDrugRawDataPort drugRawDataPort;
-	private final EmbeddingPort embeddingPort;
+	private final EmbeddingLoadingPort embeddingLoadingPort;
 	private final DrugEmbedRepositoryPort embedRepositoryPort;
 
 	private volatile EmbeddingModelType currentEmbeddingModel = EmbeddingModelType.OPENAI; // 기본 모델
@@ -53,22 +51,9 @@ public class DrugEmbedProcessor implements DrugEmbedProcessorUseCase {
 	// 임베딩 벡터를 생성하고 저장하는 공통 메서드
 	private void saveVector(Drug detail, String text) {
 		// 현재 선택된 임베딩 모델에 따라 벡터를 생성
-		float[] vector = embeddingPort.getEmbedding(text, currentEmbeddingModel);
-
+		float[] vector = embeddingLoadingPort.getEmbedding(text);
 		// 모델에 따른 저장 처리
-		switch (currentEmbeddingModel) {
-			case OPENAI:
-				embedRepositoryPort.saveGptEmbed(detail.getDrugId(), vector);
-				break;
-			case KM_BERT:
-				embedRepositoryPort.saveKmBertEmbed(detail.getDrugId(), vector);
-				break;
-			case SBERT:
-				embedRepositoryPort.saveKrSbertEmbed(detail.getDrugId(), vector);
-				break;
-			default:
-				throw new IllegalArgumentException("Unknown embedding model: " + currentEmbeddingModel);
-		}
+		embeddingLoadingPort.saveEmbedding(detail.getDrugId(),vector);
 	}
 
 	/**
