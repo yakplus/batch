@@ -5,6 +5,7 @@ import com.likelion.backendplus4.yakplus.drug.domain.model.Drug;
 import com.likelion.backendplus4.yakplus.index.application.port.in.IndexUseCase;
 import com.likelion.backendplus4.yakplus.index.application.port.out.DrugIndexRepositoryPort;
 import com.likelion.backendplus4.yakplus.index.application.port.out.GovDrugRawDataPort;
+import com.likelion.backendplus4.yakplus.switcher.application.port.out.EmbeddingSwitchPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,6 +31,7 @@ import static com.likelion.backendplus4.yakplus.common.util.log.LogUtil.log;
 public class DrugIndexer implements IndexUseCase {
     private final GovDrugRawDataPort govDrugRawDataPort;
     private final DrugIndexRepositoryPort drugIndexRepositoryPort;
+    private final EmbeddingSwitchPort embeddingSwitchPort;
     private static final String SORT_BY_PROPERTY = "drugId";
     private static final int CHUNK_SIZE = 1_000;
 
@@ -127,10 +129,13 @@ public class DrugIndexer implements IndexUseCase {
      * @return Elasticsearch 인덱스 이름
      * @author 정안식
      * @since 2025-04-27
+     * @modified 2025-05-02 이해창<br/>
+     * 2025-05-02 - 하드코딩 된 문자를 받어오던 것을
+     * 임베딩 모델 BeanName을 가져오도록 수정
      */
     private String getEsIndexName() {
         log("ES 인덱스 이름 조회");
-        return govDrugRawDataPort.getEsIndexName();
+        return embeddingSwitchPort.getAdapterBeanName();
     }
 
     /**
