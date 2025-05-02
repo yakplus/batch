@@ -9,8 +9,6 @@ import java.util.List;
 public interface GovDrugRawDataPort {
     List<Drug> fetchRawData(int i);
 
-    String getEsIndexName();
-
     Page<Drug> findAllDrugs(Pageable pageable);
 
 }

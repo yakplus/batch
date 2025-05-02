@@ -35,16 +35,11 @@ import java.util.stream.Collectors;
 public class GovDrugRawDataAdapter implements GovDrugRawDataPort {
     private final GovDrugDetailJpaRepository rawDataJpaRepository;
     private final GovDrugJpaRepository drugJpaRepository;
-
     private final EmbeddingLoadingPort embeddingLoadingPort;
 
     @Value("${gov.numOfRows}")
     private int numOfRows;
 
-    @Override
-    public String getEsIndexName() {
-        return "test-gpt";
-    }
 
 
     /**
@@ -145,6 +140,6 @@ public class GovDrugRawDataAdapter implements GovDrugRawDataPort {
 
     private Pageable createPageable(int pageNo) {
         log("pageable 생성");
-        return PageRequest.of(pageNo-1, numOfRows, Sort.by(Sort.Direction.ASC, "drugId"));
+        return PageRequest.of(pageNo, numOfRows, Sort.by(Sort.Direction.ASC, "drugId"));
     }
 }
