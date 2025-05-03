@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import static com.likelion.backendplus4.yakplus.common.util.log.LogUtil.log;
-import com.likelion.backendplus4.yakplus.drug.domain.exception.ScraperException;
-import com.likelion.backendplus4.yakplus.drug.domain.exception.error.ScraperErrorCode;
+import com.likelion.backendplus4.yakplus.drug.application.service.exception.ScraperException;
+import com.likelion.backendplus4.yakplus.drug.application.service.exception.error.ScraperErrorCode;
 
 /**
  * 원재료 정보를 파싱하여 JSON 배열 형식의 문자열로 변환하는 유틸리티 클래스입니다.

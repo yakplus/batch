@@ -7,7 +7,7 @@ import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.stereotype.Component;
 
 import com.likelion.backendplus4.yakplus.common.util.log.LogUtil;
-import com.likelion.backendplus4.yakplus.drug.infrastructure.batch.api.ApiRequestManager;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.api.util.ApiRequestManager;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.batch.detail.reader.DetailPageNumberReader;
 
 import lombok.RequiredArgsConstructor;

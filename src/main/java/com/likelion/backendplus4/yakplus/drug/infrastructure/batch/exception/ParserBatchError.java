@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ParserBatchError implements ErrorCode {
 	ALREADY_RUN(HttpStatus.CONFLICT, 400001, "이미 실행 중인 배치가 있습니다."),
+	JOB_RUN_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, 500000, "JOB 실행 요청은 정상적으로 도달했으나 실행에 실패했습니다."),
 	JSON_TYPE_CHANGE_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, 500001, "JSON을 자바 타입으로 변환하는데 실패했습니다.");
 	private final HttpStatus httpStatus;
 	private final int code;

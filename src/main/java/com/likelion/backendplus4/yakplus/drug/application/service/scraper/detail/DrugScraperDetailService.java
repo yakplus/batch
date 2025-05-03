@@ -2,7 +2,7 @@ package com.likelion.backendplus4.yakplus.drug.application.service.scraper.detai
 
 import org.springframework.stereotype.Component;
 
-import com.likelion.backendplus4.yakplus.drug.application.service.port.in.DrugScraperDetailUseCase;
+import com.likelion.backendplus4.yakplus.drug.application.service.port.in.scraper.DrugScraperDetailUseCase;
 import com.likelion.backendplus4.yakplus.drug.application.service.port.out.BatchJobPort;
 
 import lombok.RequiredArgsConstructor;
@@ -15,5 +15,15 @@ public class DrugScraperDetailService implements DrugScraperDetailUseCase {
 	@Override
 	public String requestAllData() {
 		return batchJobPort.detailScrapJobStart();
+	}
+
+	@Override
+	public String stop() {
+		return batchJobPort.detailScrapJobStop();
+	}
+
+	@Override
+	public String getStatus() {
+		return batchJobPort.detailScrapJobStatus();
 	}
 }

@@ -2,6 +2,7 @@ package com.likelion.backendplus4.yakplus.switcher.infrastructure.route.adapter;
 
 import com.likelion.backendplus4.yakplus.common.util.log.LogLevel;
 import com.likelion.backendplus4.yakplus.drug.domain.model.Drug;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.batch.embed.dto.DrugVectorDto;
 import com.likelion.backendplus4.yakplus.index.application.port.out.EmbeddingLoadingPort;
 import com.likelion.backendplus4.yakplus.switcher.application.port.out.EmbeddingSwitchPort;
 import jakarta.annotation.PostConstruct;
@@ -71,11 +72,11 @@ public class EmbeddingRouterAdapter implements EmbeddingLoadingPort, EmbeddingSw
     }
 
     @Override
-    public void saveEmbedding(Long drugId, float[] embedding) {
+    public void saveEmbedding(List<DrugVectorDto> dtos) {
         if (embeddingLoadingPort == null) {
             log(LogLevel.ERROR, "임베딩 어댑터가 선택되지 않았습니다.");
             throw new IllegalStateException("No adapter selected");
         }
-        embeddingLoadingPort.saveEmbedding(drugId, embedding);
+        embeddingLoadingPort.saveEmbedding(dtos);
     }
 }

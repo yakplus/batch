@@ -2,14 +2,15 @@ package com.likelion.backendplus4.yakplus.index.support.EmbeddingUtil;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.batch.embed.dto.DrugVectorDto;
 
 public class EmbedEntityBuilder {
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
-    public static <T> T buildEmbedEntity(Long drugId, float[] vector, Class<T> clazz) {
+    public static <T> T buildEmbedEntity(DrugVectorDto dto, Class<T> clazz) {
         try {
             return clazz.getDeclaredConstructor(Long.class, String.class)
-                    .newInstance(drugId, toStringFromFloatArray(vector));
+                    .newInstance(dto.getDrugId(), toStringFromFloatArray(dto.getVector()));
         } catch (Exception e) {
             //TODO: 엔터티 생성 실패
             throw new RuntimeException(e);

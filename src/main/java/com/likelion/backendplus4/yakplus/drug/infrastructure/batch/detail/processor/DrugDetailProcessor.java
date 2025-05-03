@@ -10,11 +10,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.likelion.backendplus4.yakplus.common.util.log.LogLevel;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.batch.common.util.MaterialParser;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.batch.common.util.XMLParser;
-import com.likelion.backendplus4.yakplus.drug.infrastructure.batch.api.ApiRequestManager;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.api.util.ApiRequestManager;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.batch.mapper.ApiResponseMapper;
-import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.dto.DrugDetailRequest;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.batch.detail.dto.DrugDetailRequest;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.repository.entity.DrugDetailEntity;
-import com.likelion.backendplus4.yakplus.drug.infrastructure.support.mapper.DrugDetailRequestMapper;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.batch.mapper.DrugDetailRequestMapper;
 
 /**
  * pageNumber를 받아 외부 REST API 호출 → JSON → DTO 리스트 변환 →

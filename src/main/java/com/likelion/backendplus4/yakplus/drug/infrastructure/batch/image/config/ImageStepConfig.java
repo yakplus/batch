@@ -3,6 +3,7 @@ package com.likelion.backendplus4.yakplus.drug.infrastructure.batch.image.config
 import java.util.List;
 
 import org.springframework.batch.core.Step;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -11,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import com.likelion.backendplus4.yakplus.drug.infrastructure.batch.api.ApiRequestManager;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.api.util.ApiRequestManager;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.batch.common.util.MdcTaskDecorator;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.batch.image.processor.ImageScrapProcessor;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.batch.image.processor.ImageTotalPageCalculator;
@@ -27,24 +28,17 @@ import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.reposit
  */
 @Configuration
 public class ImageStepConfig {
-	private final PartitionedPageReader imagePageNumberReader;
-	private final PageRangePartitioner pageRangePartitioner;
 	private final ApiRequestManager apiRequestManager;
 	private final ApiResponseMapper apiResponseMapper;
 	private final TaskExecutor taskExecutor;
 
-	public ImageStepConfig(PartitionedPageReader imagePageNumberReader,
-						  ApiRequestManager apiRequestManager,
-						  MdcTaskDecorator mdcTaskDecorator,
+	public ImageStepConfig(ApiRequestManager apiRequestManager,
 		                  ApiResponseMapper apiResponseMapper,
 		                  @Qualifier("batchExecutorManyThread")
-		                  TaskExecutor taskExecutor,
-		PageRangePartitioner pageRangePartitioner) {
-		this.imagePageNumberReader = imagePageNumberReader;
+		                  TaskExecutor taskExecutor) {
 		this.apiRequestManager = apiRequestManager;
 		this.apiResponseMapper = apiResponseMapper;
 		this.taskExecutor = taskExecutor;
-		this.pageRangePartitioner = pageRangePartitioner;
 	}
 
 
@@ -70,7 +64,6 @@ public class ImageStepConfig {
 
 	@Bean
 	public Step imageMasterStep(JobRepository jobRepository,
-		PlatformTransactionManager txManager,
 		PageRangePartitioner partitioner,
 		Step imageScrapStep) {
 		return new StepBuilder("imageMasterStep", jobRepository)
@@ -97,10 +90,11 @@ public class ImageStepConfig {
 	public Step imageScrapStep(JobRepository jobRepository,
 		PlatformTransactionManager txManager,
 		ImageScrapProcessor processor,
-		DrugImageWriter writer) {
+		DrugImageWriter writer,
+		PartitionedPageReader reader) {
 		return new StepBuilder("imageScrapStep", jobRepository)
 			.<Integer, List<ApiDataDrugImgEntity>>chunk(1, txManager)
-			.reader(imagePageNumberReader)
+			.reader(reader)
 			.processor(processor)
 			.writer(writer)
 			.faultTolerant()
@@ -108,7 +102,6 @@ public class ImageStepConfig {
 			.retryLimit(3)
 			.skip(Exception.class)
 			.skipLimit(Integer.MAX_VALUE)
-			.taskExecutor(taskExecutor)
 			.build();
 	}
 
@@ -138,4 +131,6 @@ public class ImageStepConfig {
 	public DrugImageWriter imageScrapWriter(ApiDataDrugImgRepo repository) {
 		return new DrugImageWriter(repository);
 	}
+
+
 }

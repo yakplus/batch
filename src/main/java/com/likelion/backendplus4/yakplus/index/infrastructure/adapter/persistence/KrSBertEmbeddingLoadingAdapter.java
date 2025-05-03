@@ -2,18 +2,18 @@ package com.likelion.backendplus4.yakplus.index.infrastructure.adapter.persisten
 
 import com.likelion.backendplus4.yakplus.common.util.log.LogLevel;
 import com.likelion.backendplus4.yakplus.drug.domain.model.Drug;
-import com.likelion.backendplus4.yakplus.drug.infrastructure.api.support.ApiUriCompBuilder;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.api.util.UriCompBuilder;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.batch.embed.dto.DrugVectorDto;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.embedding.model.EmbeddingRequestText;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.repository.entity.DrugKrSbertEmbedEntity;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.repository.entity.DrugRawDataEntity;
-import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.repository.jpa.GovDrugJpaRepository;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.repository.jpa.GovDrugKrSbertEmbedJpaRepository;
 import com.likelion.backendplus4.yakplus.index.application.port.out.EmbeddingLoadingPort;
 import com.likelion.backendplus4.yakplus.index.exception.IndexException;
 import com.likelion.backendplus4.yakplus.index.exception.error.IndexErrorCode;
 import com.likelion.backendplus4.yakplus.index.support.EmbeddingUtil.EmbedEntityBuilder;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -23,9 +23,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static com.likelion.backendplus4.yakplus.common.util.log.LogUtil.log;
 
@@ -33,7 +31,7 @@ import static com.likelion.backendplus4.yakplus.common.util.log.LogUtil.log;
 @RequiredArgsConstructor
 public class KrSBertEmbeddingLoadingAdapter implements EmbeddingLoadingPort {
     private final GovDrugKrSbertEmbedJpaRepository govDrugKrSbertEmbedJpaRepository;
-    private final ApiUriCompBuilder apiUriCompBuilder;
+    private final UriCompBuilder apiUriCompBuilder;
     private final RestTemplate restTemplate;
 
     @Override
@@ -62,8 +60,13 @@ public class KrSBertEmbeddingLoadingAdapter implements EmbeddingLoadingPort {
     }
 
     @Override
-    public void saveEmbedding(Long drugId, float[] embedding) {
-        govDrugKrSbertEmbedJpaRepository.save(EmbedEntityBuilder.buildEmbedEntity(drugId, embedding, DrugKrSbertEmbedEntity.class));
+    public void saveEmbedding(List<DrugVectorDto> dtos) {
+        govDrugKrSbertEmbedJpaRepository.saveAll(
+            dtos.stream()
+                .map(dto -> EmbedEntityBuilder.buildEmbedEntity(dto, DrugKrSbertEmbedEntity.class))
+                .toList()
+        );
+        govDrugKrSbertEmbedJpaRepository.flush();
     }
 
     private float[] getEmbeddingVector(URI embedUri, String text) {

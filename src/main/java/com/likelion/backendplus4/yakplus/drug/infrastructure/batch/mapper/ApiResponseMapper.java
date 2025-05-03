@@ -12,7 +12,7 @@ import com.likelion.backendplus4.yakplus.common.util.log.LogLevel;
 import com.likelion.backendplus4.yakplus.common.util.log.LogUtil;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.batch.exception.ParserBatchError;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.batch.exception.ParserBatchException;
-import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.dto.DrugDetailRequest;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.batch.detail.dto.DrugDetailRequest;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.dto.DrugImageRequest;
 
 import lombok.RequiredArgsConstructor;

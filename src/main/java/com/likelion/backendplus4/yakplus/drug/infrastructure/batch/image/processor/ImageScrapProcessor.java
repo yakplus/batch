@@ -6,7 +6,7 @@ import org.springframework.batch.item.ItemProcessor;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.likelion.backendplus4.yakplus.common.util.log.LogUtil;
-import com.likelion.backendplus4.yakplus.drug.infrastructure.batch.api.ApiRequestManager;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.api.util.ApiRequestManager;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.batch.mapper.ApiResponseMapper;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.dto.DrugImageRequest;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.repository.entity.ApiDataDrugImgEntity;

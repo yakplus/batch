@@ -22,7 +22,6 @@ import com.likelion.backendplus4.yakplus.drug.infrastructure.batch.combine.dto.T
 import lombok.RequiredArgsConstructor;
 
 @Component
-@StepScope
 @RequiredArgsConstructor
 public class TableCombineProcessor implements ItemProcessor<TableCombineDto, DrugRawDataEntity> {
 

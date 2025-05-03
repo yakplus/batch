@@ -2,9 +2,7 @@ package com.likelion.backendplus4.yakplus.drug.infrastructure.batch.detail.confi
 
 import java.util.List;
 
-import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -13,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import com.likelion.backendplus4.yakplus.drug.infrastructure.batch.api.ApiRequestManager;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.api.util.ApiRequestManager;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.batch.common.util.MdcTaskDecorator;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.batch.detail.processor.DetailTotalPageCalculator;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.batch.detail.processor.DrugDetailProcessor;

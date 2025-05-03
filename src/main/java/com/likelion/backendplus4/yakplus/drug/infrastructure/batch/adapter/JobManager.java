@@ -23,13 +23,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
 
+import com.likelion.backendplus4.yakplus.common.util.log.LogLevel;
+import com.likelion.backendplus4.yakplus.common.util.log.LogUtil;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.batch.exception.ParserBatchError;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.batch.exception.ParserBatchException;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Spring Batch Job 실행 및 제어를 위한 매니저 클래스입니다.
+ * Job 실행, 중단, 상태 조회, 재시작 기능을 제공합니다.
+ *
+ * @since 2025-05-02
+ */
 @Component
-@RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@RequiredArgsConstructor
 public class JobManager {
 	private final AtomicBoolean isRunning = new AtomicBoolean(false);
 	private final JobLauncher jobLauncher;
@@ -40,16 +48,19 @@ public class JobManager {
 
 	private Set<Long> stoppedExecutionIds = new ConcurrentSkipListSet<>();
 
-	public void IfAlreadyRunThrowException() {
-		if (isRunning.get()) {
-			throw new ParserBatchException(ParserBatchError.ALREADY_RUN);
-		}
-	}
-
+	/**
+	 * 지정된 Job을 비동기로 실행합니다.
+	 *
+	 * @param job 실행할 Job
+	 * @return 실행 요청 결과 메시지
+	 * 
+	 * @author 함예정
+	 * @since 2025-05-02
+	 */
 	public String startJob(Job job) {
 		TaskExecutor taskExecutor = taskExecutorMap.get("batchExecutor");
-		log("배치 시작");
-		isRunning.set(true); // 실행 시작
+		log("배치 실행 시작 - Job: " + job.getName());
+		isRunning.set(true);
 		taskExecutor.execute(() -> {
 			try {
 				JobParameters params = new JobParametersBuilder()
@@ -58,15 +69,24 @@ public class JobManager {
 
 				jobLauncher.run(job, params);
 			} catch (Exception e) {
-				e.printStackTrace();
+				log(LogLevel.ERROR, "Job 실행 요청은 정상적으로 받았으나 실행에 실패하였습니다. " + job.getName());
+				throw new ParserBatchException(ParserBatchError.JOB_RUN_FAIL);
 			} finally {
-				isRunning.set(false); // 완료되면 해제
+				isRunning.set(false);
 			}
 		});
 
 		return "배치 실행 요청 수락됨";
 	}
 
+	/**
+	 * 중단된 JobExecution을 재시작합니다.
+	 *
+	 * @return 재시작 요청 결과 메시지
+	 * 
+	 * @author 함예정
+	 * @since 2025-05-02
+	 */
 	public String restart() {
 		IfAlreadyRunThrowException();
 		TaskExecutor taskExecutor = taskExecutorMap.get("batchExecutor");
@@ -76,8 +96,8 @@ public class JobManager {
 					isRunning.set(true);
 					jobOperator.restart(id);
 				} catch (Exception e) {
-					//TODO 나중에 예외처리
-					System.out.println("e = " + e);
+					log(LogLevel.ERROR, "Job 재 실행 요청은 정상적으로 받았으나 실행에 실패하였습니다.");
+					throw new ParserBatchException(ParserBatchError.JOB_RUN_FAIL);
 				} finally {
 					isRunning.set(false);
 				}
@@ -88,34 +108,48 @@ public class JobManager {
 		return "재시작 요청 성공";
 	}
 
+	/**
+	 * 지정된 Job의 최근 실행 상태를 조회합니다.
+	 *
+	 * @param job 조회할 Job
+	 * @return 상태 메시지
+	 *
+	 * @author 함예정
+	 * @since 2025-05-02
+	 */
 	public String getJobStatus(Job job) {
 		List<JobInstance> instances = jobExplorer.getJobInstances(job.getName(), 0, 30);
-
 		if (instances.isEmpty()) {
 			return "실행된 Job이 없습니다.";
 		}
 
-		JobInstance instance = instances.get(0);
-		List<JobExecution> executions = jobExplorer.getJobExecutions(instance);
-
-		JobExecution latest = executions.get(0);
-
-		for (StepExecution step : latest.getStepExecutions()) {
-			long read = step.getReadCount();
-			long total = step.getReadCount() + step.getSkipCount();
-
-			int progress = (total > 0) ? (int)((read * 100.0) / total) : 0;
-
-			return "Step: " + step.getStepName() +
-				", Read: " + read +
-				", Skip: " + step.getSkipCount() +
-				", Progress: " + progress + "%";
+		for (JobInstance instance : instances) {
+			List<JobExecution> executions = jobExplorer.getJobExecutions(instance);
+			for (JobExecution execution : executions) {
+				if (execution.isRunning()) {
+					StringBuilder status = new StringBuilder("실행 중인 Step 상태: {");
+					for (StepExecution step : execution.getStepExecutions()) {
+						long read = step.getReadCount();
+						status.append("Step: ").append(step.getStepName())
+							.append(", Read: ").append(read)
+							.append(", Skip: ").append(step.getSkipCount());
+					}
+					return status.toString().trim();
+				}
+			}
 		}
-
-		return "진행 중인 Step이 없습니다.";
-
+		return "실행 중인 Job이 없습니다.";
 	}
 
+	/**
+	 * 지정된 Job을 중지합니다.
+	 *
+	 * @param job 중지할 Job
+	 * @return 중지 요청 결과 메시지
+	 * 
+	 * @author 함예정
+	 * @since 2025-05-02
+	 */
 	public String stopRunningBatch(Job job) {
 		String jobName = job.getName();
 		log("배치 작업 중단 요청:" + jobName);
@@ -137,5 +171,19 @@ public class JobManager {
 		}
 		isRunning.set(false);
 		return "중단 요청 완료";
+	}
+
+	/**
+	 * 실행 중인 배치 작업이 있을 경우 예외를 발생시킵니다.
+	 *
+	 * @throws ParserBatchException 중복 실행 예외
+	 *
+	 * @author 함예정
+	 * @since 2025-05-02
+	 */
+	public void IfAlreadyRunThrowException() {
+		if (isRunning.get()) {
+			throw new ParserBatchException(ParserBatchError.ALREADY_RUN);
+		}
 	}
 }

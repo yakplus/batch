@@ -17,8 +17,8 @@ import org.xml.sax.InputSource;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.likelion.backendplus4.yakplus.drug.domain.exception.ScraperException;
-import com.likelion.backendplus4.yakplus.drug.domain.exception.error.ScraperErrorCode;
+import com.likelion.backendplus4.yakplus.drug.application.service.exception.ScraperException;
+import com.likelion.backendplus4.yakplus.drug.application.service.exception.error.ScraperErrorCode;
 
 /**
  * XML 문자열을 파싱하여 JSON 문자열로 변환하는 클래스입니다.

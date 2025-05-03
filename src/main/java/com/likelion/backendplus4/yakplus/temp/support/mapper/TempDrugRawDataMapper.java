@@ -1,7 +1,7 @@
 package com.likelion.backendplus4.yakplus.temp.support.mapper;
 
-import com.likelion.backendplus4.yakplus.drug.domain.exception.ScraperException;
-import com.likelion.backendplus4.yakplus.drug.domain.exception.error.ScraperErrorCode;
+import com.likelion.backendplus4.yakplus.drug.application.service.exception.ScraperException;
+import com.likelion.backendplus4.yakplus.drug.application.service.exception.error.ScraperErrorCode;
 import com.likelion.backendplus4.yakplus.drug.domain.model.Drug;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.repository.entity.DrugRawDataEntity;
 import com.likelion.backendplus4.yakplus.index.infrastructure.adapter.persistence.DrugMapper;

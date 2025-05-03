@@ -26,7 +26,7 @@ spring:
     job:
       enabled: false
     jdbc:
-      initialize-schema: always
+      initialize-schema: embedded
 logging:
   level:
     org.springframework.jdbc: DEBUG
