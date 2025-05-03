@@ -2,7 +2,8 @@ package com.likelion.backendplus4.yakplus.index.infrastructure.adapter.persisten
 
 import com.likelion.backendplus4.yakplus.common.util.log.LogLevel;
 import com.likelion.backendplus4.yakplus.drug.domain.model.Drug;
-import com.likelion.backendplus4.yakplus.drug.infrastructure.api.support.ApiUriCompBuilder;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.api.util.UriCompBuilder;
+import com.likelion.backendplus4.yakplus.drug.infrastructure.batch.embed.dto.DrugVectorDto;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.embedding.model.EmbeddingRequestText;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.repository.entity.DrugKmBertEmbedEntity;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.repository.entity.DrugRawDataEntity;
@@ -29,7 +30,7 @@ import static com.likelion.backendplus4.yakplus.common.util.log.LogUtil.log;
 @RequiredArgsConstructor
 public class KmBertEmbeddingLoadingAdapter implements EmbeddingLoadingPort {
     private final GovDrugKmBertEmbedJpaRepository govDrugKmBertEmbedJpaRepository;
-    private final ApiUriCompBuilder apiUriCompBuilder;
+    private final UriCompBuilder apiUriCompBuilder;
     private final RestTemplate restTemplate;
 
     @Override
@@ -58,8 +59,13 @@ public class KmBertEmbeddingLoadingAdapter implements EmbeddingLoadingPort {
     }
 
     @Override
-    public void saveEmbedding(Long drugId, float[] embedding) {
-        govDrugKmBertEmbedJpaRepository.save(EmbedEntityBuilder.buildEmbedEntity(drugId, embedding, DrugKmBertEmbedEntity.class));
+    public void saveEmbedding(List<DrugVectorDto> dtos) {
+        govDrugKmBertEmbedJpaRepository.saveAll(
+            dtos.stream()
+                .map(dto -> EmbedEntityBuilder.buildEmbedEntity(dto, DrugKmBertEmbedEntity.class))
+                .toList()
+        );
+        govDrugKmBertEmbedJpaRepository.flush();
     }
 
     private URI getEmbeddingURI() {

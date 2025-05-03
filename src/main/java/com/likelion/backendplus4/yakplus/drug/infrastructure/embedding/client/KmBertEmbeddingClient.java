@@ -8,16 +8,16 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import com.likelion.backendplus4.yakplus.drug.infrastructure.api.util.UriCompBuilder;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.embedding.model.EmbeddingModelType;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.embedding.model.EmbeddingRequestText;
-import com.likelion.backendplus4.yakplus.drug.infrastructure.api.support.ApiUriCompBuilder;
 
 import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
 public class KmBertEmbeddingClient implements EmbeddingClient {
-	private final ApiUriCompBuilder apiUriCompBuilder;
+	private final UriCompBuilder apiUriCompBuilder;
 	private final RestTemplate restTemplate;
 
 	@Override

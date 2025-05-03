@@ -1,7 +1,10 @@
 package com.likelion.backendplus4.yakplus.index.infrastructure.adapter.persistence;
 
+import static com.likelion.backendplus4.yakplus.common.util.log.LogUtil.*;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.likelion.backendplus4.yakplus.common.util.log.LogLevel;
 import com.likelion.backendplus4.yakplus.drug.domain.model.vo.Material;
 
 import java.util.List;
@@ -42,5 +45,18 @@ public class DrugMapper{
         } catch (Exception e) {
             throw new RuntimeException("Failed to parse vector JSON", e);
         }
+    }
+
+    public static String convertSingleStringForEfficacy(List<String> stringList) {
+        log(LogLevel.DEBUG, "약품 효능 정보 단일 문자로 변환 시작");
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String s : stringList) {
+            stringBuilder.append(s);
+            stringBuilder.append(" ");
+        }
+
+        String s = stringBuilder.toString();
+        log(LogLevel.DEBUG, "약품 효능 정보 단일 문자로 변환 완료" + s);
+        return s;
     }
 }
