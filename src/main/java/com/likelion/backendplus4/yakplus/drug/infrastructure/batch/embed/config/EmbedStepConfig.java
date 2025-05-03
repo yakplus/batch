@@ -105,7 +105,6 @@ public class EmbedStepConfig {
 			.retryLimit(3)
 			.skip(Exception.class)
 			.skipLimit(Integer.MAX_VALUE)
-			.taskExecutor(taskExecutor)
 			.build();
 	}
 
@@ -141,7 +140,6 @@ public class EmbedStepConfig {
 			.retryLimit(3)
 			.skip(Exception.class)
 			.skipLimit(Integer.MAX_VALUE)
-			.taskExecutor(taskExecutor)
 			.build();
 	}
 
@@ -176,7 +174,6 @@ public class EmbedStepConfig {
 			.retryLimit(3)
 			.skip(Exception.class)
 			.skipLimit(Integer.MAX_VALUE)
-			.taskExecutor(taskExecutor)
 			.build();
 	}
 
