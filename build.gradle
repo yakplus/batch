@@ -55,6 +55,9 @@ dependencies {
     // Spring-Batch
     implementation 'org.springframework.boot:spring-boot-starter-batch'
 
+    // Swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
+
     // build.gradle
     if (project.hasProperty('env') && project.env == 'test') {
         dependencies {
