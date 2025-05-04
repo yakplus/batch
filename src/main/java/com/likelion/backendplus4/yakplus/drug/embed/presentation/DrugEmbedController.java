@@ -2,6 +2,7 @@ package com.likelion.backendplus4.yakplus.drug.embed.presentation;
 
 import static com.likelion.backendplus4.yakplus.common.response.ApiResponse.*;
 
+import com.likelion.backendplus4.yakplus.drug.embed.presentation.docs.DrugEmbedControllerDocs;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/job/embed")
 @RequiredArgsConstructor
-public class DrugEmbedController {
+public class DrugEmbedController implements DrugEmbedControllerDocs {
 	private final DrugEmbedProcessorUseCase drugEmbedProcessorUseCase;
 
 	/**
@@ -34,6 +35,7 @@ public class DrugEmbedController {
 	 * @author 함예정
 	 * @since 2025-05-02
 	 */
+	@Override
 	@PostMapping("/start")
 	public ResponseEntity<ApiResponse<String>> start() {
 		return success(drugEmbedProcessorUseCase.startEmbedding());
@@ -47,6 +49,7 @@ public class DrugEmbedController {
 	 * @author 함예정
 	 * @since 2025-05-02
 	 */
+	@Override
 	@DeleteMapping("/stop")
 	public ResponseEntity<ApiResponse<String>> stop() {
 		return success(drugEmbedProcessorUseCase.stopEmbedding());
@@ -60,6 +63,7 @@ public class DrugEmbedController {
 	 * @author 함예정
 	 * @since 2025-05-02
 	 */
+	@Override
 	@GetMapping("/status")
 	public ResponseEntity<ApiResponse<String>> status() {
 		return success(drugEmbedProcessorUseCase.statusEmbedding());

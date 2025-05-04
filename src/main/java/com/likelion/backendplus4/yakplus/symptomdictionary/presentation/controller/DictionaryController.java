@@ -2,6 +2,7 @@ package com.likelion.backendplus4.yakplus.symptomdictionary.presentation.control
 
 import com.likelion.backendplus4.yakplus.symptomdictionary.application.port.in.DictionaryUseCase;
 import com.likelion.backendplus4.yakplus.common.response.ApiResponse;
+import com.likelion.backendplus4.yakplus.symptomdictionary.presentation.controller.docs.DictionaryControllerDocs;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +21,7 @@ import static com.likelion.backendplus4.yakplus.common.response.ApiResponse.*;
 @RestController
 @RequestMapping("/dictionary")
 @RequiredArgsConstructor
-public class DictionaryController {
+public class DictionaryController implements DictionaryControllerDocs {
 
     private final DictionaryUseCase dictionaryUseCase;
 

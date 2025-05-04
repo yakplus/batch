@@ -2,6 +2,7 @@ package com.likelion.backendplus4.yakplus.drug.index.presentation.controller;
 
 import com.likelion.backendplus4.yakplus.drug.index.application.port.in.IndexUseCase;
 import com.likelion.backendplus4.yakplus.common.response.ApiResponse;
+import com.likelion.backendplus4.yakplus.drug.index.presentation.controller.docs.DrugIndexingControllerDocs;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +20,7 @@ import static com.likelion.backendplus4.yakplus.common.logging.util.LogUtil.log;
 @RestController
 @RequestMapping("/drugs/index")
 @RequiredArgsConstructor
-public class DrugIndexingController {
+public class DrugIndexingController implements DrugIndexingControllerDocs {
     private final IndexUseCase indexUseCase;
 
     /**
@@ -30,6 +31,7 @@ public class DrugIndexingController {
      * 25.04.28 - IndexUseRequest를 인자에서 제거하였습니다.(추후 임베딩 모델 선택 로직 추가시 변경예정)
      * @since 2025-04-22
      */
+    @Override
     @PostMapping("/save")
     public void index() {
         log("컨트롤러 indexAll 요청 수신");
@@ -44,6 +46,7 @@ public class DrugIndexingController {
      * @modified 2025-04-25
      * @since 2025-04-24
      */
+    @Override
     @PostMapping("/keyword")
     public ResponseEntity<ApiResponse<Void>> triggerIndex() {
         log("indexSymptom 요청 수신");

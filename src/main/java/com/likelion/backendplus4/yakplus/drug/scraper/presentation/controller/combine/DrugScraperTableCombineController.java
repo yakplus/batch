@@ -2,6 +2,7 @@ package com.likelion.backendplus4.yakplus.drug.scraper.presentation.controller.c
 
 import static com.likelion.backendplus4.yakplus.common.response.ApiResponse.*;
 
+import com.likelion.backendplus4.yakplus.drug.scraper.presentation.controller.docs.DrugScraperTableCombineControllerDocs;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/scraper/combine")
 @RequiredArgsConstructor
-public class DrugScraperTableCombineController {
+public class DrugScraperTableCombineController implements DrugScraperTableCombineControllerDocs {
 	private final DrugScraperTableCombineUseCase drugScraperTableCombineUsecase;
 
 	/**
@@ -34,6 +35,7 @@ public class DrugScraperTableCombineController {
 	 * @author 함예정
 	 * @since 2025-05-02
 	 */
+	@Override
 	@PostMapping("/start")
 	public ResponseEntity<ApiResponse<String>> start(){
 		return success(drugScraperTableCombineUsecase.mergeTable());
@@ -47,6 +49,7 @@ public class DrugScraperTableCombineController {
 	 * @author 함예정
 	 * @since 2025-05-02
 	 */
+	@Override
 	@DeleteMapping("/stop")
 	public ResponseEntity<ApiResponse<String>> stop() {
 		return success(drugScraperTableCombineUsecase.stop());
@@ -59,6 +62,7 @@ public class DrugScraperTableCombineController {
 	 * @author 함예정
 	 * @since 2025-05-02
 	 */
+	@Override
 	@GetMapping("/status")
 	public ResponseEntity<ApiResponse<String>> getBatchProgress() {
 		return success(drugScraperTableCombineUsecase.getStatus());

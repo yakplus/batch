@@ -2,6 +2,7 @@ package com.likelion.backendplus4.yakplus.drug.scraper.presentation.controller.i
 
 import static com.likelion.backendplus4.yakplus.common.response.ApiResponse.*;
 
+import com.likelion.backendplus4.yakplus.drug.scraper.presentation.controller.docs.DrugScraperImageControllerDocs;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/scraper/images")
 @RequiredArgsConstructor
-public class DrugScraperImageController {
+public class DrugScraperImageController implements DrugScraperImageControllerDocs {
 	private final DrugScraperImageUseCase drugScraperImageUsecase;
 
 	/**
@@ -35,6 +36,7 @@ public class DrugScraperImageController {
 	 * @author 함예정
 	 * @since 2025-05-02
 	 */
+	@Override
 	@PostMapping("/start")
 	public ResponseEntity<ApiResponse<String>> start(){
 		return success(drugScraperImageUsecase.requestAllData());
@@ -48,6 +50,7 @@ public class DrugScraperImageController {
 	 * @author 함예정
 	 * @since 2025-05-02
 	 */
+	@Override
 	@DeleteMapping("/stop")
 	public ResponseEntity<ApiResponse<String>> stop() {
 		return success(drugScraperImageUsecase.stop());
@@ -60,6 +63,7 @@ public class DrugScraperImageController {
 	 * @author 함예정
 	 * @since 2025-05-02
 	 */
+	@Override
 	@GetMapping("/status")
 	public ResponseEntity<ApiResponse<String>> getBatchProgress() {
 		return success(drugScraperImageUsecase.getStatus());

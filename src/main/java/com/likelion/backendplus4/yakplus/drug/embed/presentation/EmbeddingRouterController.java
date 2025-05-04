@@ -2,6 +2,7 @@ package com.likelion.backendplus4.yakplus.drug.embed.presentation;
 
 import com.likelion.backendplus4.yakplus.common.response.ApiResponse;
 import com.likelion.backendplus4.yakplus.drug.embed.application.port.in.EmbeddingRoutingUseCase;
+import com.likelion.backendplus4.yakplus.drug.embed.presentation.docs.EmbeddingRouterControllerDocs;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +17,7 @@ import static com.likelion.backendplus4.yakplus.common.logging.util.LogUtil.log;
  */
 @RestController
 @RequestMapping("/switch/embeddings")
-public class EmbeddingRouterController {
+public class EmbeddingRouterController implements EmbeddingRouterControllerDocs {
     private final EmbeddingRoutingUseCase routerUseCase;
 
     public EmbeddingRouterController(EmbeddingRoutingUseCase routerUseCase) {
