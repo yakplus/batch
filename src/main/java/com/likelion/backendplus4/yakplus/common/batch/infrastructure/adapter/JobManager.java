@@ -37,6 +37,8 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 public class JobManager {
+	private final String normalExecutorName = "normalExecutor";
+
 	private final AtomicBoolean isRunning = new AtomicBoolean(false);
 	private final JobLauncher jobLauncher;
 	private final JobOperator jobOperator;
@@ -58,7 +60,7 @@ public class JobManager {
 	 */
 	public String startJob(Job job) {
 		IfAlreadyRunThrowException();
-		TaskExecutor taskExecutor = taskExecutorMap.get("batchExecutor");
+		TaskExecutor taskExecutor = taskExecutorMap.get(normalExecutorName);
 		log("배치 실행 시작 - Job: " + job.getName());
 		isRunning.set(true);
 		taskExecutor.execute(() -> {
@@ -89,7 +91,7 @@ public class JobManager {
 	 */
 	public String restart() {
 		IfAlreadyRunThrowException();
-		TaskExecutor taskExecutor = taskExecutorMap.get("batchExecutor");
+		TaskExecutor taskExecutor = taskExecutorMap.get(normalExecutorName);
 		taskExecutor.execute(() -> {
 			for (Long id : new HashSet<>(stoppedExecutionIds)) {
 				try {
