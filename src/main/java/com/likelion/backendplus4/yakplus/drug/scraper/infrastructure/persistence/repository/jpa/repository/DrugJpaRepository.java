@@ -9,7 +9,13 @@ import com.likelion.backendplus4.yakplus.drug.scraper.infrastructure.persistence
 
 public interface DrugJpaRepository extends JpaRepository<DrugRawDataEntity, Long> {
 
-    Page<DrugRawDataEntity> findByIsGeneralIsTrue(Pageable pageable);
+	@Query("""
+           SELECT d
+           FROM DrugRawDataEntity d
+           WHERE d.isGeneral = true
+           AND d.isHerbal = false
+           """)
+    Page<DrugRawDataEntity> findByIsGeneral(Pageable pageable);
 
 	@Query("SELECT MIN(d.drugId) FROM DrugRawDataEntity d")
 	Long findMinDrugId();

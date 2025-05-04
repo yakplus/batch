@@ -46,7 +46,7 @@ public class DrugRawDataAdapter implements DrugRawDataPort {
 	public Page<Drug> findAllDrugs(Pageable pageable) {
 		log("findAllDrugs() 요청 수신");
 
-		return drugJpaRepository.findByIsGeneralIsTrue(pageable)
+		return drugJpaRepository.findByIsGeneral(pageable)
 			.map(DrugRawDataMapper::toDomainFromEntity);
 	}
 
