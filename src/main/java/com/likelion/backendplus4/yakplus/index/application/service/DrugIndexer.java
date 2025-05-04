@@ -9,8 +9,6 @@ import com.likelion.backendplus4.yakplus.switcher.application.port.out.Embedding
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,7 +30,8 @@ public class DrugIndexer implements IndexUseCase {
     private final GovDrugRawDataPort govDrugRawDataPort;
     private final DrugIndexRepositoryPort drugIndexRepositoryPort;
     private final EmbeddingSwitchPort embeddingSwitchPort;
-    private static final String SORT_BY_PROPERTY = "drugId";
+
+    private static final String INDENT = "  ";
     private static final int CHUNK_SIZE = 1_000;
 
     /**
@@ -40,8 +39,8 @@ public class DrugIndexer implements IndexUseCase {
      * ES 인덱스에 저장한다.
      *
      * @author 정안식
-     * @modified 2025-05-02 이해창
-     * 25.05.02 - 저장된 약물 상세정보 데이터 크기를 기준으로 ES에 색인하는 loop를 만들도록 수정
+     * @modified
+     * 25.05.02 - 이해창: 저장된 약물 상세정보 데이터 크기를 기준으로 ES에 색인하는 loop를 만들도록 수정
      * 25.04.28 - IndexRequest를 인자로 더 이상 받지 않도록 수정
      * 25.04.27 - esIndexname을 인자로 받아 saveAll 메서드에 전달하도록 수정
      * @since 2025-04-22
@@ -49,21 +48,19 @@ public class DrugIndexer implements IndexUseCase {
     @Override
     public void index() {
         log("index 서비스 요청 수신");
+
         String esIndexName = getEsIndexName();
         long totalDataSize = govDrugRawDataPort.getDrugTotalSize();
-        int totalPages = (int) ((totalDataSize + CHUNK_SIZE - 1) / CHUNK_SIZE); // 전체 페이지 수 계산 (올림)
-        List<Drug> drugs;
+        int totalPages = getTotalPages(totalDataSize);
+
         for(int currentPage = 0; currentPage < totalPages; currentPage++) {
             log("색인 시작: page=" + currentPage);
-            try{
-                drugs = fetchRawData(currentPage, CHUNK_SIZE);
-            } catch (Exception e) {
-                log(LogLevel.ERROR, String.format("%d 페이지 색인용 데이터 로딩 실패", currentPage), e);
-                continue;
-            }
-            log("   조회 완료: page=" + currentPage + ", 건수=" + drugs.size());
+
+            List<Drug> drugs = fetchRawData(currentPage, CHUNK_SIZE);
+            log(INDENT+"조회 완료: page=" + currentPage + ", 건수=" + drugs.size());
+
             saveDrugs(esIndexName, drugs);
-            log("   색인 완료: page=" + currentPage + ", 건수=" + drugs.size());
+            log("색인 완료: page=" + currentPage + ", 건수=" + drugs.size());
         }
     }
 
@@ -76,8 +73,8 @@ public class DrugIndexer implements IndexUseCase {
      * @since 2025-04-24
      */
     @Override
-    public void indexSymptom() {
-        log("indexSymptom 요청 수신");
+    public void indexKeyword() {
+        log("indexKeyword 요청 수신");
         int page = 0;
         Page<Drug> drugPage;
 
@@ -86,11 +83,11 @@ public class DrugIndexer implements IndexUseCase {
 
             // 1. 페이징으로 DB에서 한 청크 가져오기
             drugPage = govDrugRawDataPort.findAllDrugs(PageRequest.of(page, CHUNK_SIZE));
-            log("  조회 완료: page=" + page + ", 건수=" + drugPage.getNumberOfElements());
+            log(INDENT+"조회 완료: page=" + page + ", 건수=" + drugPage.getNumberOfElements());
 
             // 2. 청크별 ES에 색인
-            drugIndexRepositoryPort.saveAllSymptom(drugPage);
-            log("  색인 완료: page=" + page + ", 건수=" + drugPage.getNumberOfElements());
+            drugIndexRepositoryPort.saveAllKeyword(drugPage);
+            log(INDENT+"색인 완료: page=" + page + ", 건수=" + drugPage.getNumberOfElements());
 
             // 3. 다음 1000개 값 루프
             page++;
@@ -99,18 +96,33 @@ public class DrugIndexer implements IndexUseCase {
     }
 
     /**
-     * limit 크기 및 DrugId 오름차순 정렬 기준의 객체를 생성한다.
+     * Elasticsearch 인덱스 이름을 조회한다.
      *
-     * @param limit 조회할 최대 건수
-     * @return 페이징 객체
+     * @return Elasticsearch 인덱스 이름
      * @author 정안식
-     * @modified 2025-04-27
-     * 25.04.27 - itemSeq -> drugId로 수정
-     * @since 2025-04-22
+     * @since 2025-04-27
+     * @modified
+     * 2025-05-02 - 이해창: 하드코딩 된 문자를 받어오던 것을 임베딩 모델 BeanName을 가져오도록 수정
      */
-    private Pageable createPageable(int limit) {
-        log("pageable 생성");
-        return PageRequest.of(0, limit, Sort.by(SORT_BY_PROPERTY).ascending());
+    private String getEsIndexName() {
+        log("ES 인덱스 이름 조회");
+        return embeddingSwitchPort.getAdapterBeanName();
+    }
+
+    /**
+     * 전체 데이터 개수를 기준으로 CHUNK_SIZE 단위로 나누어 필요한 페이지 수를 계산합니다.
+     *
+     * <p>예를 들어, 전체 데이터가 25개이고 CHUNK_SIZE가 10이라면
+     * (25 + 10 - 1) / 10 = 3페이지가 계산됩니다.</p>
+     *
+     * @param totalDataSize 전체 데이터 개수
+     * @return 필요한 전체 페이지 수 (마지막 페이지에 남는 데이터도 한 페이지로 처리)
+     * @author 이해창
+     * @since 2025-05-03
+     */
+    private static int getTotalPages(long totalDataSize) {
+        int totalPages = (int) ((totalDataSize + CHUNK_SIZE - 1) / CHUNK_SIZE);
+        return totalPages;
     }
 
     /**
@@ -120,29 +132,14 @@ public class DrugIndexer implements IndexUseCase {
      * @param numOfRows 한 페이지당 조회할 건수
      * @return 도메인 모델 리스트
      * @author 정안식
-     * @modified 2025-05-02 이해창<br/>
-     * 25.05.02 - 페이징 처리 시 페이지 사이즈 받도록 수정 <br/>
+     * @modified
+     * 25.05.02 - 이해창: 페이징 처리 시 페이지 사이즈 받도록 수정 <br/>
      * 25.04.28 - 페이징 처리 로직 수정
      * @since 2025-04-22
      */
     private List<Drug> fetchRawData(int pageNum, int numOfRows) {
         log("RDB에서 원시 데이터 조회");
         return govDrugRawDataPort.fetchRawData(pageNum, numOfRows);
-    }
-
-    /**
-     * Elasticsearch 인덱스 이름을 조회한다.
-     *
-     * @return Elasticsearch 인덱스 이름
-     * @author 정안식
-     * @since 2025-04-27
-     * @modified 2025-05-02 이해창<br/>
-     * 2025-05-02 - 하드코딩 된 문자를 받어오던 것을
-     * 임베딩 모델 BeanName을 가져오도록 수정
-     */
-    private String getEsIndexName() {
-        log("ES 인덱스 이름 조회");
-        return embeddingSwitchPort.getAdapterBeanName();
     }
 
     /**

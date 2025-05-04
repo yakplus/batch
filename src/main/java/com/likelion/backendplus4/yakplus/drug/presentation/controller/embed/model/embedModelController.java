@@ -38,7 +38,7 @@ public class embedModelController {
 	 *   - 스프링 배치 전환에 따른 수정
 	 */
 	@PostMapping("/switch")
-	public ResponseEntity switchEmbedding(@RequestBody ModelSwitchRequeset request) {
+	public ResponseEntity<ApiResponse<String>> switchEmbedding(@RequestBody ModelSwitchRequeset request) {
 		drugEmbedProcessorUseCase.switchEmbeddingModel(request.getModelType());
 		return success("요청 성공: "+ drugEmbedProcessorUseCase.getCurrentEmbeddingModel());
 	}

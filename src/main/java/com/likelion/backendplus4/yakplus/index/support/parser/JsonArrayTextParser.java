@@ -72,34 +72,64 @@ public class JsonArrayTextParser {
     }
 
     /**
-     * HTML 엔티티(10진수 &#DDD; 및 16진수 &#xHHHH;)를 대응하는 문자로 디코딩합니다. 예: "foo&#8226;bar" → "foo•bar",
-     * "foo&#x2022;bar" → "foo•bar"
+     * HTML 엔티티(10진수 &#DDD; 및 16진수 &#xHHHH;)를 대응하는 문자로 디코딩합니다.
+     * 예: "foo&#8226;bar" → "foo•bar", "foo&#x2022;bar" → "foo•bar"
      *
      * @param input 엔티티를 포함한 문자열
      * @return 디코딩된 문자열
+     * @author 박찬병
+     * @since 2025-05-03
+     * @modified 2025-05-03
      */
     private static String decodeHtmlEntities(String input) {
-        String result = input;
+        String result = decodeDecimalEntities(input);
+        return decodeHexEntities(result);
+    }
 
-        // 10진수 엔티티 디코딩
-        Matcher decMatcher = DECIMAL_ENTITY_REGEX.matcher(result);
+    /**
+     * 10진수 HTML 엔티티(예: &#8226;)를 문자로 디코딩합니다.
+     * 내부적으로 정규표현식을 이용해 &#숫자; 패턴을 찾아 대응하는 문자로 변환합니다.
+     *
+     * @param input 디코딩할 문자열
+     * @return 10진수 엔티티가 디코딩된 문자열
+     * @author 박찬병
+     * @since 2025-05-03
+     * @modified 2025-05-03
+     */
+    private static String decodeDecimalEntities(String input) {
+        Matcher decMatcher = DECIMAL_ENTITY_REGEX.matcher(input);
         StringBuffer sb = new StringBuffer();
+
         while (decMatcher.find()) {
             int code = Integer.parseInt(decMatcher.group(1));
             decMatcher.appendReplacement(sb,
                     Matcher.quoteReplacement(Character.toString((char) code)));
         }
-        decMatcher.appendTail(sb);
-        result = sb.toString();
 
-        // 16진수 엔티티 디코딩
-        Matcher hexMatcher = HEX_ENTITY_REGEX.matcher(result);
-        sb = new StringBuffer();
+        decMatcher.appendTail(sb);
+        return sb.toString();
+    }
+
+    /**
+     * 16진수 HTML 엔티티(예: &#x2022;)를 문자로 디코딩합니다.
+     * 내부적으로 정규표현식을 이용해 &#x헥사값; 패턴을 찾아 대응하는 문자로 변환합니다.
+     *
+     * @param input 디코딩할 문자열
+     * @return 16진수 엔티티가 디코딩된 문자열
+     * @author 박찬병
+     * @since 2025-05-03
+     * @modified 2025-05-03
+     */
+    private static String decodeHexEntities(String input) {
+        Matcher hexMatcher = HEX_ENTITY_REGEX.matcher(input);
+        StringBuffer sb = new StringBuffer();
+
         while (hexMatcher.find()) {
             int code = Integer.parseInt(hexMatcher.group(1), 16);
             hexMatcher.appendReplacement(sb,
                     Matcher.quoteReplacement(Character.toString((char) code)));
         }
+
         hexMatcher.appendTail(sb);
         return sb.toString();
     }

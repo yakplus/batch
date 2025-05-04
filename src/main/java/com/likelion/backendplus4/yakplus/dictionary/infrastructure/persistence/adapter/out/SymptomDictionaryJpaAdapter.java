@@ -41,7 +41,7 @@ public class SymptomDictionaryJpaAdapter implements SymptomDictionaryJpaReposito
      */
     @Override
     @Transactional
-    public void setDictionary(List<String> symptoms) {
+    public void setDictionary(Set<String> symptoms) {
         log("setDictionary() 메서드 호출, 입력 증상 수: " + symptoms.size());
 
         // 1) 기존에 존재하는 증상 단어 조회
@@ -58,7 +58,7 @@ public class SymptomDictionaryJpaAdapter implements SymptomDictionaryJpaReposito
 
         // 3) 엔티티 변환 및 저장
         List<SymptomDictionary> entities = toInsert.stream()
-                .map(DictionaryMapper::toEntity)
+                .map(DictionaryMapper::toSymptomEntity)
                 .toList();
         repository.saveAll(entities);
         log("setDictionary() 완료, 저장된 엔티티 수: " + entities.size());

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.likelion.backendplus4.yakplus.drug.application.service.port.in.scraper.DrugScraperUsecase;
+import com.likelion.backendplus4.yakplus.drug.application.service.port.in.scraper.DrugScraperUseCase;
 import com.likelion.backendplus4.yakplus.response.ApiResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/scraper")
 public class DrugScraperController {
-	private final DrugScraperUsecase drugScraperUsecase;
+	private final DrugScraperUseCase drugScraperUsecase;
 
 	@PostMapping("/start")
 	public ResponseEntity<ApiResponse<String>> start() {

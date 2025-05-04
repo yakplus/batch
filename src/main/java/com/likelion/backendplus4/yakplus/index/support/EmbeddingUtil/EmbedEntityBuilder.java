@@ -2,7 +2,7 @@ package com.likelion.backendplus4.yakplus.index.support.EmbeddingUtil;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.likelion.backendplus4.yakplus.drug.infrastructure.batch.embed.dto.DrugVectorDto;
+import com.likelion.backendplus4.yakplus.common.batch.infrastructure.embed.dto.DrugVectorDto;
 
 public class EmbedEntityBuilder {
     private static final ObjectMapper MAPPER = new ObjectMapper();
@@ -21,8 +21,8 @@ public class EmbedEntityBuilder {
         try {
             return MAPPER.writeValueAsString(vector);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return null;
+            //TODO: 변환 실패 로그
+            throw new RuntimeException(e);
         }
     }
 }

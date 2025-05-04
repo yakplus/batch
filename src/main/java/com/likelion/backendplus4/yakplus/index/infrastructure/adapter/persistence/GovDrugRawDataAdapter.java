@@ -2,26 +2,24 @@ package com.likelion.backendplus4.yakplus.index.infrastructure.adapter.persisten
 
 import static com.likelion.backendplus4.yakplus.common.util.log.LogUtil.log;
 
-import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.repository.entity.DrugDetailEntity;
-import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.repository.jpa.GovDrugDetailJpaRepository;
+import com.likelion.backendplus4.yakplus.common.util.log.LogLevel;
+import com.likelion.backendplus4.yakplus.drug.application.service.exception.ScraperException;
+import com.likelion.backendplus4.yakplus.drug.application.service.exception.error.ScraperErrorCode;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.repository.jpa.GovDrugJpaRepository;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.support.mapper.DrugRawDataMapper;
 import com.likelion.backendplus4.yakplus.index.application.port.out.EmbeddingLoadingPort;
 import com.likelion.backendplus4.yakplus.index.application.port.out.GovDrugRawDataPort;
-import com.likelion.backendplus4.yakplus.index.exception.IndexException;
-import com.likelion.backendplus4.yakplus.index.exception.error.IndexErrorCode;
 import com.likelion.backendplus4.yakplus.drug.domain.model.Drug;
+import com.likelion.backendplus4.yakplus.index.support.parser.JsonArrayTextParser;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 공공 API로부터 조회한 원시 약품 데이터를 JPA를 통해 가져와
@@ -33,10 +31,8 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class GovDrugRawDataAdapter implements GovDrugRawDataPort {
-    private final GovDrugDetailJpaRepository rawDataJpaRepository;
     private final GovDrugJpaRepository drugJpaRepository;
     private final EmbeddingLoadingPort embeddingLoadingPort;
-
 
     /**
      * 주어진 Pageable 정보에 따라 DB에서 한 페이지 분량의 GovDrugEntity를 조회하고,
@@ -46,99 +42,59 @@ public class GovDrugRawDataAdapter implements GovDrugRawDataPort {
      * @return 페이지 단위로 변환된 GovDrug 도메인 객체의 Page
      * @author 박찬병
      * @since 2025-04-24
-     * @modified 2025-04-25
-     *
+     * @modified 
+     * 2025-05-04 - 박찬병: Mapper에 넘겨주기 전 먼저 파싱하도록 변경
      */
     @Override
     public Page<Drug> findAllDrugs(Pageable pageable) {
         log("findAllDrugs() 요청 수신");
-        return drugJpaRepository.findAll(pageable)
-                .map(DrugRawDataMapper::toDomainFromEntity);
+
+        return drugJpaRepository.findByIsGeneralIsTrue(pageable)
+                .map(entity -> {
+                    try {
+                        List<String> parsedEfficacy = JsonArrayTextParser.extractAndClean(entity.getEfficacy());
+                        return DrugRawDataMapper.toDomainFromEntity(entity, parsedEfficacy);
+                    } catch (IOException ex) {
+                        log(LogLevel.ERROR, "효능 정보 파싱 실패 - drugId: " + entity.getDrugId(), ex);
+                        throw new ScraperException(ScraperErrorCode.PARSING_ERROR);
+                    }
+                });
     }
 
     /**
-     * lastSeq가 null일 경우 0으로 치환하여 조회 시작점을 결정합니다.
+     * 지정된 페이지 번호와 페이지 크기에 따라 Pageable 객체를 생성하고,
+     * 원시 약품 데이터와 임베딩 데이터를 조인하여 한 페이지 분량의 Drug 도메인 객체 리스트를 조회합니다.
      *
-     * @param lastSeq 마지막 처리 시퀀스
-     * @return 실제 조회 시작 시퀀스
+     * @param pageNo    조회할 페이지 번호 (0부터 시작)
+     * @param numOfRows 한 페이지에 포함할 데이터 개수
+     * @return 페이지 범위에 해당하는 Drug 도메인 객체들의 리스트
      * @author 정안식
-     * @since 2025-04-22
-     * @modified 2025-04-24
+     * @since 2025-04-24
+     * @modified
+     * 2025-05-02 - 이해창: numOfRows 파라미터 추가
      */
-    private Long getStartSeq(Long lastSeq) {
-        return (lastSeq == null ? 0L : lastSeq);
-    }
-
-    /**
-     * JPA 레포지토리를 이용해 itemSeq 기준으로 정렬된 데이터를 조회합니다.
-     *
-     * @param lastSeq 마지막으로 조회된 Seq
-     * @param pageable 페이징 및 정렬 정보
-     * @return 조회된 GovDrugRawDataEntity 리스트
-     * @throws IndexException 조회 중 예외가 발생하면 SearchErrorCode.RAW_DATA_FETCH_ERROR로 래핑하여 던집니다.
-     * @author 정안식
-     * @since 2025-04-22
-     * @modified 2025-04-24
-     */
-    private List<DrugDetailEntity> getGovDrugRawDataEntities(Long lastSeq, Pageable pageable) {
-        try {
-            return rawDataJpaRepository.findByDrugIdGreaterThanOrderByDrugIdAsc(lastSeq, pageable);
-        } catch (Exception e) {
-            //TODO: LOG ERROR 처리 요망
-//            log(LogLevel.ERROR, "MySQL 데이터 조회 실패", e);
-            throw new IndexException(IndexErrorCode.RAW_DATA_FETCH_ERROR);
-        }
-
-    }
-
-    /**
-     * 조회된 엔티티 리스트를 Drug 도메인 객체 리스트로 변환합니다.
-     *
-     * @param rawData GovDrugRawDataEntity 리스트
-     * @return Drug 도메인 객체 리스트
-     * @author 정안식
-     * @since 2025-04-22
-     * @modified 2025-04-24
-     */
-    private List<Drug> convertToDrugDomains(List<DrugDetailEntity> rawData) {
-        return rawData.stream()
-                .map(this::mapToDrugDomain)
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * 단일 GovDrugRawDataEntity를 Drug 도메인 객체로 매핑합니다.
-     *
-     * @param entity 변환할 GovDrugRawDataEntity
-     * @return 변환된 Drug 도메인 객체
-     * @author 정안식
-     * @since 2025-04-22
-     * @modified 2025-04-24
-     */
-    private Drug mapToDrugDomain(DrugDetailEntity entity) {
-        //TODO: Mapper로 변경 필요
-        return Drug.builder()
-                // .drugId(entity.getItemSeq())
-                // .drugName(entity.getItemName())
-                // .company(entity.getEntpName())
-                // .efficacy(entity.get())
-                .build();
-    }
-
-
     @Override
     public List<Drug> fetchRawData(int pageNo, int numOfRows) {
         log("index 서비스 요청 수신");
         Pageable pageable = createPageable(pageNo, numOfRows);
-        List<Drug> drugs = embeddingLoadingPort.loadEmbeddingsByPage(pageable);
-        return drugs;
+        return embeddingLoadingPort.loadEmbeddingsByPage(pageable);
     }
 
+    /**
+     * 페이지 번호와 페이지 크기를 기반으로 drugId 오름차순 정렬이 적용된 Pageable 객체를 생성합니다.
+     *
+     * @param pageNo    조회할 페이지 번호 (0부터 시작)
+     * @param numOfRows 한 페이지에 포함할 데이터 개수
+     * @return 지정된 페이지 정보와 정렬 조건을 포함한 Pageable 객체
+     * @author 정안식
+     * @since 2025-04-24
+     * @modified
+     * 2025-04-24
+     */
     private Pageable createPageable(int pageNo, int numOfRows) {
         log("pageable 생성");
         return PageRequest.of(pageNo, numOfRows, Sort.by(Sort.Direction.ASC, "drugId"));
     }
-
 
     /**
      * JPA 레포지토리를 이용해 GovDrugJpaRepository의 전체 데이터 수를 조회합니다.
@@ -147,6 +103,7 @@ public class GovDrugRawDataAdapter implements GovDrugRawDataPort {
      * @author 이해창
      * @since 2025-05-02
      * @modified
+     * 2025-05-02 - 이해창: numOfRows 파라미터 추가
      */
     @Override
     public long getDrugTotalSize() {

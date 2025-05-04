@@ -12,7 +12,6 @@ public class OpenaiConfig {
 
 	@Bean
 	public OpenAiApi openaiApi() {
-		OpenAiApi openaiApiKey = new OpenAiApi(apiKey);
-		return openaiApiKey;
+        return new OpenAiApi(apiKey);
 	}
 }

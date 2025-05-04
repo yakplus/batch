@@ -69,23 +69,4 @@ public class DrugDetailEntity {
 	@Builder.Default
 	private Boolean isHerbal = false;
 
-	public DrugDetailEntity(@JsonProperty("ETC_OTC_CODE") String drugType) {
-		this.isGeneral = !"전문의약품".equals(drugType);
-	}
-
-	public void changeMaterialInfo(String materialInfo){
-		this.materialInfo = materialInfo;
-	}
-
-	public void changeUsage(String usage) {
-		this.usage = usage;
-	}
-
-	public void changeEfficacy(String efficacy) {
-		this.efficacy = efficacy;
-	}
-
-	public void changePrecaution(String precaution) {
-		this.precaution = precaution;
-	}
 }

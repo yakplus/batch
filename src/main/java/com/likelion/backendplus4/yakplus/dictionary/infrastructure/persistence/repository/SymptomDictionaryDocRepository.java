@@ -4,5 +4,4 @@ import com.likelion.backendplus4.yakplus.dictionary.infrastructure.persistence.r
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
 public interface SymptomDictionaryDocRepository extends ElasticsearchRepository<SymptomDictionaryDocument, String> {
-
 }

@@ -22,16 +22,16 @@ public enum ScraperErrorCode implements ErrorCode {
 
     @Override
     public HttpStatus httpStatus() {
-        return null;
+        return httpStatus;
     }
 
     @Override
     public int codeNumber() {
-        return 0;
+        return code;
     }
 
     @Override
     public String message() {
-        return "";
+        return message;
     }
 }

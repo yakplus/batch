@@ -9,7 +9,6 @@ import lombok.Setter;
  * @since 2025-05-02
  */
 @Getter
-@Setter
 public class ModelSwitchRequeset {
 	String modelType;
 }

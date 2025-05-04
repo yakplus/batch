@@ -7,8 +7,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class YakplusApplication {
     public static void main(String[] args) {
-        LogbackConfig logbackConfig = new LogbackConfig();
-        logbackConfig.configure();
-        SpringApplication.run(YakplusApplication.class, args);
+        try {
+            LogbackConfig logbackConfig = new LogbackConfig();
+            logbackConfig.configure();
+            SpringApplication.run(YakplusApplication.class, args);
+        }catch (Exception e) {
+            System.err.println("Error occurred while starting the application: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }

@@ -38,7 +38,8 @@ gov:
   path:
     detail: /1471000/DrugPrdtPrmsnInfoService06/getDrugPrdtPrmsnDtlInq05
     img: /1471000/DrugPrdtPrmsnInfoService06/getDrugPrdtPrmsnInq06
-
+dictionary:
+  path: classpath:unique_symptoms.json
 embed:
   kmbert: embed.techlog.dev
   krsbert: embedb.techlog.dev

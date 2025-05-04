@@ -15,11 +15,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class DrugGptEmbedEntity {
+public class DrugGptEmbedEntity implements EmbeddingEntity{
 	@Id
 	@Column( name= "ITEM_SEQ")
 	private Long drugId;
 
 	@Column( name= "GPT_VECTOR", columnDefinition = "JSON")
 	private String gptVector;
+
+	@Override
+	public String getVector() {
+		return gptVector;
+	}
 }

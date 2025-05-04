@@ -6,6 +6,7 @@ import com.likelion.backendplus4.yakplus.drug.application.service.exception.erro
 import com.likelion.backendplus4.yakplus.drug.domain.model.DrugRawData;
 import com.likelion.backendplus4.yakplus.drug.infrastructure.persistence.repository.entity.DrugRawDataEntity;
 import com.likelion.backendplus4.yakplus.drug.domain.model.Drug;
+import com.likelion.backendplus4.yakplus.index.infrastructure.adapter.persistence.DrugMapper;
 import com.likelion.backendplus4.yakplus.index.support.parser.JsonArrayTextParser;
 import java.io.IOException;
 import java.util.List;
@@ -13,48 +14,20 @@ import java.util.List;
 public class DrugRawDataMapper {
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 
-	public static DrugRawDataEntity toEntityFromDomain(DrugRawData raw) {
-		return DrugRawDataEntity
-			.builder()
-			.drugId(raw.getDrugId())
-			.drugName(raw.getDrugName())
-			.company(raw.getCompany())
-			.permitDate(raw.getPermitDate())
-			.isGeneral(raw.isGeneral())
-			.materialInfo(toStringFromObj(raw.getMaterialInfo()))
-			.storeMethod(raw.getStoreMethod())
-			.validTerm(raw.getValidTerm())
-			.efficacy(toStringFromObj(raw.getEfficacy()))
-			.usage(toStringFromObj(raw.getUsage()))
-			.precaution(toStringFromObj(raw.getPrecaution()))
-			.imageUrl(raw.getImageUrl())
-			.cancelDate(raw.getCancelDate())
-			.cancelName(raw.getCancelName())
-			.isHerbal(raw.isHerbal())
-			.build();
-	}
 
-
-	public static Drug toDomainFromEntity(DrugRawDataEntity e) {
-		List<String> efficacy;
-		try {
-			efficacy = JsonArrayTextParser.extractAndClean(e.getEfficacy());
-		} catch (IOException exception) {
-			throw new ScraperException(ScraperErrorCode.PARSING_ERROR);
-		}
-
+	public static Drug toDomainFromEntity(DrugRawDataEntity e, List<String> parsedEfficacy) {
 		return Drug.builder()
 				.drugId(e.getDrugId())
 				.drugName(e.getDrugName())
 				.company(e.getCompany())
 				.permitDate(e.getPermitDate())
 				.isGeneral(e.isGeneral())
-// TODO			.materialInfo(JsonArrayTextParser.extractAndClean(e.getMaterialInfo()))
+				.materialInfo(DrugMapper.parseMaterials(e.getMaterialInfo()))
 				.storeMethod(e.getStoreMethod())
 				.validTerm(e.getValidTerm())
-				.efficacy(efficacy)
-// TODO			.usage(e.getUsage())
-// TODO			.precaution(e.getPrecaution())
+				.efficacy(parsedEfficacy)
+				.usage(DrugMapper.parseStringToList(e.getUsage()))
+				.precaution(DrugMapper.parsePrecaution(e.getPrecaution()))
 				.imageUrl(e.getImageUrl())
 				.cancelDate(e.getCancelDate())
 				.cancelName(e.getCancelName())

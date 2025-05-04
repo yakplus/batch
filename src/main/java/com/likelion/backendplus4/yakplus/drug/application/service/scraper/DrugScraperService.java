@@ -2,14 +2,14 @@ package com.likelion.backendplus4.yakplus.drug.application.service.scraper;
 
 import org.springframework.stereotype.Service;
 
-import com.likelion.backendplus4.yakplus.drug.application.service.port.in.scraper.DrugScraperUsecase;
+import com.likelion.backendplus4.yakplus.drug.application.service.port.in.scraper.DrugScraperUseCase;
 import com.likelion.backendplus4.yakplus.drug.application.service.port.out.BatchJobPort;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class DrugScraperService implements DrugScraperUsecase {
+public class DrugScraperService implements DrugScraperUseCase {
 	private final BatchJobPort batchJobPort;
 
 	@Override

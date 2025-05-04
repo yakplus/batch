@@ -4,5 +4,4 @@ import com.likelion.backendplus4.yakplus.dictionary.infrastructure.persistence.r
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SymptomDictionaryRepository extends JpaRepository<SymptomDictionary, Long> {
-
 }

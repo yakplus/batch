@@ -8,6 +8,8 @@ import com.likelion.backendplus4.yakplus.dictionary.infrastructure.persistence.r
 import com.likelion.backendplus4.yakplus.dictionary.infrastructure.persistence.repository.document.SymptomDictionaryDocument;
 import com.likelion.backendplus4.yakplus.dictionary.infrastructure.support.mapper.DictionaryMapper;
 import java.util.List;
+import java.util.Set;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,9 +28,8 @@ public class SymptomDictionaryElsAdapter implements SymptomDictionaryElsReposito
 
     /**
      * 주어진 증상 단어 리스트를 바탕으로 Elasticsearch에 신규 증상 사전 문서를 일괄 저장합니다.
-     * 1) 입력된 리스트에서 중복을 제거하고,
-     * 2) DictionaryMapper를 통해 Document 객체로 변환한 뒤,
-     * 3) repository.saveAll을
+     * 1) DictionaryMapper를 통해 Document 객체로 변환한 뒤,
+     * 2) repository.saveAll을
      * 호출하여 일괄 색인합니다.
      *
      * @param symptoms 저장할 증상 단어 리스트
@@ -38,14 +39,11 @@ public class SymptomDictionaryElsAdapter implements SymptomDictionaryElsReposito
      */
     @Override
     @Transactional
-    public void setDictionary(List<String> symptoms) {
+    public void setDictionary(Set<String> symptoms) {
         log("setDictionary() 메서드 호출, 입력 증상 수: " + symptoms.size());
-        // 중복 제거 및 Document 변환
         List<SymptomDictionaryDocument> docs = symptoms.stream()
-                .distinct()
-                .map(DictionaryMapper::toDocument)
+                .map(DictionaryMapper::toSymptomDocument)
                 .toList();
-        log("setDictionary() distinct 처리 후 문서 수: " + docs.size());
 
         // 일괄 저장
         repository.saveAll(docs);

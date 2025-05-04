@@ -6,12 +6,14 @@ import com.likelion.backendplus4.yakplus.index.application.port.out.DrugIndexRep
 import com.likelion.backendplus4.yakplus.drug.domain.model.Drug;
 import com.likelion.backendplus4.yakplus.index.exception.IndexException;
 import com.likelion.backendplus4.yakplus.index.exception.error.IndexErrorCode;
-import com.likelion.backendplus4.yakplus.index.infrastructure.adapter.persistence.repository.DrugSymptomRepository;
-import com.likelion.backendplus4.yakplus.index.infrastructure.adapter.persistence.repository.document.DrugSymptomDocument;
-import com.likelion.backendplus4.yakplus.index.support.mapper.SymptomMapper;
+
+import com.likelion.backendplus4.yakplus.index.infrastructure.adapter.persistence.repository.DrugKeywordRepository;
+import com.likelion.backendplus4.yakplus.index.infrastructure.adapter.persistence.repository.document.DrugKeywordDocument;
+import com.likelion.backendplus4.yakplus.index.support.mapper.KeywordMapper;
 import org.apache.http.entity.ContentType;
 import org.apache.http.nio.entity.NStringEntity;
 import org.elasticsearch.client.Request;
+
 import org.elasticsearch.client.RestClient;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
@@ -35,12 +37,12 @@ import static com.likelion.backendplus4.yakplus.common.util.log.LogUtil.log;
  */
 @Component
 public class ElasticsearchDrugAdapter implements DrugIndexRepositoryPort {
-    private final DrugSymptomRepository symptomRepository;
+    private final DrugKeywordRepository keywordRepository;
     private final RestClient restClient;
     private final ObjectMapper objectMapper;
 
-    public ElasticsearchDrugAdapter(DrugSymptomRepository drugSymptomRepository, RestClient restClient, ObjectMapper objectMapper) {
-        this.symptomRepository = drugSymptomRepository;
+    public ElasticsearchDrugAdapter(DrugKeywordRepository drugKeywordRepository, RestClient restClient, ObjectMapper objectMapper) {
+        this.keywordRepository = drugKeywordRepository;
         this.restClient = restClient;
         this.objectMapper = objectMapper;
     }
@@ -70,17 +72,33 @@ public class ElasticsearchDrugAdapter implements DrugIndexRepositoryPort {
         }
     }
 
+    /**
+     * 약품 도메인 객체 페이지를 Elasticsearch 문서로 변환하여 색인합니다.
+     *
+     * 1) Drug 도메인 객체 → DrugKeywordDocument로 변환
+     * 2) Elasticsearch에 saveAll로 일괄 색인
+     *
+     * @param drugs 색인할 약품 도메인 페이지
+     * @author 박찬병
+     * @since 2025-05-03
+     * @modified 2025-05-03
+     */
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void saveAllSymptom(Page<Drug> drugs) {
+    public void saveAllKeyword(Page<Drug> drugs) {
         //  도메인 → ES Document 변환
         log("saveAllSymptom() 요청 수신");
-        List<DrugSymptomDocument> docs = drugs.stream()
-                .map(SymptomMapper::toDocument)  // 내부에서 예외 처리 됨
+        List<DrugKeywordDocument> docs = drugs.stream()
+                .map(drug -> KeywordMapper.toDocument(
+                        drug,
+                        drug.generateEfficacySuggestions(),
+                        drug.generateIngredientSuggestions()
+                ))
                 .toList();
+
         log("  문서 변환 완료: count=" + docs.size());
 
-        symptomRepository.saveAll(docs);
+        keywordRepository.saveAll(docs);
         log("  ES 색인 완료: count=" + docs.size());
     }
 

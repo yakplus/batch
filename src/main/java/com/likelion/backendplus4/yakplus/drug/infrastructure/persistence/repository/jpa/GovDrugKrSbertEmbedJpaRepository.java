@@ -11,14 +11,14 @@ import java.util.List;
 
 @Repository
 public interface GovDrugKrSbertEmbedJpaRepository extends JpaRepository<DrugKrSbertEmbedEntity,Long> {
-    @Query(
-            value = """
+    String QUERY = """
             SELECT r, e
             FROM DrugKrSbertEmbedEntity e
             JOIN DrugRawDataEntity  r
                 ON r.drugId = e.drugId
             WHERE e.krSbertVector IS NOT NULL
-        """
-    )
+                    AND r.isHerbal is FALSE
+        """;
+    @Query(QUERY)
     List<Object[]> findRawAndEmbed(Pageable pageable);
 }

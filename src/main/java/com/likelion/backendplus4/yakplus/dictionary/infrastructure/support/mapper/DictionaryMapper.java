@@ -22,25 +22,24 @@ public class DictionaryMapper {
      * @since 2025-05-01
      * @modified 2025-05-01
      */
-    public static SymptomDictionary toEntity(String name) {
-        SymptomDictionary entity = new SymptomDictionary(null, name);
-        return entity;
+    public static SymptomDictionary toSymptomEntity(String name) {
+        return SymptomDictionary.builder()
+                .name(name)
+                .build();
     }
 
     /**
      * 단일 증상명을 Elasticsearch 색인용 문서로 변환합니다.
      *
-     * @param name 증상명 문자열
-     * @return SymptomDictionaryDocument ES 문서 객체
+     * @param name 증상명 문자열    * @return SymptomDictionaryDocument ES 문서 객체
      * @author 박찬병
      * @since 2025-05-01
      * @modified 2025-05-01
      */
-    public static SymptomDictionaryDocument toDocument(String name) {
-        SymptomDictionaryDocument doc = SymptomDictionaryDocument.builder()
+    public static SymptomDictionaryDocument toSymptomDocument(String name) {
+        return SymptomDictionaryDocument.builder()
                 .symptom(name)
                 .symptomSuggester(List.of(name))
                 .build();
-        return doc;
     }
 }

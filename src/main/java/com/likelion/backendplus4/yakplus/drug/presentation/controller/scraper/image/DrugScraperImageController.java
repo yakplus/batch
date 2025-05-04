@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.likelion.backendplus4.yakplus.drug.application.service.port.in.scraper.DrugScraperImageUsecase;
+import com.likelion.backendplus4.yakplus.drug.application.service.port.in.scraper.DrugScraperImageUseCase;
 import com.likelion.backendplus4.yakplus.response.ApiResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/scraper/images")
 @RequiredArgsConstructor
 public class DrugScraperImageController {
-	private final DrugScraperImageUsecase drugScraperImageUsecase;
+	private final DrugScraperImageUseCase drugScraperImageUsecase;
 
 	/**
 	 * 의약품 이미지 수집 작업을 시작합니다.

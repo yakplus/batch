@@ -17,7 +17,7 @@ import static com.likelion.backendplus4.yakplus.common.util.log.LogUtil.log;
  * @since 2025-04-22
  */
 @RestController
-@RequestMapping("/api/drugs/index")
+@RequestMapping("/drugs/index")
 @RequiredArgsConstructor
 public class DrugController {
     private final IndexUseCase indexUseCase;
@@ -37,17 +37,17 @@ public class DrugController {
     }
 
     /**
-     * 색인 배치 작업을 실행하여, DB로부터 조회한 약품 증상 데이터를 Elasticsearch에 일괄 색인합니다.
+     * 색인 배치 작업을 실행하여, DB로부터 조회한 약품 데이터를 Elasticsearch에 일괄 색인합니다.
      *
      * @return 색인 작업 성공 여부 응답 (Void)
      * @author 박찬병
      * @modified 2025-04-25
      * @since 2025-04-24
      */
-    @PostMapping("/symptom")
+    @PostMapping("/keyword")
     public ResponseEntity<ApiResponse<Void>> triggerIndex() {
         log("indexSymptom 요청 수신");
-        indexUseCase.indexSymptom();
+        indexUseCase.indexKeyword();
         return ApiResponse.success();
     }
 }

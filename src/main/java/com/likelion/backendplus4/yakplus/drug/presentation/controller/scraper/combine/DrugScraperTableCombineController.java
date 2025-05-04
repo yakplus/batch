@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.likelion.backendplus4.yakplus.drug.application.service.port.in.scraper.DrugScraperTableCombineUsecase;
+import com.likelion.backendplus4.yakplus.drug.application.service.port.in.scraper.DrugScraperTableCombineUseCase;
 import com.likelion.backendplus4.yakplus.response.ApiResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/scraper/combine")
 @RequiredArgsConstructor
 public class DrugScraperTableCombineController {
-	private final DrugScraperTableCombineUsecase drugScraperTableCombineUsecase;
+	private final DrugScraperTableCombineUseCase drugScraperTableCombineUsecase;
 
 	/**
 	 * 의약품 상세정보와 이미지 정보 테이블을 병합하는 작업을 시작합니다.
