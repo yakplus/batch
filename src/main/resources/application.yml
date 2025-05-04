@@ -38,10 +38,17 @@ gov:
   path:
     detail: /1471000/DrugPrdtPrmsnInfoService06/getDrugPrdtPrmsnDtlInq05
     img: /1471000/DrugPrdtPrmsnInfoService06/getDrugPrdtPrmsnInq06
-dictionary:
-  path: classpath:unique_symptoms.json
+log:
+  rolling:
+    directory: logs
+    file-name: yakplus-batch.log
+    pattern: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"
+    max-history: 30
+    total-size-cap: 10MB
 embed:
   kmbert: embed.techlog.dev
   krsbert: embedb.techlog.dev
+  switcher:
+    default-adapter: gptEmbeddingLoadingAdapter
 server:
   port: 8077

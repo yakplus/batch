@@ -30,13 +30,15 @@ import java.util.List;
  */
 @Configuration
 public class ImageStepConfig {
+    private static final String TASK_EXECUTOR = "singleItemExecutor";
+
     private final ApiRequestManager apiRequestManager;
     private final ApiResponseMapper apiResponseMapper;
     private final TaskExecutor taskExecutor;
 
     public ImageStepConfig(ApiRequestManager apiRequestManager,
                            ApiResponseMapper apiResponseMapper,
-                           @Qualifier("batchExecutorManyThread")
+                           @Qualifier(TASK_EXECUTOR)
                            TaskExecutor taskExecutor) {
         this.apiRequestManager = apiRequestManager;
         this.apiResponseMapper = apiResponseMapper;

@@ -25,6 +25,10 @@ import java.util.List;
  * @since 2025-05-02
  */
 public class DrugDetailProcessor implements ItemProcessor<Integer, List<DrugDetailEntity>> {
+    private final String materialTagName = "MATERIAL_NAME";
+    private final String efficacyTagName = "EE_DOC_DATA";
+    private final String usageTagName = "UD_DOC_DATA";
+    private final String precautionTagName = "NB_DOC_DATA";
 
     private final ApiRequestManager apiRequestManager;
     private final ApiResponseMapper apiResponseMapper;
@@ -54,10 +58,6 @@ public class DrugDetailProcessor implements ItemProcessor<Integer, List<DrugDeta
      */
     @Override
     public List<DrugDetailEntity> process(Integer pageNumber) {
-        private final String materialTagName = "MATERIAL_NAME";
-        private final String efficacyTagName = "EE_DOC_DATA";
-        private final String usageTagName = "UD_DOC_DATA";
-        private final String precautionTagName = "NB_DOC_DATA";
 
         String response = apiRequestManager.fetchDetailData(pageNumber);
         JsonNode items = apiRequestManager.getItemsFromResponse(response);

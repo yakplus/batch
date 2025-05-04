@@ -19,7 +19,7 @@ import static com.likelion.backendplus4.yakplus.common.util.log.LogUtil.log;
 @Component("embeddingRouterAdapter")
 @Primary
 public class EmbeddingRouterAdapter implements EmbeddingLoadingPort, EmbeddingSwitchPort {
-    @Value("${switcher.default-adapter}")
+    @Value("${embed.switcher.default-adapter}")
     private String DEFAULT_ADAPTER; // 임베딩 로딩 어뎁터 이름 변경 시 수동으로 수정해야함!!!!!!!
     private final Map<String, EmbeddingLoadingPort> adapters;
     private volatile EmbeddingLoadingPort embeddingLoadingPort;
