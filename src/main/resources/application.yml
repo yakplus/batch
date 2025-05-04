@@ -50,5 +50,8 @@ embed:
   krsbert: embedb.techlog.dev
   switcher:
     default-adapter: gptEmbeddingLoadingAdapter
+
+dictionary:
+  path: classpath:unique_symptoms.json
 server:
   port: 8077
