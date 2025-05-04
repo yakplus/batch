@@ -1,11 +1,11 @@
 package com.likelion.backendplus4.yakplus.common.exception.handler;
 
-import static com.likelion.backendplus4.yakplus.common.util.log.LogUtil.log;
+import static com.likelion.backendplus4.yakplus.common.logging.util.LogUtil.log;
 
 import com.likelion.backendplus4.yakplus.common.exception.CustomException;
 import com.likelion.backendplus4.yakplus.common.exception.error.ErrorCode;
-import com.likelion.backendplus4.yakplus.common.util.log.LogLevel;
-import com.likelion.backendplus4.yakplus.response.ApiResponse;
+import com.likelion.backendplus4.yakplus.common.logging.util.LogLevel;
+import com.likelion.backendplus4.yakplus.common.response.ApiResponse;
 import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

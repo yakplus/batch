@@ -1,6 +1,6 @@
 package com.likelion.backendplus4.yakplus.common.interceptor;
 
-import com.likelion.backendplus4.yakplus.common.util.log.LogMessage;
+import com.likelion.backendplus4.yakplus.common.logging.util.LogMessage;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.MDC;
@@ -9,7 +9,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.util.UUID;
 
-import static com.likelion.backendplus4.yakplus.common.util.log.LogUtil.log;
+import static com.likelion.backendplus4.yakplus.common.logging.util.LogUtil.log;
 
 /**
  * 로깅을 위한 인터셉터 클래스

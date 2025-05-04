@@ -5,7 +5,7 @@ import java.util.*;
 
 import com.likelion.backendplus4.yakplus.drug.domain.model.vo.Material;
 
-import com.likelion.backendplus4.yakplus.index.support.parser.SymptomTextParser;
+import com.likelion.backendplus4.yakplus.drug.index.support.parser.SymptomTextParser;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
