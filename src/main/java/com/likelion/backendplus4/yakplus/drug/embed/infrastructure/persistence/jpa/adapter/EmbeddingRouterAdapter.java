@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import static com.likelion.backendplus4.yakplus.common.logging.util.LogUtil.log;
@@ -136,6 +137,6 @@ public class EmbeddingRouterAdapter implements EmbeddingPort, EmbeddingSwitchPor
     @Override
     public String getAdapterBeanName() {
         log("어댑터 빈 이름 요청 - 현재 선택된 어댑터: " + adapterBeanName);
-        return adapterBeanName;
+        return adapterBeanName.toLowerCase();
     }
 }
