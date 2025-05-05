@@ -24,6 +24,11 @@ jobs:
     - name: Make gradlew executable
       run: chmod +x ./gradlew
 
+    - name: Copy Dictionary
+      run: |
+        mkdir -p src/main/resources
+        echo '${{ secrets.DICTIONARY }}' > src/main/resources/unique_symptoms.json
+
     - name: Build Spring Boot (JAR)
       run: ./gradlew bootJar -Penv=test
 
