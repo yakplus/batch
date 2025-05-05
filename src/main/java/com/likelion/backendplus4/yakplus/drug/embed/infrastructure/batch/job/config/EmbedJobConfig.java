@@ -7,7 +7,7 @@ import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-/**
+/***
  * 임베딩 처리 작업을 구성하는 Spring Batch 설정 클래스입니다.
  * <p>
  * 모델 스위칭과 임베딩 작업을 순차적으로 구성하여 실행합니다.
