@@ -29,7 +29,7 @@ import static com.likelion.backendplus4.yakplus.common.logging.util.LogUtil.log;
 @RequiredArgsConstructor
 public class EmbedWriter implements ItemWriter<DrugVectorDto> {
     private final EmbeddingPort embeddingPort;
-    private final AtomicInteger count = new AtomicInteger();
+    private static final AtomicInteger count = new AtomicInteger();
 
     /**
      * 전달된 임베딩 결과 리스트를 저장소에 저장합니다.

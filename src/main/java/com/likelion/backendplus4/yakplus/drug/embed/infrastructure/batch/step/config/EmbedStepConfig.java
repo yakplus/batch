@@ -58,9 +58,9 @@ import java.util.Map;
 public class EmbedStepConfig {
     private final String batchExecutorName = "singleItemExecutor";
 
-    private final String openAiEmbeddingAdapterName = "OpenAiEmbeddingAdapter";
-    private final String kmBertEmbeddingAdapterName = "KmBertEmbeddingAdapter";
-    private final String krSBertEmbeddingAdapterName = "KrSBertEmbeddingAdapter";
+    private final String openAiEmbeddingAdapterName = "openAiEmbeddingAdapter";
+    private final String kmBertEmbeddingAdapterName = "kmBertEmbeddingAdapter";
+    private final String krSBertEmbeddingAdapterName = "krSBertEmbeddingAdapter";
 
     private final int retryLimit = 3;
     private final Class retryException = Exception.class;

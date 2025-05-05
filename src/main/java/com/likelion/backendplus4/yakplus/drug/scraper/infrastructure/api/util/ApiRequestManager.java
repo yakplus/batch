@@ -121,7 +121,6 @@ public class ApiRequestManager {
 	 * @since 2025-04-21
 	 */
 	public JsonNode getItemsFromResponse(String response) {
-		log("응답에서 items 값 추출");
 		try {
 			return new ObjectMapper().readTree(response)
 				.path("body")
