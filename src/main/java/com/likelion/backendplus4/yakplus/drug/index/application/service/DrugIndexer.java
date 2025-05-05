@@ -31,7 +31,7 @@ public class DrugIndexer implements IndexUseCase {
     private final EmbeddingSwitchPort embeddingSwitchPort;
 
     private static final String INDENT = "  ";
-    private static final int CHUNK_SIZE = 1_000;
+    private static final int CHUNK_SIZE = 100;
 
     /**
      * 요청으로 전달된 lastSeq, limit 정보를 바탕으로 RDB에서 데이터를 조회하고
