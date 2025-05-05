@@ -29,7 +29,7 @@ public class DrugKeywordDocument {
     @Field(type = FieldType.Text, name = "company")
     private String company;
 
-    @Field(type = FieldType.Keyword, name = "imageUrl")
+    @Field(type = FieldType.Text, name = "imageUrl")
     private String imageUrl;
 
     @Field(type = FieldType.Text, name = "efficacy")
