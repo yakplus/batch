@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * 의약품 성분 정보를 나타내는 값 객체(Value Object)입니다.
+ */
 @Getter
 @ToString
 public class Material {

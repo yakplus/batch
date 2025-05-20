@@ -21,6 +21,8 @@ configurations {
 
 repositories {
     mavenCentral()
+    maven { url 'https://repo.spring.io/milestone' }
+    maven { url 'https://repo.spring.io/snapshot' }
 }
 
 dependencies {
@@ -45,6 +47,16 @@ dependencies {
     // Elastic search
     implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
     implementation 'org.elasticsearch.client:elasticsearch-rest-high-level-client:7.17.10'
+
+    // OpenAi
+    implementation 'org.springframework.ai:spring-ai-openai-spring-boot-starter:1.0.0-M5'
+
+
+    // Spring-Batch
+    implementation 'org.springframework.boot:spring-boot-starter-batch'
+
+    // Swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
 
     // build.gradle
     if (project.hasProperty('env') && project.env == 'test') {
